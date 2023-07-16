@@ -1,0 +1,60 @@
+@import "../../styles/variable.module.scss";
+
+.sideBar {
+  padding: 2rem 3.8rem 2rem 3.8rem;
+  height: 100%;
+  position: relative;
+
+  .sidebarHeader {
+    @include display-flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .closeSidebarBtn{
+      @include display-center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid $border-color;
+      border-radius: 10px;
+      cursor: pointer;
+      .BiLeftArrow{
+        font-size: 1.5rem
+      }
+    }
+
+    .sidebarLogo {
+      @include display-flex;
+      align-items: center;
+      gap: 10px;
+      .siteLogo {
+        width: 2rem;
+        height: 2rem;
+      }
+      .siteTitle {
+        font-weight: 800;
+      }
+    }
+  }
+
+  .sidebarMenus{
+    margin-top: 4rem;
+
+    .navMenuSubtitle{
+      opacity: .3;
+      font-weight: 700;
+  
+    }
+
+    .menus{
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+      .navLinks{
+        margin-bottom: 1.5rem;
+         h4{
+          cursor: pointer;
+          font-size: 1.3rem;
+         }
+      }
+    }
+  }
+}

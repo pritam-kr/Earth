@@ -1,0 +1,25 @@
+$primary-color: #0e72c9;
+$border-color: #0000001f;
+$subtext-color: #353535f3;
+$headings-color: #282828;
+
+$smooth-boxShadow: 0.9px 2.8px 4.2px #00000067, 2.2px 6.7px 5.3px #0000005d,
+  4.1px 12.5px 10px #00000009, 7.4px 22.3px 17.9px #0000000b,
+  13.8px 41.8px 33.4px #0000000d, 33px 100px 80px #00000012;
+$border-radius: 15px;
+$secondar-text: #808080f1;
+
+@mixin display-flex {
+  display: flex;
+}
+
+@mixin display-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// padding for right side page container
+@mixin page-container-padding {
+  padding: 1.5rem 0rem 1.5rem 0rem;
+}

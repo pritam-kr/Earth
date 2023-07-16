@@ -1,11 +1,26 @@
+import { Route, Routes } from "react-router-dom";
+import styles from "./App.module.scss"
 
-import './App.css';
+import { Home, View as ComponentView } from "./pages";
+import { MainContainer, Sidebar } from "./components";
+
 
 function App() {
   return (
-    <div className="App">
-       
-    </div>
+    <MainContainer>
+      <div className={styles.appContainer}>
+        <div className={styles.sidebarContainer}>
+          <Sidebar />
+        </div>
+
+        <div className={styles.routesContainer}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/v" element={<ComponentView />} />
+          </Routes>
+        </div>
+      </div>
+    </MainContainer>
   );
 }
 
