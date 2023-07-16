@@ -1,5 +1,13 @@
+/*--For Subtext-*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&display=swap");
+/*--For Headings--*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans:wght@100;200;300;400;500;600;700;800&display=swap');
+
 :root {
-  --body-bg: #f6f6f6;
+  --body-bg: #f7f7f7;
+  --subtext-fontFamily: "Inter", sans-serif;
+  --heading-fontFamily: "Noto Sans", sans-serif;
+  --heading-color: #282828;
 }
 * {
   margin: 0;
@@ -10,4 +18,23 @@ body {
   width: 100%;
   height: 100%;
   background-color: var(--body-bg);
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-fontFamily);
+  color: var(--heading-color);
+}
+p,
+li,
+button,
+::placeholder {
+  font-family: var(--subtext-fontFamily);
+}
+
+html{
+  font-size: 85%;
 }
