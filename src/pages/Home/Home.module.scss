@@ -2,4 +2,40 @@
 
 .pageContainer {
   @include page-container-padding;
+  .header {
+    @include display-flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .right {
+      .searchBar {
+        @include display-flex;
+        // justify-content: center;
+        align-items: center;
+        // gap: 10px;
+        border: 1px solid $border-color;
+        background-color: #fff;
+        min-width: 300px;
+         border-radius: 5px;
+        .input {
+          padding: 12px 10px;
+          width: 85%;
+          border: none;
+          outline: none;
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+
+        .btnSearch {
+          @include display-center;
+          cursor: pointer;
+          width: 15%;
+          padding: 13px 5px;
+          border: none;
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+      }
+    }
+  }
 }

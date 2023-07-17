@@ -5,12 +5,12 @@
     width: 100%;
     background-color: rgba(0, 0, 0, 0.041);
     border-radius: $border-radius;
-    // display: grid;
+    display: grid;
      
-    // grid-template-columns: 25% auto;
-    // grid-template-rows: 100%;
-    @include display-flex;
-    gap: 10px;
+    grid-template-columns: 25% auto;
+    grid-template-rows: 100%;
+    // @include display-flex;
+    // gap: 10px;
 
     .sidebarContainer, .routesContainer{
         padding: .5rem;
@@ -20,10 +20,13 @@
         padding: 0;
         border-radius: $border-radius;
         background-color: #fff;
-        width: 400px;
-        max-width: 400px;
+        max-width: fit-content;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
          
+    }
+
+    .routesContainer{
+       padding: 0;
     }
   }
