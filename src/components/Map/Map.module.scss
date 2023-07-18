@@ -2,12 +2,33 @@
 
 .mapContainer {
   width: 100%;
-  height: calc(100vh - 125px);
+ height: calc(100vh - 125px);
   border: 1px solid $border-color;
-  border: 1px solid $border-color;
-  margin: 1.5rem 0 1rem 0;
+ 
+  margin: 1.5rem auto 1rem auto;
   border-radius: 10px;
   background-color: #fff;
-  overflow-y: hidden;
+  overflow-y: scroll;
   position: relative;
+// .ocation-marker{
+//   width: 900px !important;
+// }
+  .locationInfo {
+    position: absolute;
+    bottom: 0;
+    width: 300px;
+    height: 180px;
+    overflow-y: scroll;
+    background-color: #fff;
+    bottom: 10px;
+    left: 10px;
+    border: 1px solid $border-color;
+
+    /* From https://css.glass */
+    background: rgba(237, 234, 234, 0.555);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  }
 }

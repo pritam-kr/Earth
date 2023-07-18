@@ -1,15 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "./Home.module.scss";
 import { Title } from "../../widgets";
 import * as BiIcons from "react-icons/bi";
 import { Map } from "../../components";
-import { useFetchApi } from "../../customHookes";
  
 
 const Home = () => {
 
-  const data = useFetchApi()
-  console.log(data)
+  const [searchValue, setSearchValue] = useState("")
 
   return (
     <div className={styles.pageContainer}>
@@ -19,14 +17,14 @@ const Home = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.searchBar}>
-            <input type="text" placeholder="Search" className={styles.input} />{" "}
+            <input type="text" placeholder="Search" className={styles.input} onChange={e => setSearchValue(e.target.value)} />{" "}
             <button className={styles.btnSearch}>
               <BiIcons.BiSearch />
             </button>
           </div>
         </div>
       </div>
-      <Map />
+      <Map searchValue={searchValue} />
     </div>
   );
 };
