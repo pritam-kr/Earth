@@ -23,6 +23,7 @@
     bottom: 10px;
     left: 10px;
     border: 1px solid $border-color;
+    z-index: 999999;
 
     /* From https://css.glass */
     background: rgba(237, 234, 234, 0.555);
