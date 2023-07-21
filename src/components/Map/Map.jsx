@@ -5,8 +5,8 @@ import { useCurrentLanLat } from "../../customHookes";
 
 const Map = ({ searchValue }) => {
   const { loading, latitude, longitude } = useCurrentLanLat();
- 
   const mapContainer = useRef(null);
+  
   const [mapProperties, setMapProperties] = useState({
     lat: null,
     lon: null,
@@ -40,17 +40,16 @@ const Map = ({ searchValue }) => {
       marker.addClassName("location-marker");
 
       // Add geolocate control to the map.
-      map.addControl(
-        new maplibregl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true,
-          },
-          trackUserLocation: true,
-        })
-      );
+      // map.addControl(
+      //   new maplibregl.GeolocateControl({
+      //     positionOptions: {
+      //       enableHighAccuracy: true,
+      //     },
+      //     trackUserLocation: true,
+      //   })
+      // );
     });
 
-    console.log("ppp");
   }, [loading, latitude, longitude]);
 
   return (

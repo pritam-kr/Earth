@@ -3,19 +3,36 @@ import styles from "./Home.module.scss";
 import { Title } from "../../widgets";
 import * as BiIcons from "react-icons/bi";
 import { Map } from "../../components";
-import { useDispatch } from "react-redux";
-import { MAP_ACTIONS } from "../../redux/reducer/mapReducer";
- 
-
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { MAP_ACTIONS } from "../../redux/actions/actions";
+const apiKey = "ad09d41295facd76d3932305350f3282";
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState("");
-  const dispatch = useDispatch()
+  const [suggestionBox, setSuggestionBox] = useState(true);
+  const dispatch = useDispatch();
+  const selector = useSelector((state) => state);
+  console.log(selector);
 
-const searchHandler = () => {
-  dispatch({type: MAP_ACTIONS.GET_CURRENT_COORDINATE, payload: "mmmm"})
-}
-  
+  const getLocations = async (searchValue) => {
+    try {
+      const { data, status } = await axios.get(
+        `http://api.openweathermap.org/geo/1.0/direct?q=${searchValue}&limit=5&appid=${apiKey}`
+      );
+
+      if (status === 200) {
+        dispatch({ type: MAP_ACTIONS.GET_LOCATION_LIST, payload: data });
+      }
+    } catch (error) {
+      console.log(`Something error occured ${error.message}`);
+    }
+  };
+
+  const searchHandler = (searchValue) => {
+    getLocations(searchValue);
+  };
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.header}>
@@ -28,11 +45,28 @@ const searchHandler = () => {
               type="text"
               placeholder="Search"
               className={styles.input}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(e) => searchHandler(e.target.value)}
             />{" "}
-            <button className={styles.btnSearch} onClick={searchHandler}>
+            {/* <button className={styles.btnSearch} onClick={searchHandler}>
               <BiIcons.BiSearch />
-            </button>
+            </button> */}
+            {suggestionBox && (
+              <div className={styles.searchSuggestion}>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+                <li>lllldck ii ihie </li>
+              </div>
+            )}
           </div>
         </div>
       </div>
