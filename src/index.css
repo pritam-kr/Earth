@@ -32,11 +32,13 @@ h6 {
 }
 p,
 li,
-button,
+button,input,
 ::placeholder {
   font-family: var(--subtext-fontFamily);
+  font-size: 16px;
 }
 
 html{
   font-size: 85%;
 }
+

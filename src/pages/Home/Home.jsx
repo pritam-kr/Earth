@@ -1,37 +1,69 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./Home.module.scss";
 import { Title } from "../../widgets";
-import * as BiIcons from "react-icons/bi";
 import { Map } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
-const apiKey = "ad09d41295facd76d3932305350f3282";
+import { debaunceFunction } from "../../utils/debaunceFunction";
+import { apiKey } from "../../apiData/useMap";
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState("");
   const [suggestionBox, setSuggestionBox] = useState(true);
   const dispatch = useDispatch();
-  const selector = useSelector((state) => state);
-  console.log(selector);
+  const { locationList } = useSelector((state) => state.mapReducer);
 
-  const getLocations = async (searchValue) => {
+  const getCurrentUserLocationInfo = async () => {
+    try {
+      dispatch({
+        type: MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO,
+        payload: { data: null, isLoading: true },
+      });
+
+      const { data: locationInfo, status: locationInfoStatus } =
+        await axios.get("https://geolocation-db.com/json/");
+
+      if (locationInfoStatus === 200)
+        dispatch({
+          type: MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO,
+          payload: { data: locationInfo, isLoading: false },
+        });
+    } catch (error) {
+      dispatch({
+        type: MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO,
+        payload: { data: null, isLoading: false },
+      });
+      console.log(`Something error occured ${error.message}`);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUserLocationInfo();
+  }, []);
+
+  const getLocations = async (event) => {
+    let query = event.target.value;
+    if (!query) return;
     try {
       const { data, status } = await axios.get(
-        `http://api.openweathermap.org/geo/1.0/direct?q=${searchValue}&limit=5&appid=${apiKey}`
+        `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
       );
 
       if (status === 200) {
         dispatch({ type: MAP_ACTIONS.GET_LOCATION_LIST, payload: data });
       }
     } catch (error) {
+      dispatch({ type: MAP_ACTIONS.GET_LOCATION_LIST, payload: [] });
       console.log(`Something error occured ${error.message}`);
     }
   };
 
-  const searchHandler = (searchValue) => {
-    getLocations(searchValue);
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debaunceSearchHandler = useCallback(
+    debaunceFunction(getLocations, 2000),
+    []
+  );
 
   return (
     <div className={styles.pageContainer}>
@@ -45,26 +77,16 @@ const Home = () => {
               type="text"
               placeholder="Search"
               className={styles.input}
-              onChange={(e) => searchHandler(e.target.value)}
-            />{" "}
-            {/* <button className={styles.btnSearch} onClick={searchHandler}>
-              <BiIcons.BiSearch />
-            </button> */}
-            {suggestionBox && (
-              <div className={styles.searchSuggestion}>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
+              onChange={debaunceSearchHandler}
+            />
 
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
-                <li>lllldck ii ihie </li>
+            {locationList?.length > 1 && (
+              <div className={styles.searchSuggestion}>
+                {locationList?.length
+                  ? locationList?.map((item, i) => (
+                      <LocationName location={item} key={i} />
+                    ))
+                  : ""}
               </div>
             )}
           </div>
@@ -76,3 +98,12 @@ const Home = () => {
 };
 
 export default Home;
+
+const LocationName = ({ location }) => {
+  return (
+    <p className={styles.locationOption}>
+      {location.name}
+      {location.state && `, ${location.state}`}
+    </p>
+  );
+};
