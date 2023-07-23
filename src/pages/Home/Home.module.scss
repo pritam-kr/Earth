@@ -7,6 +7,12 @@
     justify-content: space-between;
     align-items: center;
 
+    .left{
+      @include display-flex;
+      justify-content: flex-start;
+      gap: 10px;
+      align-items: center;
+    }
     .right {
       .searchBar {
         @include display-flex;

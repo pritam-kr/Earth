@@ -1,17 +1,90 @@
 import axios from "axios";
-
+import { MAP_ACTIONS } from "../redux/actions/actions";
+import { useDispatch } from "react-redux";
 export const apiKey = "ad09d41295facd76d3932305350f3282";
- 
 
 export const useMap = () => {
+  // Find current air pollution data
+  //http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}
 
-// Find current air pollution data
-//http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}
+  const dispatch = useDispatch();
 
-const airPollutionApi = () => {
+  const findAirPollutionForLocation = async (lon, lat) => {
+    try {
+      dispatch({
+        type: MAP_ACTIONS.GET_AIR_POLLUTION,
+        payload: { isLoading: true, data: null },
+      });
+      const { data, status } = await axios.get(
+        `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`
+      );
+
+      if (status === 200)
+        dispatch({
+          type: MAP_ACTIONS.GET_AIR_POLLUTION,
+          payload: {
+            isLoading: false,
+            data: {
+              ...data,
+            },
+          },
+        });
+    } catch (error) {
+      dispatch({
+        type: MAP_ACTIONS.GET_AIR_POLLUTION,
+        payload: { isLoading: false, data: null },
+      });
+      console.log(`Something went wrong ${error.message}`);
+    }
+  };
+
+  const getCurrentUserLocationInfo = async () => {
+    try {
+      dispatch({
+        type: MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO,
+        payload: { data: null, isLoading: true },
+      });
+
+      const { data: locationInfo, status: locationInfoStatus } =
+        await axios.get("https://geolocation-db.com/json/");
+
+      if (locationInfoStatus === 200)
+        dispatch({
+          type: MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO,
+          payload: { data: locationInfo, isLoading: false },
+        });
+      findAirPollutionForLocation(
+        locationInfo?.longitude,
+        locationInfo?.latitude
+      );
+    } catch (error) {
+      dispatch({
+        type: MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO,
+        payload: { data: null, isLoading: false },
+      });
+      console.log(`Something error occured ${error.message}`);
+    }
+  };
 
 
+  // Get Location list on search bar
+  const getLocations = async (event) => {
+    let query = event.target.value;
+    if (!query) return;
+    try {
+      const { data, status } = await axios.get(
+        `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
+      );
 
-}
+      if (status === 200) {
+        dispatch({ type: MAP_ACTIONS.GET_LOCATION_LIST, payload: data });
+      }
+    } catch (error) {
+      dispatch({ type: MAP_ACTIONS.GET_LOCATION_LIST, payload: [] });
+      console.log(`Something error occured ${error.message}`);
+    }
+  };
 
-}
+
+  return { findAirPollutionForLocation, getCurrentUserLocationInfo, getLocations };
+};

@@ -2,5 +2,7 @@ export const MAP_ACTIONS = {
   GET_CURRENT_COORDINATE: "get_current_coordinate",
   GET_LOCATION_LIST: "get_location_list",
   GET_AIR_POLLUTION: "get_air_pollution",
-  GET_USER_CURRENT_LOCATION_IFNO: "get_user_current_location"
+  GET_USER_CURRENT_LOCATION_IFNO: "get_user_current_location",
+  RANDOM_LOADING: "random-loadin",
+  SET_LAT_LON_ON_MAP: "set_lan_lat"
 };

@@ -2,20 +2,19 @@ import { MAP_ACTIONS } from "../actions/actions";
 
 const initialState = {
   currentUserLocationInfo: null,
-  coordinates: { lan: 0, lat: 0 },
+  coordinates: { lan: null, lat: null },
   locationList: [],
   isLoading: false,
   mapProperties: {},
   isError: "",
-  currentLocationCoordinates: { lon: "", lat: "", loading: false },
+
   airPollutionInfo: null,
 };
 
 const mapReducer = (state = initialState, action) => {
   switch (action.type) {
-    case MAP_ACTIONS.GET_CURRENT_COORDINATE:
-      console.log(action);
-      return state;
+    case MAP_ACTIONS.RANDOM_LOADING:
+      return { ...state, isLoading: action.payload };
 
     case MAP_ACTIONS.GET_LOCATION_LIST:
       return { ...state, locationList: action.payload };
@@ -24,8 +23,7 @@ const mapReducer = (state = initialState, action) => {
       const { data, isLoading } = action.payload;
       return {
         ...state,
-        isLoading: isLoading,
-        airPollutionInfo: { ...data },
+        airPollutionInfo: { ...data, airPoluttionLoading: isLoading },
       };
 
     case MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO:
@@ -34,10 +32,13 @@ const mapReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        isLoading: userInfoDataLoading,
-        currentUserLocationInfo: { userInfoData },
+
+        currentUserLocationInfo: { userInfoData, userInfoDataLoading },
       };
 
+    case MAP_ACTIONS.SET_LAT_LON_ON_MAP:
+      const { lat, lon, location, state : cityState } = action.payload;
+      return { ...state, coordinates: { lat, lon, location, cityState } };
     default:
       return state;
   }

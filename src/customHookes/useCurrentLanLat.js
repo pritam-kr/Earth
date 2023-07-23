@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 
 const useCurrentLanLat = () => {
   const getLonLatCoordinates = () => {
