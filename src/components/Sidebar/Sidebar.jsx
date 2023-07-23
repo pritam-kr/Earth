@@ -2,9 +2,11 @@ import React from "react";
 import styles from "./Sidebar.module.scss";
 import { SubTitle } from "../../widgets";
 import { MENUS } from "./constants";
+import { NavLink } from "react-router-dom";
 // import * as BiIcons from "react-icons/bi";
 
 const Sidebar = () => {
+ 
   return (
     <div className={styles.sideBar}>
       <div className={styles.sidebarHeader}>
@@ -22,13 +24,18 @@ const Sidebar = () => {
       </div>
 
       <div className={styles.sidebarMenus}>
-        <SubTitle text={"Data we have."} className={styles.navMenuSubtitle}/>
+        <SubTitle text={"Data we have."} className={styles.navMenuSubtitle} />
 
         <div className={styles.menus}>
           {MENUS.map((item) => (
-            <div className={styles.navLinks}>
-              <h4>{item.label}</h4>
-            </div>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? styles.activeNavlink :  styles.navLinks
+              }
+              to={item.path}
+            >
+              {item.label}
+            </NavLink>
           ))}
         </div>
       </div>

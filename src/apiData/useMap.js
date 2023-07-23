@@ -1,11 +1,14 @@
 import axios from "axios";
 import { MAP_ACTIONS } from "../redux/actions/actions";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 export const apiKey = "ad09d41295facd76d3932305350f3282";
 
 export const useMap = () => {
   // Find current air pollution data
   //http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}
+
+  const [searchValue, setSearchValue] = useState("");
 
   const dispatch = useDispatch();
 
@@ -66,10 +69,10 @@ export const useMap = () => {
     }
   };
 
-
   // Get Location list on search bar
   const getLocations = async (event) => {
     let query = event.target.value;
+    setSearchValue(query);
     if (!query) return;
     try {
       const { data, status } = await axios.get(
@@ -85,6 +88,11 @@ export const useMap = () => {
     }
   };
 
-
-  return { findAirPollutionForLocation, getCurrentUserLocationInfo, getLocations };
+  return {
+    findAirPollutionForLocation,
+    getCurrentUserLocationInfo,
+    getLocations,
+    searchValue,
+    setSearchValue
+  };
 };

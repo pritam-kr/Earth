@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./Map.module.scss";
 import maplibregl from "maplibre-gl";
 import { useCurrentLanLat } from "../../customHookes";
@@ -11,12 +11,10 @@ const Map = ({ searchValue }) => {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
 
-  const { airPollutionInfo, currentUserLocationInfo, coordinates } =
+  const { airPollutionInfo, currentUserLocationInfo, coordinates, isLoading } =
     useSelector((state) => state.mapReducer);
   const userInfoData = currentUserLocationInfo?.userInfoData;
   const userCurrentInfoLoading = currentUserLocationInfo?.userInfoDataLoading;
-
-  console.log(coordinates, "coordinates");
 
   useEffect(() => {
     const getCoodinates = async () => {
@@ -46,15 +44,15 @@ const Map = ({ searchValue }) => {
         .addTo(map);
       marker.addClassName("location-marker");
 
-      //Add geolocate control to the map.
-      map.addControl(
-        new maplibregl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true,
-          },
-          trackUserLocation: true,
-        })
-      );
+      // //Add geolocate control to the map.
+      // map.addControl(
+      //   new maplibregl.GeolocateControl({
+      //     positionOptions: {
+      //       enableHighAccuracy: true,
+      //     },
+      //     trackUserLocation: true,
+      //   })
+      // );
     };
 
     getCoodinates();
@@ -64,14 +62,14 @@ const Map = ({ searchValue }) => {
     <div className={styles.mapContainer} ref={mapContainer}>
       {airPollutionInfo && (
         <div className={styles.locationInfo}>
-          {userCurrentInfoLoading ? (
-            <div>
+          {userCurrentInfoLoading || isLoading ? (
+            <div className={styles.loaderWrapper}>
               <Loader
                 src={
                   "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
                 }
-                width={30}
-                height={30}
+                width={40}
+                height={40}
               />
             </div>
           ) : (

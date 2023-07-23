@@ -4,12 +4,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans:wght@100;200;300;400;500;600;700;800&display=swap');
 
 @import 'maplibre-gl/dist/maplibre-gl.css'; 
+@import "react-toggle/style.css";
 
 :root {
   --body-bg: #f7f7f7;
   --subtext-fontFamily: "Inter", sans-serif;
   --heading-fontFamily: "Noto Sans", sans-serif;
   --heading-color: #282828;
+  --primary-color: #0e72c9;
 }
 * {
   margin: 0;
@@ -32,7 +34,7 @@ h6 {
 }
 p,
 li,
-button,input,
+button,input, a,span,
 ::placeholder {
   font-family: var(--subtext-fontFamily);
   font-size: 16px;
@@ -42,3 +44,10 @@ html{
   font-size: 85%;
 }
 
+.statsToggle.react-toggle--checked .react-toggle-track {
+  background-color: var(--primary-color);
+}
+ 
+ 
+
+ 
