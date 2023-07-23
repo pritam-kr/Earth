@@ -2,7 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import styles from "./App.module.scss"
 
 import { Home, View as ComponentView } from "./pages";
-import { MainContainer, Sidebar } from "./components";
+import { MainContainer, Map, Sidebar } from "./components";
+
 
 
 function App() {

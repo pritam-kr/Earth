@@ -2,17 +2,15 @@
 
 .mapContainer {
   width: 100%;
- height: calc(100vh - 125px);
+  height: calc(100vh - 125px);
   border: 1px solid $border-color;
- 
+
   margin: 1.5rem auto 1rem auto;
   border-radius: 10px;
   background-color: #fff;
   overflow-y: scroll;
   position: relative;
-// .ocation-marker{
-//   width: 900px !important;
-// }
+
   .locationInfo {
     position: absolute;
     bottom: 0;
@@ -23,12 +21,38 @@
     bottom: 10px;
     left: 10px;
     border: 1px solid $border-color;
+    z-index: 999999;
+    padding: 10px;
 
     /* From https://css.glass */
     background: rgba(237, 234, 234, 0.555);
-    border-radius: 16px;
+    border-radius: 10px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+
+    .header {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      .lonLat {
+        font-weight: 600;
+        font-size: 12px;
+        opacity: 0.6;
+      }
+    }
+
+    .footer {
+      margin-top: 10px;
+
+      h3 {
+        margin-bottom: 5px;
+      }
+      li {
+        margin-bottom: 5px;
+      }
+    }
   }
 }

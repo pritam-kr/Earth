@@ -1,49 +1,126 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./Map.module.scss";
 import maplibregl from "maplibre-gl";
+import { useCurrentLanLat } from "../../customHookes";
+import { useSelector, useDispatch } from "react-redux";
+import { MAP_ACTIONS } from "../../redux/actions/actions";
+import Loader from "../Loader/Loader";
 
 const Map = ({ searchValue }) => {
-  const MAP_API_KEY = process.env.REACT_APP_MAP_KEY;
-  const map = useRef(null);
+  const { getLonLatCoordinates } = useCurrentLanLat();
+  const dispatch = useDispatch();
   const mapContainer = useRef(null);
-  const [mapProperties, setMapProperties] = useState({
-    lat: 35.6846,
-    lang: 139.7525,
-    zoom: 1,
-    style: "",
-  });
+
+  const { airPollutionInfo, currentUserLocationInfo, coordinates } =
+    useSelector((state) => state.mapReducer);
+  const userInfoData = currentUserLocationInfo?.userInfoData;
+  const userCurrentInfoLoading = currentUserLocationInfo?.userInfoDataLoading;
+
+  console.log(coordinates, "coordinates");
 
   useEffect(() => {
-    if (map.current) return;
+    const getCoodinates = async () => {
+      dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
+      const { longitude, latitude } = await getLonLatCoordinates();
+      if (longitude && latitude) {
+        dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
+      }
 
-    map.current = new maplibregl.Map({
-      container: mapContainer.current,
-      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z`,
-      center: [mapProperties.lang, mapProperties.lat], // starting position [lng, lat]
-      zoom: 3, // starting zoom
-      maxZoom: 20,
-      preserveDrawingBuffer: true,
-      attributionControl: true,
-      boxZoom: true,
-    });
+      const map = new maplibregl.Map({
+        container: mapContainer.current,
+        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z`,
+        center: [coordinates?.lon ?? longitude, coordinates?.lat ?? latitude], // starting position [lng, lat]
+        zoom: 3, // starting zoom
+        maxZoom: 24,
+        preserveDrawingBuffer: true,
+        attributionControl: true,
+        boxZoom: true,
+      });
 
-    map.current.addControl(new maplibregl.NavigationControl(), "top-left");
-    let marker = new maplibregl.Marker({ color: "#FF0000" })
-      .setLngLat([mapProperties.lang, mapProperties.lat])
+      map.addControl(new maplibregl.NavigationControl(), "top-right");
+      let marker = new maplibregl.Marker({ color: "#FF0000" })
+        .setLngLat([
+          coordinates?.lon ?? longitude,
+          coordinates?.lat ?? latitude,
+        ])
+        .addTo(map);
+      marker.addClassName("location-marker");
 
-      .addTo(map.current);
-    marker.addClassName("location-marker");
+      //Add geolocate control to the map.
+      map.addControl(
+        new maplibregl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          trackUserLocation: true,
+        })
+      );
+    };
 
-    map.current.on("load", function () {
-      map.current.resize();
-    });
-  }, [searchValue]);
+    getCoodinates();
+  }, [coordinates?.lat, coordinates?.lon]);
 
   return (
     <div className={styles.mapContainer} ref={mapContainer}>
-      <div className={styles.locationInfo}></div>
+      {airPollutionInfo && (
+        <div className={styles.locationInfo}>
+          {userCurrentInfoLoading ? (
+            <div>
+              <Loader
+                src={
+                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
+                }
+                width={30}
+                height={30}
+              />
+            </div>
+          ) : (
+            <>
+              <div className={styles.header}>
+                {coordinates?.location ? (
+                  <h2>
+                    {coordinates?.location}
+                    {coordinates?.cityState && `, ${coordinates?.cityState}`}
+                  </h2>
+                ) : (
+                  <h2>
+                    {userInfoData?.city}
+                    {userInfoData?.state && `, ${userInfoData?.state}`}
+                  </h2>
+                )}
+
+                <p className={styles.lonLat}>
+                  {airPollutionInfo?.coord?.lon}
+                  {airPollutionInfo?.coord?.lat &&
+                    `, ${airPollutionInfo?.coord?.lat}`}
+                </p>
+
+                {/* <p className={styles.dateTime}>
+          {new Date(airPollutionInfo?.list[0]?.dt)}
+        </p> */}
+              </div>
+              <div className={styles.footer}>
+                <h3>Components in Air </h3>
+
+                <ul>
+                  {airPollutionInfo?.list?.map((item) => (
+                    <li className={styles?.aqi}>AQI: {item.main.aqi}</li>
+                  ))}
+                  {airPollutionInfo?.list?.map((item) =>
+                    Object.keys(item.components).map((item2) => (
+                      <li>
+                        {item2}: {item.components[item2]}
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export default Map;
+export default React.memo(Map);
