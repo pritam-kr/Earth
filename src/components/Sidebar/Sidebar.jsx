@@ -16,7 +16,7 @@ const Sidebar = () => {
             alt="earth-logo"
             src="https://res.cloudinary.com/dhqxln7zi/image/upload/v1689483981/Hello-World-earth_dpfm4x.svg"
           />
-          <h1 className={styles.siteTitle}>Burnning Earth</h1>
+          <h1 className={styles.siteTitle}>Burning Earth</h1>
         </div>
         {/* <div className={styles.closeSidebarBtn}>
           <BiIcons.BiLeftArrow className={styles.BiLeftArrow} />

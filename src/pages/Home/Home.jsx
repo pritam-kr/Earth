@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import styles from "./Home.module.scss";
 import { Title } from "../../widgets";
-import { Map, Loader } from "../../components";
+import { Map, Loader, AirPollutionStats } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import { debaunceFunction } from "../../utils/debaunceFunction";
@@ -140,7 +140,7 @@ const Home = () => {
           )}
         </div>
       </div>
-      {!stats && <Map />}
+      {stats ? <AirPollutionStats />: <Map />}
     </div>
   );
 };
