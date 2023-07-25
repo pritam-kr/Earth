@@ -3,9 +3,9 @@ import styles from "./Sidebar.module.scss";
 import { SubTitle } from "../../widgets";
 import { MENUS } from "./constants";
 import { NavLink } from "react-router-dom";
-// import * as BiIcons from "react-icons/bi";
+import * as AiIcons from "react-icons/ai";
 
-const Sidebar = () => {
+const Sidebar = ({setModal}) => {
  
   return (
     <div className={styles.sideBar}>
@@ -38,6 +38,11 @@ const Sidebar = () => {
             </NavLink>
           ))}
         </div>
+      </div>
+
+      <div className={styles.sidebarFooter}>
+        <div></div>
+        <div><AiIcons.AiFillSetting className={styles.settingIcon} onClick={() => setModal(true)}/></div>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import { useMap } from "../../apiData/useMap";
 import * as BiIcons from "react-icons/bi";
 import Toggle from "react-toggle";
 
-const Home = () => {
+const Home = ({setModal}) => {
   const {
     getCurrentUserLocationInfo,
     getLocations,
