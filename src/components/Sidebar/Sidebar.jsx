@@ -2,9 +2,11 @@ import React from "react";
 import styles from "./Sidebar.module.scss";
 import { SubTitle } from "../../widgets";
 import { MENUS } from "./constants";
-// import * as BiIcons from "react-icons/bi";
+import { NavLink } from "react-router-dom";
+import * as AiIcons from "react-icons/ai";
 
-const Sidebar = () => {
+const Sidebar = ({setModal}) => {
+ 
   return (
     <div className={styles.sideBar}>
       <div className={styles.sidebarHeader}>
@@ -14,7 +16,7 @@ const Sidebar = () => {
             alt="earth-logo"
             src="https://res.cloudinary.com/dhqxln7zi/image/upload/v1689483981/Hello-World-earth_dpfm4x.svg"
           />
-          <h1 className={styles.siteTitle}>Burnning Earth</h1>
+          <h1 className={styles.siteTitle}>Burning Earth</h1>
         </div>
         {/* <div className={styles.closeSidebarBtn}>
           <BiIcons.BiLeftArrow className={styles.BiLeftArrow} />
@@ -22,15 +24,25 @@ const Sidebar = () => {
       </div>
 
       <div className={styles.sidebarMenus}>
-        <SubTitle text={"Data we have."} className={styles.navMenuSubtitle}/>
+        <SubTitle text={"Data we have."} className={styles.navMenuSubtitle} />
 
         <div className={styles.menus}>
           {MENUS.map((item) => (
-            <div className={styles.navLinks}>
-              <h4>{item.label}</h4>
-            </div>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? styles.activeNavlink :  styles.navLinks
+              }
+              to={item.path}
+            >
+              {item.label}
+            </NavLink>
           ))}
         </div>
+      </div>
+
+      <div className={styles.sidebarFooter}>
+        <div></div>
+        <div><AiIcons.AiFillSetting className={styles.settingIcon} onClick={() => setModal(true)}/></div>
       </div>
     </div>
   );

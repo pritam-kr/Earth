@@ -1,29 +1,31 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import styles from "./Home.module.scss";
 import { Title } from "../../widgets";
-import { Map, Loader } from "../../components";
+import { Map, Loader, AirPollutionStats } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import { debaunceFunction } from "../../utils/debaunceFunction";
-import { apiKey, useMap } from "../../apiData/useMap";
+import { useMap } from "../../apiData/useMap";
+import * as BiIcons from "react-icons/bi";
+import Toggle from "react-toggle";
 
-const Home = () => {
+const Home = ({setModal}) => {
   const {
     getCurrentUserLocationInfo,
     getLocations,
     findAirPollutionForLocation,
   } = useMap();
 
-  const [searchValue, setSearchValue] = useState("");
-  const [suggestionBox, setSuggestionBox] = useState(true);
-
+  const suggestionRef = useRef(null);
+  const inputRef = useRef(null);
   const dispatch = useDispatch();
-
   const { locationList, currentUserLocationInfo, airPollutionInfo, isLoading } =
     useSelector((state) => state.mapReducer);
   const userCurrentInfoLoading = currentUserLocationInfo?.userInfoDataLoading;
   const airPollutionLoding = airPollutionInfo?.airPoluttionLoading;
+
+  const [suggestionBox, setSuggestionBox] = useState(false);
+  const [stats, setShowStats] = useState(false);
 
   useEffect(() => {
     getCurrentUserLocationInfo();
@@ -31,16 +33,30 @@ const Home = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debaunceSearchHandler = useCallback(
-    debaunceFunction(getLocations, 2000),
+    debaunceFunction(getLocations, 500),
     []
   );
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      if (e.target !== suggestionRef.current && e.target !== inputRef.current) {
+        setSuggestionBox(false);
+      }
+    });
+
+    return () => {
+      window.removeEventListener("click", () => {});
+    };
+  });
 
   const airPollutionHandler = (e) => {
     const locationInfo = JSON.parse(e.target.getAttribute("data"));
     if (locationInfo) {
       findAirPollutionForLocation(locationInfo.lon, locationInfo.lat);
       // Locate on map firstly
-      console.log(locationInfo);
+      inputRef.current.value = `${locationInfo?.name}${
+        locationInfo?.state !== undefined && ", "
+      }${locationInfo?.state ?? ""}`;
       dispatch({
         type: MAP_ACTIONS.SET_LAT_LON_ON_MAP,
         payload: {
@@ -51,6 +67,10 @@ const Home = () => {
         },
       });
     }
+  };
+
+  const showStatsHandler = (e) => {
+    setShowStats(e.target.checked);
   };
 
   return (
@@ -69,30 +89,58 @@ const Home = () => {
           )}
         </div>
         <div className={styles.right}>
-          <div className={styles.searchBar}>
-            <input
-              type="text"
-              placeholder="Search city name"
-              className={styles.input}
-              onChange={debaunceSearchHandler}
+          <label className={styles.toggleWrapper}>
+            <Toggle
+              defaultChecked={stats}
+              icons={false}
+              onChange={showStatsHandler}
+              className={"statsToggle"}
+               
             />
+            <span>Pollution Stats</span>
+          </label>
 
-            {locationList?.length > 0 && (
-              <div
-                className={styles.searchSuggestion}
-                onClick={(e) => airPollutionHandler(e)}
-              >
-                {locationList?.length
-                  ? locationList?.map((item, i) => (
+          {!stats && (
+            <div className={styles.searchBar}>
+              <input
+                type="text"
+                placeholder="Search city name"
+                className={styles.input}
+                onChange={debaunceSearchHandler}
+                onFocus={() => setSuggestionBox(true)}
+                ref={inputRef}
+              />
+
+              {inputRef?.current?.value && (
+                <BiIcons.BiXCircle
+                  className={styles.btnXCircle}
+                  onClick={() => (inputRef.current.value = "")}
+                />
+              )}
+
+              {suggestionBox && (
+                <div
+                  className={styles.searchSuggestion}
+                  onClick={(e) => airPollutionHandler(e)}
+                  ref={suggestionRef}
+                >
+                  {locationList?.length ? (
+                    locationList?.map((item, i) => (
                       <LocationName location={item} key={i} />
                     ))
-                  : ""}
-              </div>
-            )}
-          </div>
+                  ) : (
+                    <div className={styles.noLocation}>
+                      <BiIcons.BiLocationPlus className={styles.locationIcon} />
+                      <h4>No location found</h4>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
-      <Map searchValue={searchValue} />
+      {stats ? <AirPollutionStats />: <Map />}
     </div>
   );
 };
