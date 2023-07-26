@@ -9,7 +9,7 @@ import { useMap } from "../../apiData/useMap";
 import * as BiIcons from "react-icons/bi";
 import Toggle from "react-toggle";
 
-const Home = ({setModal}) => {
+const Home = ({ setModal }) => {
   const {
     getCurrentUserLocationInfo,
     getLocations,
@@ -27,6 +27,9 @@ const Home = ({setModal}) => {
   const [suggestionBox, setSuggestionBox] = useState(false);
   const [stats, setShowStats] = useState(false);
 
+  const features = JSON.parse(localStorage.getItem("features"));
+
+ 
   useEffect(() => {
     getCurrentUserLocationInfo();
   }, []);
@@ -89,16 +92,17 @@ const Home = ({setModal}) => {
           )}
         </div>
         <div className={styles.right}>
-          <label className={styles.toggleWrapper}>
-            <Toggle
-              defaultChecked={stats}
-              icons={false}
-              onChange={showStatsHandler}
-              className={"statsToggle"}
-               
-            />
-            <span>Pollution Stats</span>
-          </label>
+          {features?.["map_with_stats"] && (
+            <label className={styles.toggleWrapper}>
+              <Toggle
+                defaultChecked={stats}
+                icons={false}
+                onChange={showStatsHandler}
+                className={"statsToggle"}
+              />
+              <span>Pollution Stats</span>
+            </label>
+          )}
 
           {!stats && (
             <div className={styles.searchBar}>
@@ -140,7 +144,7 @@ const Home = ({setModal}) => {
           )}
         </div>
       </div>
-      {stats ? <AirPollutionStats />: <Map />}
+      {stats ? <AirPollutionStats /> : <Map />}
     </div>
   );
 };

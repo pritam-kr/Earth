@@ -1,17 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./SettingModal.module.scss";
 import Toggle from "react-toggle";
 
-const SettingModal = ({setModal}) => {
-  const showStatsHandler = (r, e) => {
-    console.log(r, e.target.checked);
+const SettingModal = ({ setModal }) => {
+  const [toggleData, setToggleData] = useState(
+    !JSON.parse(localStorage.getItem("features"))
+      ? {
+          air_pollution: true,
+          map_with_stats: false,
+          co2_emission: false,
+          water_pollution: false,
+          heat_wave: false,
+        }
+      : JSON.parse(localStorage.getItem("features"))
+  );
+
+  const showStatsHandler = (name, e) => {
+    setToggleData((prev) => ({ ...prev, [name]: e.target.checked }));
+  };
+
+  const localStorageHandler = () => {
+    setModal(false);
+    localStorage.setItem("features", JSON.stringify(toggleData));
   };
 
   const FEATURES_LIST = [
-    { id: 1, label: "Map with statistics", name: "map_with_stats" },
-    { id: 1, label: "Co2 Emission", name: "co2_emission" },
-    { id: 1, label: "Water pollution", name: "water_pollution" },
-    { id: 1, label: "Heat wave", name: "heat_wave" },
+    { id: 1, label: "Air pollution", name: "air_pollution" },
+    { id: 2, label: "Map with statistics", name: "map_with_stats" },
+    { id: 3, label: "Co2 Emission", name: "co2_emission" },
+    { id: 4, label: "Water pollution", name: "water_pollution" },
+    { id: 5, label: "Heat wave", name: "heat_wave" },
+  ];
+
+  const DEFAULT_FEATURES = [
+    "air_pollution",
+    "co2_emission",
+    "water_pollution",
+    "heat_wave",
   ];
 
   return (
@@ -21,7 +46,7 @@ const SettingModal = ({setModal}) => {
           <div className={styles.title}>
             <h3>Settings</h3>
           </div>
-          <div className={styles.close} onClick={() => setModal(false)}>
+          <div className={styles.close} onClick={() => localStorageHandler()}>
             <h3>X</h3>
           </div>
         </div>
@@ -42,13 +67,14 @@ const SettingModal = ({setModal}) => {
         <div className={styles.featuresWrapper}>
           {FEATURES_LIST.map((item) => {
             return (
-              <div className={styles.feature} key={item.id}>
-                <p className={styles.featureTitle}>{item.label}</p>
+              <div className={styles.feature} key={item?.id}>
+                <p className={styles.featureTitle}>{item?.label}</p>
                 <div className={styles.toggleWrapper}>
                   <Toggle
-                    //   defaultChecked={stats}
+                    disabled={DEFAULT_FEATURES.includes(item?.name)}
+                    defaultChecked={item?.name && toggleData[item?.name]}
                     icons={false}
-                    onChange={(e) => showStatsHandler(item.name, e)}
+                    onChange={(e) => showStatsHandler(item?.name, e)}
                     className={"statsToggle"}
                   />
                 </div>
