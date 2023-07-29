@@ -22,8 +22,6 @@ const MapStats = () => {
     )
     .flat();
 
-  console.log(data);
-
   const COLORS = [
     "#0088FE",
     "#00C49F",
@@ -75,7 +73,7 @@ const MapStats = () => {
                 data={data ?? []}
                 cx="50%"
                 cy="50%"
-                 labelLine={true}
+                labelLine={true}
                 // isAnimationActive={false}
                 // label={renderCustomizedLabel}
                 outerRadius={100}
@@ -83,15 +81,12 @@ const MapStats = () => {
                 dataKey="value"
                 label
               >
-                {/* <Label content={renderCustomizedLabel} position="inside" /> */}
                 {data?.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
                   />
                 ))}
-
-                <Tooltip  formatter={(value) => `${(value * 100).toFixed(0)}%`} />
               </Pie>
             </PieChart>
           </ResponsiveContainer>

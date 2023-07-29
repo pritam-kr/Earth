@@ -13,12 +13,12 @@ const Map = ({ searchValue }) => {
 
   const { airPollutionInfo, currentUserLocationInfo, coordinates, isLoading } =
     useSelector((state) => state.mapReducer);
-  const userInfoData = currentUserLocationInfo?.userInfoData;
   const userCurrentInfoLoading = currentUserLocationInfo?.userInfoDataLoading;
 
   useEffect(() => {
     const getCoodinates = async () => {
       dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
+      // Co-ordinate on map
       const { longitude, latitude } = await getLonLatCoordinates();
       if (longitude && latitude) {
         dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
@@ -27,7 +27,7 @@ const Map = ({ searchValue }) => {
       const map = new maplibregl.Map({
         container: mapContainer.current,
         style: `https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z`,
-        center: [coordinates?.lon ?? longitude, coordinates?.lat ?? latitude], // starting position [lng, lat]
+        center: [longitude, latitude], // starting position [lng, lat]
         zoom: 3, // starting zoom
         maxZoom: 24,
         preserveDrawingBuffer: true,
@@ -37,26 +37,15 @@ const Map = ({ searchValue }) => {
 
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       let marker = new maplibregl.Marker({ color: "#FF0000" })
-        .setLngLat([
-          coordinates?.lon ?? longitude,
-          coordinates?.lat ?? latitude,
-        ])
+        .setLngLat([longitude, latitude])
         .addTo(map);
       marker.addClassName("location-marker");
-
-      // //Add geolocate control to the map.
-      // map.addControl(
-      //   new maplibregl.GeolocateControl({
-      //     positionOptions: {
-      //       enableHighAccuracy: true,
-      //     },
-      //     trackUserLocation: true,
-      //   })
-      // );
     };
 
     getCoodinates();
   }, [coordinates?.lat, coordinates?.lon]);
+
+  console.log(airPollutionInfo, "airPollutionInfo", coordinates)
 
   return (
     <div className={styles.mapContainer} ref={mapContainer}>
@@ -75,27 +64,16 @@ const Map = ({ searchValue }) => {
           ) : (
             <>
               <div className={styles.header}>
-                {coordinates?.location ? (
-                  <h2>
-                    {coordinates?.location}
-                    {coordinates?.cityState && `, ${coordinates?.cityState}`}
-                  </h2>
-                ) : (
-                  <h2>
-                    {userInfoData?.city}
-                    {userInfoData?.state && `, ${userInfoData?.state}`}
-                  </h2>
-                )}
+                <h2>
+                  {coordinates?.location}
+                  {coordinates?.cityState && `, ${coordinates?.cityState}`}
+                </h2>
 
                 <p className={styles.lonLat}>
                   {airPollutionInfo?.coord?.lon}
                   {airPollutionInfo?.coord?.lat &&
                     `, ${airPollutionInfo?.coord?.lat}`}
                 </p>
-
-                {/* <p className={styles.dateTime}>
-          {new Date(airPollutionInfo?.list[0]?.dt)}
-        </p> */}
               </div>
               <div className={styles.footer}>
                 <h3>Components in Air </h3>

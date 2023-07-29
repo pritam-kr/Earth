@@ -6,8 +6,6 @@ const initialState = {
   locationList: [],
   isLoading: false,
   mapProperties: {},
-  isError: "",
-
   airPollutionInfo: null,
 };
 
