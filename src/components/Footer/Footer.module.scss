@@ -1,0 +1,14 @@
+@import "../../styles/variable.module.scss";
+
+
+footer{
+    background-color: $white;
+    min-height: 40px;
+    border-top: 1px solid $border-color;
+    @include display-center;
+    padding: 20px 10px;
+
+    label{
+        color: $secondar-text;
+    }
+}

@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { useSelector } from "react-redux";
 
-const MapStats = () => {
+const MapStats = ({ pieChart: pieChartProp }) => {
   const { airPollutionInfo } = useSelector((state) => state.mapReducer);
 
   const data = airPollutionInfo?.list
@@ -64,41 +64,39 @@ const MapStats = () => {
   };
 
   return (
-    <div className={styles.statsContainer}>
-      <div className={styles.row}>
-        <div className={`${styles.statsWrapper} ${styles.pieChartWrapper}`}>
-          <ResponsiveContainer width={"100%"} height={"100%"}>
-            <PieChart width={600} height={600}>
-              <Pie
-                data={data ?? []}
-                cx="50%"
-                cy="50%"
-                labelLine={true}
-                // isAnimationActive={false}
-                // label={renderCustomizedLabel}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-                label
-              >
-                {data?.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-        <div className={styles.statsWrapper}>1</div>
-      </div>
+    <>
+      {pieChartProp && (
+        <ResponsiveContainer
+          width={"100%"}
+          height={"100%"}
+          className={styles.statsContainer}
+        >
+          <PieChart width={600} height={600}>
+            <Pie
+              data={data ?? []}
+              cx="50%"
+              cy="50%"
+              labelLine={true}
+              isAnimationActive={true}
+              // label={renderCustomizedLabel}
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="value"
+              label
+            >
+              {data?.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      )}
 
-      <div className={styles.row}>
-        <div className={styles.statsWrapper}>1</div>
-        <div className={styles.statsWrapper}>1</div>
-      </div>
-    </div>
+     
+    </>
   );
 };
 
