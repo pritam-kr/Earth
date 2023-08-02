@@ -1,10 +1,16 @@
 @import "../../styles/variable.module.scss";
 
-.statsContainer {
-  width: 330px !important;
-  height: 100% !important;
-  border-right: 1px solid $border-color;
-  overflow-y: scroll;
-  
+.graphContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  gap: 10px;
 
+  .pieChartContainer,
+  .lineContainer {
+    @include display-center;
+    border: 1px solid $border-color;
+    border-radius: 10px;
+     padding: 5px;
+  }
 }

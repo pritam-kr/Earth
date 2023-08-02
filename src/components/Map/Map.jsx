@@ -24,11 +24,13 @@ const Map = () => {
 
   //States
   const [pieChart, showPieChart] = useState(false);
+  const [chart, showChart] = useState(false);
   const [basemap, setBaseMap] = useState(false);
   const [mapStyle, setMapStyle] = useState(
     "https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z"
   );
 
+ 
   useEffect(() => {
     const getCoodinates = async () => {
       const { longitude, latitude } = await getLonLatCoordinates();
@@ -81,17 +83,26 @@ const Map = () => {
         <div className={styles.right}>
           <div
             className={styles.visulaizeWrapper}
-            onClick={() => showPieChart((prev) => !prev)}
+            onClick={() => {
+              showPieChart((prev) => !prev);
+              showChart((prev) => !prev);
+            }}
           >
             <MapIcons.FcPieChart className={styles.mapIcon} />
           </div>
-          <div className={styles.visulaizeWrapper}>
+          <div
+            className={styles.visulaizeWrapper}
+            onClick={() => {
+              showPieChart((prev) => !prev);
+              showChart((prev) => !prev);
+            }}
+          >
             <MapIcons.FcLineChart className={styles.mapIcon} />
           </div>
 
-          {pieChart && (
+          {(pieChart || chart) && (
             <div className={styles.graphWrapper}>
-              <MapStats pieChart={pieChart} />
+              <MapStats pieChart={pieChart} chart={chart} />
             </div>
           )}
         </div>
