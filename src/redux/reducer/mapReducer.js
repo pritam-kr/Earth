@@ -1,23 +1,20 @@
 import { MAP_ACTIONS } from "../actions/actions";
 
 const initialState = {
-  currentUserLocationInfo: null,
-  coordinates: { lan: null, lat: null },
-  locationList: [],
-  isLoading: false,
-  mapProperties: {},
-  isError: "",
+  //Oninitial render
+  coordinates: { lon: null, lat: null, isLoading: false, error: "" },
+  locationsList: { data: [], isLoading: true, error: "" },
 
+  mapLoading: false,
+  mapProperties: {},
   airPollutionInfo: null,
+  currentUserLocationInfo: null,
 };
 
 const mapReducer = (state = initialState, action) => {
   switch (action.type) {
-    case MAP_ACTIONS.RANDOM_LOADING:
-      return { ...state, isLoading: action.payload };
-
-    case MAP_ACTIONS.GET_LOCATION_LIST:
-      return { ...state, locationList: action.payload };
+    case MAP_ACTIONS.GET_INITIAL_LON_LAT:
+      return { ...state, coordinates: action.payload };
 
     case MAP_ACTIONS.GET_AIR_POLLUTION:
       const { data, isLoading } = action.payload;
@@ -25,6 +22,12 @@ const mapReducer = (state = initialState, action) => {
         ...state,
         airPollutionInfo: { ...data, airPoluttionLoading: isLoading },
       };
+
+    case MAP_ACTIONS.GET_LOCATION_LIST:
+      return { ...state, locationsList: action.payload };
+
+    case MAP_ACTIONS.RANDOM_LOADING:
+      return { ...state, mapLoading: action.payload };
 
     case MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO:
       const { data: userInfoData, isLoading: userInfoDataLoading } =
@@ -36,9 +39,6 @@ const mapReducer = (state = initialState, action) => {
         currentUserLocationInfo: { userInfoData, userInfoDataLoading },
       };
 
-    case MAP_ACTIONS.SET_LAT_LON_ON_MAP:
-      const { lat, lon, location, state : cityState } = action.payload;
-      return { ...state, coordinates: { lat, lon, location, cityState } };
     default:
       return state;
   }

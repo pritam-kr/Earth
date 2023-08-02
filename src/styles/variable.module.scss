@@ -3,6 +3,8 @@ $border-color: #0000001f;
 $subtext-color: #353535f3;
 $headings-color: #282828;
 $primary-transparent : #0e72c90f;
+$white : #fff;
+$defautl-border-radius : 15px;
 
 $smooth-boxShadow: 0.9px 2.8px 4.2px #00000067, 2.2px 6.7px 5.3px #0000005d,
   4.1px 12.5px 10px #00000009, 7.4px 22.3px 17.9px #0000000b,
@@ -19,6 +21,8 @@ $secondar-text: #808080f1;
   justify-content: center;
   align-items: center;
 }
+
+
 
 // padding for right side page container
 @mixin page-container-padding {

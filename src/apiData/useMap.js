@@ -41,6 +41,7 @@ export const useMap = () => {
     }
   };
 
+  //Dont use this for now
   const getCurrentUserLocationInfo = async () => {
     try {
       dispatch({
@@ -75,15 +76,26 @@ export const useMap = () => {
     setSearchValue(query);
     if (!query) return;
     try {
+      dispatch({
+        type: MAP_ACTIONS.GET_LOCATION_LIST,
+        payload: { data: [], isLoading: true, error: "" },
+      });
+
       const { data, status } = await axios.get(
         `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
       );
 
       if (status === 200) {
-        dispatch({ type: MAP_ACTIONS.GET_LOCATION_LIST, payload: data });
+        dispatch({
+          type: MAP_ACTIONS.GET_LOCATION_LIST,
+          payload: { data: data, isLoading: false, error: "" },
+        });
       }
     } catch (error) {
-      dispatch({ type: MAP_ACTIONS.GET_LOCATION_LIST, payload: [] });
+      dispatch({
+        type: MAP_ACTIONS.GET_LOCATION_LIST,
+        payload: { data: null, isLoading: false, error: "" },
+      });
       console.log(`Something error occured ${error.message}`);
     }
   };
@@ -93,6 +105,6 @@ export const useMap = () => {
     getCurrentUserLocationInfo,
     getLocations,
     searchValue,
-    setSearchValue
+    setSearchValue,
   };
 };

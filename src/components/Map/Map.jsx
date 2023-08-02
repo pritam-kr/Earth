@@ -1,33 +1,46 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Map.module.scss";
 import maplibregl from "maplibre-gl";
 import { useCurrentLanLat } from "../../customHookes";
 import { useSelector, useDispatch } from "react-redux";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import Loader from "../Loader/Loader";
+import * as MapIcons from "react-icons/fc";
+import * as FaIcons from "react-icons/fa";
+import { useMap } from "../../apiData/useMap";
+import MapStats from "../MapStats/MapStats";
+import { BASEMAP } from "./constants";
 
-const Map = ({ searchValue }) => {
+const Map = () => {
+  const { findAirPollutionForLocation } = useMap();
   const { getLonLatCoordinates } = useCurrentLanLat();
-  const dispatch = useDispatch();
   const mapContainer = useRef(null);
 
-  const { airPollutionInfo, currentUserLocationInfo, coordinates, isLoading } =
-    useSelector((state) => state.mapReducer);
-  const userInfoData = currentUserLocationInfo?.userInfoData;
-  const userCurrentInfoLoading = currentUserLocationInfo?.userInfoDataLoading;
+  // Redux States
+  const { coordinates, airPollutionInfo } = useSelector(
+    (state) => state.mapReducer
+  );
+  const dispatch = useDispatch();
 
+  //States
+  const [pieChart, showPieChart] = useState(false);
+  const [chart, showChart] = useState(false);
+  const [basemap, setBaseMap] = useState(false);
+  const [mapStyle, setMapStyle] = useState(
+    "https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z"
+  );
+
+ 
   useEffect(() => {
     const getCoodinates = async () => {
-      dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
       const { longitude, latitude } = await getLonLatCoordinates();
-      if (longitude && latitude) {
-        dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
-      }
+      if (!coordinates.lon && !coordinates.lat)
+        findAirPollutionForLocation(longitude, latitude);
 
       const map = new maplibregl.Map({
         container: mapContainer.current,
-        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z`,
-        center: [coordinates?.lon ?? longitude, coordinates?.lat ?? latitude], // starting position [lng, lat]
+        style: mapStyle,
+        center: [coordinates.lon ?? longitude, coordinates.lat ?? latitude], // starting position [lng, lat]
         zoom: 3, // starting zoom
         maxZoom: 24,
         preserveDrawingBuffer: true,
@@ -37,86 +50,63 @@ const Map = ({ searchValue }) => {
 
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       let marker = new maplibregl.Marker({ color: "#FF0000" })
-        .setLngLat([
-          coordinates?.lon ?? longitude,
-          coordinates?.lat ?? latitude,
-        ])
+        .setLngLat([coordinates.lon ?? longitude, coordinates.lat ?? latitude])
         .addTo(map);
       marker.addClassName("location-marker");
-
-      // //Add geolocate control to the map.
-      // map.addControl(
-      //   new maplibregl.GeolocateControl({
-      //     positionOptions: {
-      //       enableHighAccuracy: true,
-      //     },
-      //     trackUserLocation: true,
-      //   })
-      // );
     };
 
     getCoodinates();
-  }, [coordinates?.lat, coordinates?.lon]);
+  }, [coordinates, mapStyle]);
 
   return (
     <div className={styles.mapContainer} ref={mapContainer}>
-      {airPollutionInfo && (
-        <div className={styles.locationInfo}>
-          {userCurrentInfoLoading || isLoading ? (
-            <div className={styles.loaderWrapper}>
-              <Loader
-                src={
-                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-                }
-                width={40}
-                height={40}
-              />
+      <div className={styles.mapFooter}>
+        <div className={styles.left}>
+          <div className={styles.mapbaseWrapper}>
+            <FaIcons.FaLayerGroup
+              className={styles.mapIcon}
+              onClick={() => setBaseMap((prev) => !prev)}
+            />
+
+            {basemap && (
+              <div className={styles.mapTypes}>
+                {BASEMAP.map((item) => (
+                  <div onClick={() => setMapStyle(item.mapLink)}>
+                    <img src={item.IMGlink} alt="basemap" />{" "}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={styles.right}>
+          <div
+            className={styles.visulaizeWrapper}
+            onClick={() => {
+              showPieChart((prev) => !prev);
+              showChart((prev) => !prev);
+            }}
+          >
+            <MapIcons.FcPieChart className={styles.mapIcon} />
+          </div>
+          <div
+            className={styles.visulaizeWrapper}
+            onClick={() => {
+              showPieChart((prev) => !prev);
+              showChart((prev) => !prev);
+            }}
+          >
+            <MapIcons.FcLineChart className={styles.mapIcon} />
+          </div>
+
+          {(pieChart || chart) && (
+            <div className={styles.graphWrapper}>
+              <MapStats pieChart={pieChart} chart={chart} />
             </div>
-          ) : (
-            <>
-              <div className={styles.header}>
-                {coordinates?.location ? (
-                  <h2>
-                    {coordinates?.location}
-                    {coordinates?.cityState && `, ${coordinates?.cityState}`}
-                  </h2>
-                ) : (
-                  <h2>
-                    {userInfoData?.city}
-                    {userInfoData?.state && `, ${userInfoData?.state}`}
-                  </h2>
-                )}
-
-                <p className={styles.lonLat}>
-                  {airPollutionInfo?.coord?.lon}
-                  {airPollutionInfo?.coord?.lat &&
-                    `, ${airPollutionInfo?.coord?.lat}`}
-                </p>
-
-                {/* <p className={styles.dateTime}>
-          {new Date(airPollutionInfo?.list[0]?.dt)}
-        </p> */}
-              </div>
-              <div className={styles.footer}>
-                <h3>Components in Air </h3>
-
-                <ul>
-                  {airPollutionInfo?.list?.map((item) => (
-                    <li className={styles?.aqi}>AQI: {item.main.aqi}</li>
-                  ))}
-                  {airPollutionInfo?.list?.map((item) =>
-                    Object.keys(item.components).map((item2) => (
-                      <li>
-                        {item2}: {item.components[item2]}
-                      </li>
-                    ))
-                  )}
-                </ul>
-              </div>
-            </>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

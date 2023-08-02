@@ -7,22 +7,43 @@ import {
   ResponsiveContainer,
   Label,
   Tooltip,
+  // Graph
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  AreaChart,
+  Area,
 } from "recharts";
 import { useSelector } from "react-redux";
 
-const MapStats = () => {
+const MapStats = ({ pieChart: pieChartProp, chart }) => {
   const { airPollutionInfo } = useSelector((state) => state.mapReducer);
 
   const data = airPollutionInfo?.list
     ?.map((item) =>
       Object.keys(item.components)?.map((item2) => ({
         name: item2,
-        value: item.components[item2] * 2,
+        value: item.components[item2],
       }))
     )
     .flat();
 
-  console.log(data);
+  let data2 = airPollutionInfo?.list
+    ?.map((item) =>
+      Object.keys(item.components)?.map((item2) => ({
+        name: item2,
+        value: item.components[item2],
+      }))
+    )
+    .flat();
+
+  const dataGraph = data2?.map((item) => ({
+    name: item.name,
+    amt: item.value,
+  }));
 
   const COLORS = [
     "#0088FE",
@@ -66,43 +87,71 @@ const MapStats = () => {
   };
 
   return (
-    <div className={styles.statsContainer}>
-      <div className={styles.row}>
-        <div className={`${styles.statsWrapper} ${styles.pieChartWrapper}`}>
-          <ResponsiveContainer width={"100%"} height={"100%"}>
+    <div className={styles.graphContainer}>
+      
+       
+        {pieChartProp && (
+          <ResponsiveContainer
+            width={"100%"}
+            height={"100%"}
+            className={styles.pieChartContainer}
+          >
             <PieChart width={600} height={600}>
               <Pie
                 data={data ?? []}
                 cx="50%"
                 cy="50%"
-                 labelLine={true}
-                // isAnimationActive={false}
+                labelLine={false}
+                isAnimationActive={true}
                 // label={renderCustomizedLabel}
-                outerRadius={100}
+                outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
-                label
+                nameKey="name"
+                // label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               >
-                {/* <Label content={renderCustomizedLabel} position="inside" /> */}
                 {data?.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
                   />
                 ))}
-
-                <Tooltip  formatter={(value) => `${(value * 100).toFixed(0)}%`} />
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-        </div>
-        <div className={styles.statsWrapper}>1</div>
-      </div>
+        )}
+      
 
-      <div className={styles.row}>
-        <div className={styles.statsWrapper}>1</div>
-        <div className={styles.statsWrapper}>1</div>
-      </div>
+      {chart && (
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          className={styles.lineContainer}
+        >
+          <AreaChart
+            width={400}
+            height={400}
+            data={dataGraph}
+            margin={{
+              top: 10,
+              right: 30,
+              left: 0,
+              bottom: 0,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Area
+              // type="monotone"
+              dataKey="amt"
+              stroke="#8884d8"
+              fill="#0e72c9"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };

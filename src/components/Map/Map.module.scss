@@ -2,63 +2,113 @@
 
 .mapContainer {
   width: 100%;
-  height: calc(100vh - 125px);
-  border: 1px solid $border-color;
-
-  margin: 1.5rem auto 1rem auto;
-  border-radius: 10px;
-  background-color: #fff;
+  height: calc(88vh);
   overflow-y: scroll;
+  border: 1px solid $border-color;
   position: relative;
+  border-radius: 10px;
 
-  .locationInfo {
+  .mapFooter {
     position: absolute;
-    bottom: 0;
-    width: 300px;
-    height: 180px;
-    overflow-y: scroll;
-    background-color: #fff;
-    bottom: 10px;
-    left: 10px;
-    border: 1px solid $border-color;
-    z-index: 999999;
-    padding: 10px;
+    z-index: 99999;
+    bottom: 25px;
+    // left: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
 
-    /* From https://css.glass */
-    background: rgba(237, 234, 234, 0.555);
-    border-radius: 10px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    @include display-flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
 
-    .loaderWrapper {
-      @include display-center;
-      width: 100%;
-      height: 100%;
-    }
+    .left {
+      .mapbaseWrapper {
+        width: 50px;
+        height: 50px;
+        padding: 5px;
+        background-color: $white;
+        @include display-center;
+        cursor: pointer;
+        border-radius: 5px;
+        border: 1px solid $border-color;
+        position: relative;
 
-    .header {
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      .lonLat {
-        font-weight: 600;
-        font-size: 12px;
-        opacity: 0.6;
+        .mapTypes {
+          position: absolute;
+          left: 53px;
+          @include display-flex;
+
+          & > div {
+            width: 50px;
+            height: 50px;
+            padding: 5px;
+            background-color: $white;
+            @include display-center;
+            border-radius: 5px;
+            border: 1px solid $border-color;
+
+            & > img {
+              width: 100%;
+              height: 100%;
+              border-radius: 10px;
+              object-fit: cover;
+              cursor: pointer;
+            }
+          }
+        }
+
+        .mapIcon {
+          color: $primary-color;
+
+          font-size: 25px;
+        }
       }
     }
 
-    .footer {
-      margin-top: 10px;
+    .right {
+      // margin-right: auto;
+      @include display-flex;
+      flex: 0.05;
+      position: relative;
 
-      h3 {
-        margin-bottom: 5px;
+      .visulaizeWrapper {
+        width: 50px;
+        height: 50px;
+        padding: 5px;
+        background-color: $white;
+        @include display-center;
+        border: 1px solid $border-color;
+        gap: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-right: 3px;
+        position: relative;
+
+        .mapIcon {
+          font-size: 30px;
+          color: $primary-color;
+        }
       }
-      li {
-        margin-bottom: 5px;
-        list-style-type: none;
+
+      .graphWrapper {
+        min-width: 400px;
+        max-width: 800px;
+        height: 300px;
+        overflow-x: scroll;
+        border: 1px solid $border-color;
+        border-radius: 10px;
+        padding: 10px;
+        bottom: 53px;
+        right: 110px;
+        position: absolute;
+
+        background: rgba(255, 255, 255, 0.613);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(9.4px);
+        -webkit-backdrop-filter: blur(8.4px);
+        border: 1px solid $border-color;
       }
     }
   }

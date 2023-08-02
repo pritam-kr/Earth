@@ -1,41 +1,16 @@
 @import "../../styles/variable.module.scss";
 
-.statsContainer {
+.graphContainer {
+  height: 100%;
   width: 100%;
-  height: calc(100vh - 125px);
-  border: 1px solid $border-color;
-  padding: 10px;
-  margin: 1.5rem auto 1rem auto;
-  border-radius: 10px;
-  background-color: #fff;
-  overflow-y: scroll;
-  position: relative;
-
-  //   display: grid;
-  //   grid-template-columns: 50% 50%;
-  //   grid-template-rows: repeat(2, auto);
-
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 
-  .row {
-    width: 100%;
-    height: 100%;
-
-    display: grid;
-    grid-template-columns: 50% 50%;
-    justify-content: center;
-    gap: 5px;
-
-    & > .statsWrapper {
-      padding: 10px;
-      border: 1px solid $border-color;
-      border-radius: 10px;
-    }
-
-    .pieChartWrapper{
-        @include display-center;
-    }
+  .pieChartContainer,
+  .lineContainer {
+    @include display-center;
+    border: 1px solid $border-color;
+    border-radius: 10px;
+     padding: 5px;
   }
 }

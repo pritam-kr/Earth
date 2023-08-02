@@ -1,32 +1,16 @@
-  @import "./styles/variable.module.scss";
+@import "./styles/variable.module.scss";
 
-  .appContainer{
-    height: 100%;
-    width: 100%;
-    background-color: rgba(116, 116, 116, 0.041);
-    border-radius: $border-radius;
-    display: grid;
-     
-    grid-template-columns: 25% auto;
-    grid-template-rows: 100%;
-    // @include display-flex;
-    // gap: 10px;
+.appContainer {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(116, 116, 116, 0.041);
+  border-radius: $border-radius;
+  display: grid;
 
-    .sidebarContainer, .routesContainer{
-        padding: .5rem;
-    }
-    .sidebarContainer{
-        border-right: 1px solid $border-color;
-        padding: 0;
-        border-radius: $border-radius;
-        background-color: #fff;
-        // max-width: fit-content;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-         
-    }
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+  // @include display-flex;
+  // gap: 10px;
 
-    .routesContainer{
-       padding: 0;
-    }
-  }
+   
+}

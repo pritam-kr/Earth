@@ -20,8 +20,8 @@
   .modal {
     max-width: 600px;
     width: 500px;
-    max-height: 300px;
-    overflow-y: scroll;
+
+    // overflow-y: scroll;
     border: 1px solid $border-color;
     background-color: #fff;
     border-radius: 10px;
@@ -43,28 +43,29 @@
 
       p {
         color: $subtext-color;
-        opacity: .8;
-        
+        opacity: 0.8;
       }
     }
 
     .featuresWrapper {
       margin: 20px 0 15px 0;
+      height: 200px;
+      overflow-y: scroll;
 
       .feature {
         color: $primary-color;
-       
+
         display: flex;
         justify-content: space-between;
 
         margin-bottom: 15px;
 
-        .featureTitle{
-            font-size: 15px;
+        .featureTitle {
+          font-size: 15px;
         }
         .toggleWrapper {
           display: flex;
-        //   flex-direction: column;
+          //   flex-direction: column;
           align-items: center;
         }
       }
