@@ -17,9 +17,7 @@ const Map = () => {
   const mapContainer = useRef(null);
 
   // Redux States
-  const { coordinates, airPollutionInfo } = useSelector(
-    (state) => state.mapReducer
-  );
+  const { coordinates } = useSelector((state) => state.mapReducer);
   const dispatch = useDispatch();
 
   //States
@@ -30,10 +28,14 @@ const Map = () => {
     "https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z"
   );
 
- 
   useEffect(() => {
     const getCoodinates = async () => {
+      dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
       const { longitude, latitude } = await getLonLatCoordinates();
+      if (longitude && latitude) {
+        dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
+      }
+
       if (!coordinates.lon && !coordinates.lat)
         findAirPollutionForLocation(longitude, latitude);
 

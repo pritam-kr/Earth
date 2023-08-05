@@ -12,8 +12,6 @@ export const SelectNav = ({
   showDropdown,
   navLinksRef,
 }) => {
- 
-
   return (
     <div
       className={styles.optionWrapper}
@@ -27,7 +25,7 @@ export const SelectNav = ({
           </label>
         }
 
-        {dropdown ? <IoIcons.IoIosArrowDown /> : <IoIcons.IoIosArrowUp />}
+        {dropdown ? <IoIcons.IoIosArrowUp /> : <IoIcons.IoIosArrowDown />}
       </div>
 
       {dropdown && (

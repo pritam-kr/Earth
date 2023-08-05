@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import styles from "./App.module.scss";
 
-import { Home, View as ComponentView } from "./pages";
+import { Home, View as ComponentView, Temprature } from "./pages";
 import { Footer, MainContainer, Nav } from "./components";
 import SettingModal from "./modals/settingModal/SettingModal";
 import { useState } from "react";
@@ -15,6 +14,7 @@ function App() {
       <MainContainer>
         <Routes>
           <Route path="/" element={<Home setModal={setSettingModal} />} />
+          <Route path="/temprature" element={<Temprature />} />
           <Route path="/v" element={<ComponentView />} />
         </Routes>
       </MainContainer>

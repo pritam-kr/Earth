@@ -1,3 +1,4 @@
+import axios from "axios";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 
 export const MENUS = [
@@ -6,6 +7,38 @@ export const MENUS = [
   { label: "Water Pollution", value: "water pollution", path: "/2" },
   { label: "Heat Wave", value: "head wave", path: "/3" },
 ];
+
+export const getAllState = (countryCode) => {
+  try {
+    return axios.get(
+      `https://api.countrystatecity.in/v1/countries/${countryCode}/states`,
+      {
+        headers: {
+          "X-CSCAPI-KEY":
+            "RkZLNmp1QnNNeXZIN094RjhvY25Hd3pQNHN0d0pvdk1xWVlidUpEaA==",
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getAllCities = (countryCode = "IN", stateCode = "JH") => {
+  try {
+    return axios.get(
+      `https://api.countrystatecity.in/v1/countries/${countryCode}/states/${stateCode}/cities`,
+      {
+        headers: {
+          "X-CSCAPI-KEY":
+            "RkZLNmp1QnNNeXZIN094RjhvY25Hd3pQNHN0d0pvdk1xWVlidUpEaA==",
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 export const airPollutionHandler = (
   e,

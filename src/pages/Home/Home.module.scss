@@ -3,4 +3,24 @@
 .pageContainer {
   padding: 0px 0 0px 0;
   padding: 10px;
+  position: relative;
+
+  .mapLoader {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    @include display-center;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(255, 255, 255, 0.466);
+
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(7.4px);
+    -webkit-backdrop-filter: blur(8.4px);
+    border: 1px solid $border-color;
+    z-index: 999999;
+  }
 }
