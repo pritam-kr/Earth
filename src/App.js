@@ -15,7 +15,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home setModal={setSettingModal} />} />
           <Route path="/temprature" element={<Temprature />} />
-          <Route path="/v" element={<ComponentView />} />
         </Routes>
       </MainContainer>
 

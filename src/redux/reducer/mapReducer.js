@@ -6,9 +6,10 @@ const initialState = {
   locationsList: { data: [], isLoading: true, error: "" },
   mapLoading: false,
   countries: { data: [], isLoading: true, error: "" },
-  states: { data: [], isLoading: true, error: "" },
+  states: { data: [], isLoading: false, error: "" },
   cities: { data: [], isLoading: true, error: "" },
   countryCoordinate: { lat: null, lng: null },
+  citiesCoordinates: { data: [], isLoading: false, error: "" },
 
   mapProperties: {},
   airPollutionInfo: null,
@@ -17,6 +18,15 @@ const initialState = {
 
 const mapReducer = (state = initialState, action) => {
   switch (action.type) {
+    case MAP_ACTIONS.GET_CITIES_COORDINATS:
+      return { ...state, citiesCoordinates: action.payload };
+
+    case MAP_ACTIONS.GET_CITIES:
+      return { ...state, cities: action.payload };
+
+    case MAP_ACTIONS.GET_STATES:
+      return { ...state, states: action.payload };
+
     case MAP_ACTIONS.GET_COUNTRY_COORDINATS:
       return { ...state, countryCoordinate: action.payload };
 

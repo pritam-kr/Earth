@@ -10,12 +10,14 @@ import * as FaIcons from "react-icons/fa";
 import { useMap } from "../../apiData/useMap";
 import MapStats from "../MapStats/MapStats";
 import { BASEMAP } from "./constants";
+import { useScreenShot } from "../../customHookes/useScreenShot";
 
 const Map = () => {
   const { findAirPollutionForLocation } = useMap();
+  const { loading, takeScreenShot } = useScreenShot();
   const { getLonLatCoordinates } = useCurrentLanLat();
   const mapContainer = useRef(null);
-
+  console.log(loading, "loading");
   // Redux States
   const { coordinates } = useSelector((state) => state.mapReducer);
   const dispatch = useDispatch();
@@ -107,6 +109,25 @@ const Map = () => {
               <MapStats pieChart={pieChart} chart={chart} />
             </div>
           )}
+
+          <div
+            className={styles.visulaizeWrapper}
+            onClick={() => takeScreenShot(mapContainer.current)}
+          >
+            {loading ? (
+              <Loader
+                width={20}
+                height={20}
+                src={
+                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
+                }
+              />
+            ) : (
+              <MapIcons.FcDownload
+                className={`${styles.mapIcon} ${styles.downloadIcon}`}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

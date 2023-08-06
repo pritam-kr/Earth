@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Nav.module.scss";
-import { MENUS, airPollutionHandler } from "./constants";
+import {
+  MENUS,
+  airPollutionHandler,
+  findCoordinates,
+  getAllCities,
+  getAllState,
+} from "./constants";
 import { SelectNav } from "./components/SelectNav";
 import { debaunceFunction } from "../../utils/debaunceFunction";
 import { useMap } from "../../apiData/useMap";
@@ -11,10 +17,11 @@ import { useFetchApi } from "../../customHookes";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
+import Select from "../Select/Select";
 
 const Nav = () => {
   const { getLocations, findAirPollutionForLocation } = useMap();
-  const { data: countryList, loading } = useFetchApi(
+  const { data: countryList, loading: countryLoading } = useFetchApi(
     "https://restcountries.com/v3.1/all"
   );
 
@@ -25,10 +32,11 @@ const Nav = () => {
     []
   );
   // Local states
-  const [navLinks, setNavLinks] = useState("Air Pollution");
+  const [navLinks, setNavLinks] = useState("");
   const [dropdown, showDropdown] = useState(false);
   const [suggestionBox, setSuggestionBox] = useState(false);
-  const [searchValue, setSearchValue] = useState({ country: "" });
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
 
   // Refs
   const navLinksRef = useRef(null);
@@ -38,6 +46,7 @@ const Nav = () => {
   // Redux State
   const ReducerStates = useSelector((state) => state.mapReducer);
   const locationLists = ReducerStates.locationsList.data;
+  const stateList = ReducerStates.states;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -52,75 +61,150 @@ const Nav = () => {
     };
   });
 
-  const tempratureHandler = async ({ e, dispatch }) => {
-    const countryInfo = JSON.parse(e.target.getAttribute("data"));
-    let lat, lng;
-    [lat, lng] = countryInfo.latlng;
-    if (lat && lng)
-      dispatch({
-        type: MAP_ACTIONS.GET_COUNTRY_COORDINATS,
-        payload: { lat: lat, lng: lng },
-      });
-  };
+  useEffect(() => {
+    (async () => {
+      const countryCode = country?.cca2;
 
+      let lat, lng;
+      [lat, lng] = country.latlng || [0, 0];
+      if (lat && lng) {
+        dispatch({
+          type: MAP_ACTIONS.GET_COUNTRY_COORDINATS,
+          payload: { lat: lat, lng: lng },
+        });
+      }
+
+      if (countryCode) {
+        try {
+          dispatch({
+            type: MAP_ACTIONS.GET_STATES,
+            payload: { data: [], isLoading: true, error: "" },
+          });
+
+          const { data, status } = await getAllState(countryCode);
+
+          if (status === 200) {
+            dispatch({
+              type: MAP_ACTIONS.GET_STATES,
+              payload: { data: data, isLoading: false, error: "" },
+            });
+          }
+        } catch (error) {
+          dispatch({
+            type: MAP_ACTIONS.GET_STATES,
+            payload: { data: [], isLoading: false, error: error.message },
+          });
+        }
+      }
+    })();
+  }, [country]);
+
+  useEffect(() => {
+    (async () => {
+      if (state) {
+        try {
+          dispatch({
+            type: MAP_ACTIONS.GET_CITIES,
+            payload: { data: [], isLoading: true, error: "" },
+          });
+
+          const { data, status } = await getAllCities(
+            country?.cca2,
+            state.iso2
+          );
+
+          if (status === 200) {
+            dispatch({
+              type: MAP_ACTIONS.GET_CITIES,
+              payload: { data: data, isLoading: false, error: "" },
+            });
+
+            dispatch({
+              type: MAP_ACTIONS.GET_CITIES_COORDINATS,
+              payload: { data: [], isLoading: true, error: "" },
+            });
+
+            const responses = data.map((item) =>
+              findCoordinates(item.name.toLowerCase().trim())
+            );
+            const response = await Promise.all(responses);
+
+            const citiesCoordinates = response
+              .filter((item) => item.data.length && item.status === 200)
+              .map((item) => item.data)
+              .flat();
+
+            dispatch({
+              type: MAP_ACTIONS.GET_CITIES_COORDINATS,
+              payload: { data: citiesCoordinates, isLoading: false, error: "" },
+            });
+          }
+        } catch (error) {
+          dispatch({
+            type: MAP_ACTIONS.GET_CITIES,
+            payload: { data: [], isLoading: false, error: error.message },
+          });
+          dispatch({
+            type: MAP_ACTIONS.GET_CITIES_COORDINATS,
+            payload: { data: [], isLoading: false, error: "" },
+          });
+        }
+      }
+    })();
+  }, [state]);
+
+  
   const renderSelectComponents = () => {
     switch (pathname) {
       case "/temprature":
         return (
-          <>
-            {" "}
-            <input
-              type="text"
-              placeholder="Search country name"
-              className={styles.input}
-              value={searchValue.country}
-              onChange={(e) =>
-                setSearchValue((prev) => ({ ...prev, country: e.target.value }))
-              }
+          <div className={styles.tempratureInputs}>
+            <Select
+              placeholder={"Select country name"}
+              className={styles.selectCountryState}
+              options={countryList
+                .sort(function (a, b) {
+                  if (a.name.common < b.name.common) {
+                    return -1;
+                  }
+                  if (a.name.common > b.name.common) {
+                    return 1;
+                  }
+                  return 0;
+                })
+                .map((item) => ({
+                  ...item,
+                  label: `${item.name.common} ${item.flag}`,
+                }))}
+              value={country}
+              setValue={setCountry}
+              loading={countryLoading}
             />
-            {searchValue.country.trim() && (
-              <div
-                className={styles.searchSuggestion}
-                onClick={(e) =>
-                  tempratureHandler({
-                    e,
-                    dispatch,
-                    findAirPollutionForLocation,
-                    inputRef,
-                  })
-                }
-              >
-                {countryList?.length ? (
-                  countryList
-                    ?.sort(function (a, b) {
-                      if (a.name.common < b.name.common) {
-                        return -1;
-                      }
-                      if (a.name.common > b.name.common) {
-                        return 1;
-                      }
-                      return 0;
-                    })
-                    ?.filter((item) =>
-                      item.name.common
-                        .toLowerCase()
-                        .includes(searchValue.country.toLowerCase())
-                    )
-                    .map((item, i) => <CountryName country={item} key={i} />)
-                ) : (
-                  <div className={styles.noLocation}>
-                    <BiIcons.BiLocationPlus className={styles.locationIcon} />
-                    <h4>No country found</h4>
-                  </div>
-                )}
-              </div>
-            )}
-          </>
+            <Select
+              placeholder={"Select state name"}
+              className={styles.selectCountryState}
+              disabled={!stateList.data?.length}
+              options={stateList?.data
+                ?.sort(function (a, b) {
+                  if (a.name < b.name) {
+                    return -1;
+                  }
+                  if (a.name > b.name) {
+                    return 1;
+                  }
+                  return 0;
+                })
+                .map((item) => ({ ...item, label: item.name }))}
+              value={state}
+              setValue={setState}
+              loading={stateList.isLoading}
+            />
+          </div>
         );
 
       default:
         return (
-          <>
+          <div className={styles.searchBar}>
             {" "}
             <input
               type="text"
@@ -161,7 +245,7 @@ const Nav = () => {
                 )}
               </div>
             )}
-          </>
+          </div>
         );
     }
   };
@@ -187,9 +271,7 @@ const Nav = () => {
           navLinksRef={navLinksRef}
         />
       </div>
-      <div className={styles.right}>
-        <div className={styles.searchBar}>{renderSelectComponents()}</div>
-      </div>
+      <div className={styles.right}>{renderSelectComponents()}</div>
     </nav>
   );
 };
@@ -205,10 +287,4 @@ const LocationName = ({ location }) => {
   );
 };
 
-const CountryName = ({ country }) => {
-  return (
-    <p className={styles.locationOption} data={JSON.stringify(country)}>
-      {country?.name?.common} {country?.flag}
-    </p>
-  );
-};
+ 

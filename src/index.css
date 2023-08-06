@@ -1,9 +1,9 @@
 /*--For Subtext-*/
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&display=swap");
 /*--For Headings--*/
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans:wght@100;200;300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans:wght@100;200;300;400;500;600;700;800&display=swap");
 
-@import 'maplibre-gl/dist/maplibre-gl.css'; 
+@import "maplibre-gl/dist/maplibre-gl.css";
 @import "react-toggle/style.css";
 
 :root {
@@ -34,20 +34,45 @@ h6 {
 }
 p,
 li,
-button,input, a,span,label,
+button,
+input,
+a,
+span,
+label,
 ::placeholder {
   font-family: var(--subtext-fontFamily);
   font-size: 16px;
 }
 
-html{
+html {
   font-size: 85%;
 }
 
 .statsToggle.react-toggle--checked .react-toggle-track {
   background-color: var(--primary-color);
 }
- 
- 
 
- 
+input {
+  width: 100%;
+}
+
+.customMarker {
+  width: 30px;
+  height: 0;
+  border-left: 25px solid transparent; /* Adjust this value to make the left side smaller */
+  border-right: 25px solid transparent; /* Adjust this value to make the right side smaller */
+  border-top: 40px solid #a42d0fbb; /* Adjust this value to make the cone shorter */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: 500;
+}
+
+.temp {
+  font-size: 8px;
+  position: absolute;
+  color: white;
+  bottom: 13px;
+}

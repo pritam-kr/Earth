@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import * as IoIcons from "react-icons/io";
 import { useEffect } from "react";
 
@@ -12,6 +12,16 @@ export const SelectNav = ({
   showDropdown,
   navLinksRef,
 }) => {
+  const location = useLocation();
+
+  const navLinks = (pathname) => {
+    if (pathname === "/") {
+      return "Air Pollution";
+    } else if (pathname === "/temprature") {
+      return "Temprature info";
+    }
+  };
+
   return (
     <div
       className={styles.optionWrapper}
@@ -21,7 +31,7 @@ export const SelectNav = ({
       <div className={styles.selectedValue}>
         {
           <label className={value ? styles.active : styles.placeholder}>
-            {value ? value : "Select"}
+            {navLinks(location.pathname)}
           </label>
         }
 

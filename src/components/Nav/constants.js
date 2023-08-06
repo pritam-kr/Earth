@@ -8,6 +8,18 @@ export const MENUS = [
   { label: "Heat Wave", value: "head wave", path: "/3" },
 ];
 
+
+export const findCoordinates = (city) => {
+  try {
+    return axios.get(
+      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=ad09d41295facd76d3932305350f3282`
+    );
+  } catch (error) {
+    console.log(error.message);
+    return null;
+  }
+};
+
 export const getAllState = (countryCode) => {
   try {
     return axios.get(
