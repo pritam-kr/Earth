@@ -12,12 +12,11 @@ import { debaunceFunction } from "../../utils/debaunceFunction";
 import { useMap } from "../../apiData/useMap";
 import * as BiIcons from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import * as IoIcons from "react-icons/io";
 import { useFetchApi } from "../../customHookes";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import Select from "../Select/Select";
+import { getUniqueListBy } from "../../utils/getUniqueArray";
 
 const Nav = () => {
   const { getLocations, findAirPollutionForLocation } = useMap();
@@ -47,6 +46,7 @@ const Nav = () => {
   const ReducerStates = useSelector((state) => state.mapReducer);
   const locationLists = ReducerStates.locationsList.data;
   const stateList = ReducerStates.states;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -79,6 +79,7 @@ const Nav = () => {
           dispatch({
             type: MAP_ACTIONS.GET_STATES,
             payload: { data: [], isLoading: true, error: "" },
+            countryCode: "",
           });
 
           const { data, status } = await getAllState(countryCode);
@@ -87,12 +88,14 @@ const Nav = () => {
             dispatch({
               type: MAP_ACTIONS.GET_STATES,
               payload: { data: data, isLoading: false, error: "" },
+              countryCode: countryCode,
             });
           }
         } catch (error) {
           dispatch({
             type: MAP_ACTIONS.GET_STATES,
             payload: { data: [], isLoading: false, error: error.message },
+            countryCode: "",
           });
         }
       }
@@ -129,10 +132,18 @@ const Nav = () => {
             );
             const response = await Promise.all(responses);
 
-            const citiesCoordinates = response
-              .filter((item) => item.data.length && item.status === 200)
-              .map((item) => item.data)
-              .flat();
+            const citiesCoordinates = getUniqueListBy(
+              response
+                .filter((item) => item.data.length && item.status === 200)
+                .map((item) => item.data)
+                .flat()
+                .filter(
+                  (item) =>
+                    item.country === country.cca2 &&
+                    item.state.toLowerCase() === state.name.toLowerCase()
+                ),
+              "name"
+            );
 
             dispatch({
               type: MAP_ACTIONS.GET_CITIES_COORDINATS,
@@ -153,7 +164,6 @@ const Nav = () => {
     })();
   }, [state]);
 
-  
   const renderSelectComponents = () => {
     switch (pathname) {
       case "/temprature":
@@ -286,5 +296,3 @@ const LocationName = ({ location }) => {
     </p>
   );
 };
-
- 

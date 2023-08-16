@@ -11,14 +11,15 @@ import { useMap } from "../../apiData/useMap";
 import MapStats from "../MapStats/MapStats";
 import { BASEMAP } from "./constants";
 import { useScreenShot } from "../../customHookes/useScreenShot";
+import { useSearchParams } from "react-router-dom";
 
 const Map = () => {
   const { findAirPollutionForLocation } = useMap();
   const { loading, takeScreenShot } = useScreenShot();
   const { getLonLatCoordinates } = useCurrentLanLat();
   const mapContainer = useRef(null);
-  console.log(loading, "loading");
-  // Redux States
+  const [searchParams, setSearchParams] = useSearchParams({});
+   
   const { coordinates } = useSelector((state) => state.mapReducer);
   const dispatch = useDispatch();
 
@@ -34,6 +35,7 @@ const Map = () => {
     const getCoodinates = async () => {
       dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
       const { longitude, latitude } = await getLonLatCoordinates();
+
       if (longitude && latitude) {
         dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
       }
@@ -41,6 +43,10 @@ const Map = () => {
       if (!coordinates.lon && !coordinates.lat)
         findAirPollutionForLocation(longitude, latitude);
 
+      setSearchParams({
+        longitude: coordinates.lon ?? longitude,
+        latitude: coordinates.lat ?? latitude,
+      });
       const map = new maplibregl.Map({
         container: mapContainer.current,
         style: mapStyle,
