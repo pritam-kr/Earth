@@ -2,6 +2,8 @@ import { MAP_ACTIONS } from "../actions/actions";
 
 const initialState = {
   //Oninitial render
+  countryCode: "",
+  stateName: "",
   coordinates: { lon: null, lat: null, isLoading: false, error: "" },
   locationsList: { data: [], isLoading: true, error: "" },
   mapLoading: false,
@@ -25,7 +27,11 @@ const mapReducer = (state = initialState, action) => {
       return { ...state, cities: action.payload };
 
     case MAP_ACTIONS.GET_STATES:
-      return { ...state, states: action.payload };
+      return {
+        ...state,
+        states: action.payload,
+     
+      };
 
     case MAP_ACTIONS.GET_COUNTRY_COORDINATS:
       return { ...state, countryCoordinate: action.payload };

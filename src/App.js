@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-
-import { Home, View as ComponentView, Temprature } from "./pages";
+import { Home, Temprature } from "./pages";
 import { Footer, MainContainer, Nav } from "./components";
 import SettingModal from "./modals/settingModal/SettingModal";
 import { useState } from "react";

@@ -7,7 +7,6 @@ const Home = ({ setModal }) => {
   const suggestionRef = useRef(null);
   const inputRef = useRef(null);
   const { mapLoading } = useSelector((state) => state.mapReducer);
-
   const [suggestionBox, setSuggestionBox] = useState(false);
 
   useEffect(() => {
