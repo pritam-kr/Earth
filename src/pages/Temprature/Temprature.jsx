@@ -1,4 +1,4 @@
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Temprature.module.scss";
 import { useCurrentLanLat } from "../../customHookes";
 import maplibregl from "maplibre-gl";
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../components";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import { findWeather } from "./constant";
+import MapFooter from "../../components/MapFooter/MapFooter";
 
 const Temprature = () => {
   const mapContainer = useRef(null);
@@ -41,7 +42,7 @@ const Temprature = () => {
           countryCoordinate.lng ?? longitude,
           countryCoordinate.lat ?? latitude,
         ], // starting position [lng, lat]
-        zoom: 3, // starting zoom
+        zoom: 5, // starting zoom
         maxZoom: 24,
         preserveDrawingBuffer: true,
         attributionControl: true,
@@ -59,26 +60,30 @@ const Temprature = () => {
 
           const customMark = document.createElement("div");
           customMark.className = "customMarker";
-
           const celcius = Math.trunc(data.main.temp);
-
           const temp = document.createElement("p");
           temp.className = "temp";
           temp.textContent = `${celcius}°C`;
           customMark.appendChild(temp);
+
+          // create the popup
+          const popup = new maplibregl.Popup({ offset: 25 }).setHTML(` <div>
+           <p style="font-size:14px; ">${item.name}, ${item.state}</p>
+           <p style="font-size:10px; color: #808080f1;">lon: ${item.lon}, lat: ${item.lat}</p>
+        </div>`);
 
           let marker = new maplibregl.Marker({
             color: "#FF0000",
             element: customMark,
           })
             .setLngLat([item.lon, item.lat])
+            .setPopup(popup)
             .addTo(map);
         });
-
     };
 
     getCoodinates();
-  }, [countryCoordinate, citiesCoordinates.data]);
+  }, [countryCoordinate, citiesCoordinates.data, mapStyle]);
 
   return (
     <div className={styles.pageContainer}>
@@ -95,6 +100,8 @@ const Temprature = () => {
           />
         </div>
       )}
+
+      <MapFooter setMapStyle={setMapStyle} mapContainerRef={mapContainer} />
     </div>
   );
 };
