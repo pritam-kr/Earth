@@ -1,0 +1,26 @@
+@import "../../styles/variable.module.scss";
+
+.pieChart {
+  margin-left: 15px;
+}
+
+.colorWrapper {
+  margin-top: -220px;
+  text-align: left;
+
+  .color {
+    font-size: 11px;
+    margin-right: 10px;
+    color: $secondar-text;
+    cursor: pointer;
+
+    span {
+      display: inline-block;
+      background-color: red;
+      width: 13px;
+      height: 13px;
+      margin-right: 5px;
+      border-radius: 10px;
+    }
+  }
+}

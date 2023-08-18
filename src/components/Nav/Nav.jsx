@@ -17,6 +17,7 @@ import { useLocation } from "react-router-dom";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import Select from "../Select/Select";
 import { getUniqueListBy } from "../../utils/getUniqueArray";
+import { toast } from "react-hot-toast";
 
 const Nav = () => {
   const { getLocations, findAirPollutionForLocation } = useMap();
@@ -144,7 +145,7 @@ const Nav = () => {
                 ),
               "name"
             );
-
+ 
             dispatch({
               type: MAP_ACTIONS.GET_CITIES_COORDINATS,
               payload: { data: citiesCoordinates, isLoading: false, error: "" },

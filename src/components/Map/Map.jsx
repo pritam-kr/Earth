@@ -4,29 +4,19 @@ import maplibregl from "maplibre-gl";
 import { useCurrentLanLat } from "../../customHookes";
 import { useSelector, useDispatch } from "react-redux";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
-import Loader from "../Loader/Loader";
-import * as MapIcons from "react-icons/fc";
-import * as FaIcons from "react-icons/fa";
 import { useMap } from "../../apiData/useMap";
-import MapStats from "../MapStats/MapStats";
-import { BASEMAP } from "./constants";
-import { useScreenShot } from "../../customHookes/useScreenShot";
 import { useSearchParams } from "react-router-dom";
+import MapFooter from "../MapFooter/MapFooter";
 
 const Map = () => {
   const { findAirPollutionForLocation } = useMap();
-  const { loading, takeScreenShot } = useScreenShot();
   const { getLonLatCoordinates } = useCurrentLanLat();
   const mapContainer = useRef(null);
   const [searchParams, setSearchParams] = useSearchParams({});
-   
   const { coordinates } = useSelector((state) => state.mapReducer);
   const dispatch = useDispatch();
 
   //States
-  const [pieChart, showPieChart] = useState(false);
-  const [chart, showChart] = useState(false);
-  const [basemap, setBaseMap] = useState(false);
   const [mapStyle, setMapStyle] = useState(
     "https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z"
   );
@@ -70,72 +60,7 @@ const Map = () => {
 
   return (
     <div className={styles.mapContainer} ref={mapContainer}>
-      <div className={styles.mapFooter}>
-        <div className={styles.left}>
-          <div className={styles.mapbaseWrapper}>
-            <FaIcons.FaLayerGroup
-              className={styles.mapIcon}
-              onClick={() => setBaseMap((prev) => !prev)}
-            />
-
-            {basemap && (
-              <div className={styles.mapTypes}>
-                {BASEMAP.map((item) => (
-                  <div onClick={() => setMapStyle(item.mapLink)}>
-                    <img src={item.IMGlink} alt="basemap" />{" "}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className={styles.right}>
-          <div
-            className={styles.visulaizeWrapper}
-            onClick={() => {
-              showPieChart((prev) => !prev);
-              showChart((prev) => !prev);
-            }}
-          >
-            <MapIcons.FcPieChart className={styles.mapIcon} />
-          </div>
-          <div
-            className={styles.visulaizeWrapper}
-            onClick={() => {
-              showPieChart((prev) => !prev);
-              showChart((prev) => !prev);
-            }}
-          >
-            <MapIcons.FcLineChart className={styles.mapIcon} />
-          </div>
-
-          {(pieChart || chart) && (
-            <div className={styles.graphWrapper}>
-              <MapStats pieChart={pieChart} chart={chart} />
-            </div>
-          )}
-
-          <div
-            className={styles.visulaizeWrapper}
-            onClick={() => takeScreenShot(mapContainer.current)}
-          >
-            {loading ? (
-              <Loader
-                width={20}
-                height={20}
-                src={
-                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-                }
-              />
-            ) : (
-              <MapIcons.FcDownload
-                className={`${styles.mapIcon} ${styles.downloadIcon}`}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <MapFooter setMapStyle={setMapStyle} mapContainerRef={mapContainer} />
     </div>
   );
 };

@@ -2,16 +2,13 @@ import axios from "axios";
 import { MAP_ACTIONS } from "../redux/actions/actions";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-export const apiKey = "ad09d41295facd76d3932305350f3282";
+export const apiKey = "a78a5f9307b4a570b54118d91f3b0d9d";
 
 export const useMap = () => {
   // Find current air pollution data
-  //http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}
 
   const [searchValue, setSearchValue] = useState("");
-
   const dispatch = useDispatch();
-
   const findAirPollutionForLocation = async (lon, lat) => {
     try {
       dispatch({

@@ -76,3 +76,16 @@ input {
   color: white;
   bottom: 13px;
 }
+.maplibregl-popup-content,
+.recharts-default-tooltip {
+  border-radius: 10px !important;
+  border: 1px solid #0000001f;
+}
+
+.maplibregl-popup-close-button {
+  margin-right: 8px;
+}
+
+.aplibregl-ctrl-attrib-inner > a {
+  font-size: 10px !important;
+}

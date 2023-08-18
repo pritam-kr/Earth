@@ -1,0 +1,111 @@
+@import "../../styles/variable.module.scss";
+
+.mapFooter {
+  position: absolute;
+  z-index: 99999;
+  bottom: 25px;
+  // left: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @include display-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+
+  .left {
+    .mapbaseWrapper {
+      width: 50px;
+      height: 50px;
+      padding: 5px;
+      background-color: $white;
+      @include display-center;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 1px solid $border-color;
+      position: relative;
+
+      .mapTypes {
+        position: absolute;
+        left: 53px;
+        @include display-flex;
+
+        & > div {
+          width: 50px;
+          height: 50px;
+          padding: 5px;
+          background-color: $white;
+          @include display-center;
+          border-radius: 5px;
+          border: 1px solid $border-color;
+
+          & > img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .mapIcon {
+        color: $primary-color;
+
+        font-size: 25px;
+      }
+    }
+  }
+
+  .right {
+    // margin-right: auto;
+    @include display-flex;
+    flex: 0.05;
+    position: relative;
+
+    .visulaizeWrapper {
+      width: 50px;
+      height: 50px;
+      padding: 5px;
+      background-color: $white;
+      @include display-center;
+      border: 1px solid $border-color;
+      gap: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 3px;
+      position: relative;
+
+      .mapIcon {
+        font-size: 30px;
+        color: $primary-color;
+      }
+
+      .downloadIcon {
+        font-size: 30px;
+        color: $primary-color;
+      }
+
+      .pieChartCircleWrapper {
+        position: absolute;
+        width: 300px;
+        background-color: $white;
+        z-index: 999999;
+        right: 50px;
+
+        bottom: 50px;
+        padding: 10px;
+        height: 300px;
+
+        border-radius: 10px;
+        border: 1px solid $border-color;
+      }
+
+      .graphWrapper {
+        width: 400px;
+        bottom: 50px;
+      }
+    }
+  }
+}
