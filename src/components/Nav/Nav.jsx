@@ -1,15 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Nav.module.scss";
-import {
-  MENUS,
-  airPollutionHandler,
-  findCoordinates,
-  getAllCities,
-  getAllState,
-} from "./constants";
+import { MENUS, airPollutionHandler, findCoordinates } from "./constants";
 import { SelectNav } from "./components/SelectNav";
 import { debaunceFunction } from "../../utils/debaunceFunction";
-import { useMap } from "../../apiData/useMap";
 import * as BiIcons from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchApi } from "../../customHookes";
@@ -17,10 +10,16 @@ import { useLocation } from "react-router-dom";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import Select from "../Select/Select";
 import { getUniqueListBy } from "../../utils/getUniqueArray";
-import { toast } from "react-hot-toast";
+import { useServices } from "../../services/useServices";
 
 const Nav = () => {
-  const { getLocations, findAirPollutionForLocation } = useMap();
+  const {
+    findAirPollutionForLocation,
+    getLocations,
+    getAllState,
+    getAllCities,
+  } = useServices();
+
   const { data: countryList, loading: countryLoading } = useFetchApi(
     "https://restcountries.com/v3.1/all"
   );
@@ -131,6 +130,7 @@ const Nav = () => {
             const responses = data.map((item) =>
               findCoordinates(item.name.toLowerCase().trim())
             );
+
             const response = await Promise.all(responses);
 
             const citiesCoordinates = getUniqueListBy(
@@ -145,7 +145,7 @@ const Nav = () => {
                 ),
               "name"
             );
- 
+
             dispatch({
               type: MAP_ACTIONS.GET_CITIES_COORDINATS,
               payload: { data: citiesCoordinates, isLoading: false, error: "" },

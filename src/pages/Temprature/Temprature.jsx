@@ -52,7 +52,7 @@ const Temprature = () => {
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
       citiesCoordinates.data?.length > 0 &&
-        citiesCoordinates.data.forEach(async (item, i) => {
+        citiesCoordinates.data.map(async (item, i) => {
           const { data, status } = await findWeather({
             lat: item.lat,
             lon: item.lon,

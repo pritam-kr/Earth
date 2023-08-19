@@ -16,14 +16,12 @@ const PieChartCircle = ({ isPieChart, colors }) => {
 
   const RADIAN = Math.PI / 180;
 
-  console.log(data);
-
   return (
     <>
       <ResponsiveContainer
         width={"100%"}
         height={"100%"}
-         className={styles.pieChart}
+        className={styles.pieChart}
       >
         <PieChart width={400} height={400}>
           <Pie
@@ -52,7 +50,6 @@ const PieChartCircle = ({ isPieChart, colors }) => {
       <div className={styles.colorWrapper}>
         {data?.map((item, index) => (
           <p className={styles.color}>
-            {console.log(colors[index % colors.length], "colors[index % colors.length]")}
             <span
               style={{ backgroundColor: colors[index % colors.length] }}
             ></span>

@@ -1,5 +1,7 @@
 import axios from "axios";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
+import { apiKey } from "../../apiData/useMap";
+
 
 export const MENUS = [
   { label: "Air Pollution", value: "air pollution", path: "/" },
@@ -12,7 +14,7 @@ export const MENUS = [
 export const findCoordinates = (city) => {
   try {
     return axios.get(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=ad09d41295facd76d3932305350f3282`
+      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`
     );
   } catch (error) {
     console.log(error.message);
@@ -20,37 +22,7 @@ export const findCoordinates = (city) => {
   }
 };
 
-export const getAllState = (countryCode) => {
-  try {
-    return axios.get(
-      `https://api.countrystatecity.in/v1/countries/${countryCode}/states`,
-      {
-        headers: {
-          "X-CSCAPI-KEY":
-            "RkZLNmp1QnNNeXZIN094RjhvY25Hd3pQNHN0d0pvdk1xWVlidUpEaA==",
-        },
-      }
-    );
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-export const getAllCities = (countryCode = "IN", stateCode = "JH") => {
-  try {
-    return axios.get(
-      `https://api.countrystatecity.in/v1/countries/${countryCode}/states/${stateCode}/cities`,
-      {
-        headers: {
-          "X-CSCAPI-KEY":
-            "RkZLNmp1QnNNeXZIN094RjhvY25Hd3pQNHN0d0pvdk1xWVlidUpEaA==",
-        },
-      }
-    );
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+ 
 
 export const airPollutionHandler = (
   e,

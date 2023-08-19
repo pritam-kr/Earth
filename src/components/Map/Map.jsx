@@ -4,21 +4,22 @@ import maplibregl from "maplibre-gl";
 import { useCurrentLanLat } from "../../customHookes";
 import { useSelector, useDispatch } from "react-redux";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
-import { useMap } from "../../apiData/useMap";
 import { useSearchParams } from "react-router-dom";
 import MapFooter from "../MapFooter/MapFooter";
+import { useServices } from "../../services/useServices";
 
 const Map = () => {
-  const { findAirPollutionForLocation } = useMap();
+  const { findAirPollutionForLocation } = useServices();
   const { getLonLatCoordinates } = useCurrentLanLat();
   const mapContainer = useRef(null);
-  const [searchParams, setSearchParams] = useSearchParams({});
   const { coordinates } = useSelector((state) => state.mapReducer);
   const dispatch = useDispatch();
+  const MAP_KEY = process.env.REACT_APP_MAP_KEY;
 
   //States
+  const [searchParams, setSearchParams] = useSearchParams({});
   const [mapStyle, setMapStyle] = useState(
-    "https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z"
+    `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAP_KEY}`
   );
 
   useEffect(() => {

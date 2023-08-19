@@ -8,12 +8,10 @@
   .mapContainer {
     width: 100%;
     height: calc(88vh);
-    overflow-y: scroll;
-    border: 1px solid $border-color;
+    // overflow-y: scroll;
+
     position: relative;
     border-radius: 10px;
-
-    
   }
 
   .mapLoader {
@@ -35,5 +33,3 @@
     z-index: 999999;
   }
 }
-
-
