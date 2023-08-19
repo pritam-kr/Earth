@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Nav.module.scss";
-import { MENUS, airPollutionHandler, findCoordinates } from "./constants";
+import { MENUS, airPollutionHandler } from "./constants";
 import { SelectNav } from "./components/SelectNav";
 import { debaunceFunction } from "../../utils/debaunceFunction";
 import * as BiIcons from "react-icons/bi";
@@ -18,6 +18,7 @@ const Nav = () => {
     getLocations,
     getAllState,
     getAllCities,
+    findCoordinates,
   } = useServices();
 
   const { data: countryList, loading: countryLoading } = useFetchApi(
@@ -25,6 +26,7 @@ const Nav = () => {
   );
 
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debaunceSearchHandler = useCallback(
     debaunceFunction(getLocations, 500),
@@ -46,8 +48,6 @@ const Nav = () => {
   const ReducerStates = useSelector((state) => state.mapReducer);
   const locationLists = ReducerStates.locationsList.data;
   const stateList = ReducerStates.states;
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     window.addEventListener("click", (e) => {

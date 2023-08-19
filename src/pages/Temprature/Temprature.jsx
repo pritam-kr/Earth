@@ -5,10 +5,12 @@ import maplibregl from "maplibre-gl";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../components";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
-import { findWeather } from "./constant";
 import MapFooter from "../../components/MapFooter/MapFooter";
+import { useServices } from "../../services/useServices";
 
 const Temprature = () => {
+  const { getWeatherInfo } = useServices();
+
   const mapContainer = useRef(null);
   const { getLonLatCoordinates } = useCurrentLanLat();
   const [mapStyle, setMapStyle] = useState(
@@ -50,17 +52,21 @@ const Temprature = () => {
       });
 
       map.addControl(new maplibregl.NavigationControl(), "top-right");
+      
+      const response = citiesCoordinates.data?.map((item) =>
+        getWeatherInfo({ lat: item.lat, lon: item.lon })
+      );
+      const data = await Promise.allSettled(response);
+      console.log(data, "data");
 
-      citiesCoordinates.data?.length > 0 &&
-        citiesCoordinates.data.map(async (item, i) => {
-          const { data, status } = await findWeather({
-            lat: item.lat,
-            lon: item.lon,
-          });
+      data
+        .filter((item) => item.value.status === 200)
+        .forEach((item) => {
+          const weatherInfo = item?.value.data;
 
           const customMark = document.createElement("div");
           customMark.className = "customMarker";
-          const celcius = Math.trunc(data.main.temp);
+          const celcius = Math.trunc(weatherInfo.main.temp);
           const temp = document.createElement("p");
           temp.className = "temp";
           temp.textContent = `${celcius}°C`;
@@ -68,15 +74,15 @@ const Temprature = () => {
 
           // create the popup
           const popup = new maplibregl.Popup({ offset: 25 }).setHTML(` <div>
-           <p style="font-size:14px; ">${item.name}, ${item.state}</p>
-           <p style="font-size:10px; color: #808080f1;">lon: ${item.lon}, lat: ${item.lat}</p>
-        </div>`);
+         <p style="font-size:14px; ">${weatherInfo.name}</p>
+         <p style="font-size:10px; color: #808080f1;">lon: ${weatherInfo.coord.lon}, lat: ${weatherInfo.coord.lat}</p>
+      </div>`);
 
           let marker = new maplibregl.Marker({
             color: "#FF0000",
             element: customMark,
           })
-            .setLngLat([item.lon, item.lat])
+            .setLngLat([weatherInfo.coord.lon, weatherInfo.coord.lat])
             .setPopup(popup)
             .addTo(map);
         });

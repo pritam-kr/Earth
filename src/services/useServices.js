@@ -72,7 +72,7 @@ export const useServices = () => {
     }
   };
 
-  // 3. Get all states
+  // 3. Get all states by country code
   const getAllState = (countryCode) => {
     try {
       return axios.get(
@@ -88,7 +88,7 @@ export const useServices = () => {
     }
   };
 
-  // 4. Get All cities
+  // 4. Get All cities by country and state code
   const getAllCities = (countryCode = "IN", stateCode = "JH") => {
     try {
       return axios.get(
@@ -104,6 +104,28 @@ export const useServices = () => {
     }
   };
 
+  // 5. Find Co-ordinates by city name
+  const findCoordinates = (city) => {
+    try {
+      return axios.get(
+        `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${OPEN_WEATHER_API_KEY}`
+      );
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  // 6. Get weather info by co-ordinates
+  const getWeatherInfo = ({ lat, lon }) => {
+    try {
+      return axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_API_KEY}&units=metric`
+      );
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return {
     findAirPollutionForLocation,
     getLocations,
@@ -111,5 +133,7 @@ export const useServices = () => {
     setSearchValue,
     getAllState,
     getAllCities,
+    findCoordinates,
+    getWeatherInfo,
   };
 };

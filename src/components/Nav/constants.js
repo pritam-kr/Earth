@@ -1,7 +1,4 @@
-import axios from "axios";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
-import { apiKey } from "../../apiData/useMap";
-
 
 export const MENUS = [
   { label: "Air Pollution", value: "air pollution", path: "/" },
@@ -9,20 +6,6 @@ export const MENUS = [
   // { label: "Water Pollution", value: "water pollution", path: "/2" },
   // { label: "Heat Wave", value: "head wave", path: "/3" },
 ];
-
-
-export const findCoordinates = (city) => {
-  try {
-    return axios.get(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`
-    );
-  } catch (error) {
-    console.log(error.message);
-    return null;
-  }
-};
-
- 
 
 export const airPollutionHandler = (
   e,
@@ -49,4 +32,3 @@ export const airPollutionHandler = (
     });
   }
 };
-
