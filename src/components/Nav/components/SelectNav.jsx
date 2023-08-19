@@ -16,9 +16,9 @@ export const SelectNav = ({
 
   const navLinks = (pathname) => {
     if (pathname === "/") {
-      return "Air Pollution";
+      return "Air Quality";
     } else if (pathname === "/temprature") {
-      return "Temprature info";
+      return "Weather info";
     }
   };
 

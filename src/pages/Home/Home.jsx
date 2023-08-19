@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styles from "./Home.module.scss";
 import { Loader, Map } from "../../components";
 import { useSelector } from "react-redux";
-
+ 
 const Home = ({ setModal }) => {
   const suggestionRef = useRef(null);
   const inputRef = useRef(null);

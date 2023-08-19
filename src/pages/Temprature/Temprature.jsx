@@ -7,6 +7,7 @@ import { Loader } from "../../components";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import MapFooter from "../../components/MapFooter/MapFooter";
 import { useServices } from "../../services/useServices";
+import { firstLetterUppercase } from "../../utils/firstLetterUppercase";
 
 const Temprature = () => {
   const { getWeatherInfo } = useServices();
@@ -52,7 +53,7 @@ const Temprature = () => {
       });
 
       map.addControl(new maplibregl.NavigationControl(), "top-right");
-      
+
       const response = citiesCoordinates.data?.map((item) =>
         getWeatherInfo({ lat: item.lat, lon: item.lon })
       );
@@ -60,9 +61,11 @@ const Temprature = () => {
       console.log(data, "data");
 
       data
-        .filter((item) => item.value.status === 200)
+        ?.filter(
+          (item) => item?.value?.status === 200 || item?.status === "rejected"
+        )
         .forEach((item) => {
-          const weatherInfo = item?.value.data;
+          const weatherInfo = item?.value?.data;
 
           const customMark = document.createElement("div");
           customMark.className = "customMarker";
@@ -74,8 +77,17 @@ const Temprature = () => {
 
           // create the popup
           const popup = new maplibregl.Popup({ offset: 25 }).setHTML(` <div>
-         <p style="font-size:14px; ">${weatherInfo.name}</p>
-         <p style="font-size:10px; color: #808080f1;">lon: ${weatherInfo.coord.lon}, lat: ${weatherInfo.coord.lat}</p>
+         <p style="font-size:14px; display: flex; align-items: center; margin-top: -10px;">${
+           weatherInfo.name
+         } <img style="width:40px; object-fit: cover;"  src=https://openweathermap.org/img/wn/${
+            weatherInfo.weather[0].icon
+          }@2x.png /></p>
+         <p style="font-size:10px; color: #808080; height: 0; margin-bottom: 15px;">lon: ${
+           weatherInfo.coord.lon
+         }, lat: ${weatherInfo.coord.lat}</p>
+         <p style="font-size:10px; color: #808080; height: 0; margin-bottom: 15px;"">${firstLetterUppercase(
+           weatherInfo.weather[0].description
+         )}, ${weatherInfo.main.temp}°C</p>
       </div>`);
 
           let marker = new maplibregl.Marker({
