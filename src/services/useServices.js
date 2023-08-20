@@ -18,7 +18,7 @@ export const useServices = () => {
         payload: { isLoading: true, data: null },
       });
       const { data, status } = await axios.get(
-        `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_API_KEY}`
+        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_API_KEY}`
       );
 
       if (status === 200)
@@ -53,7 +53,7 @@ export const useServices = () => {
       });
 
       const { data, status } = await axios.get(
-        `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${OPEN_WEATHER_API_KEY}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${OPEN_WEATHER_API_KEY}`
       );
 
       if (status === 200) {
@@ -108,7 +108,7 @@ export const useServices = () => {
   const findCoordinates = (city) => {
     try {
       return axios.get(
-        `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${OPEN_WEATHER_API_KEY}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${OPEN_WEATHER_API_KEY}`
       );
     } catch (error) {
       toast.error(error.message);

@@ -53,7 +53,7 @@ const Map = () => {
       let marker = new maplibregl.Marker({ color: "#FF0000" })
         .setLngLat([coordinates.lon ?? longitude, coordinates.lat ?? latitude])
         .addTo(map);
-      marker.addClassName("location-marker");
+      // marker.addClassName("location-marker");
     };
 
     getCoodinates();
