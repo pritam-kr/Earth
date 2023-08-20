@@ -40,8 +40,8 @@ const Graph = () => {
           height={400}
           data={dataGraph}
           margin={{
-            top: 10,
-            right: 30,
+            top: 0,
+            right: 0,
             left: 0,
             bottom: 0,
           }}
@@ -53,7 +53,7 @@ const Graph = () => {
           <Area
             // type="monotone"
             dataKey="amt"
-            stroke="#8884d8"
+            stroke="#0e72c9"
             fill="#0e72c9"
           />
         </AreaChart>

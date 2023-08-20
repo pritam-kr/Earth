@@ -5,7 +5,7 @@ import { SelectNav } from "./components/SelectNav";
 import { debaunceFunction } from "../../utils/debaunceFunction";
 import * as BiIcons from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { useFetchApi } from "../../customHookes";
+import { useFetchApi, useOutSideClick } from "../../customHookes";
 import { useLocation } from "react-router-dom";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import Select from "../Select/Select";
@@ -20,6 +20,11 @@ const Nav = () => {
     getAllCities,
     findCoordinates,
   } = useServices();
+
+  // Refs
+ 
+  const inputRef = useRef(null);
+  const suggestionRef = useRef(null);
 
   const { data: countryList, loading: countryLoading } = useFetchApi(
     "https://restcountries.com/v3.1/all"
@@ -38,11 +43,6 @@ const Nav = () => {
   const [suggestionBox, setSuggestionBox] = useState(false);
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
-
-  // Refs
-  const navLinksRef = useRef(null);
-  const inputRef = useRef(null);
-  const suggestionRef = useRef(null);
 
   // Redux State
   const ReducerStates = useSelector((state) => state.mapReducer);
@@ -279,7 +279,6 @@ const Nav = () => {
           styles={styles}
           dropdown={dropdown}
           showDropdown={showDropdown}
-          navLinksRef={navLinksRef}
         />
       </div>
       <div className={styles.right}>{renderSelectComponents()}</div>

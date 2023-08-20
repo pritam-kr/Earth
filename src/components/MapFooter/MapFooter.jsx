@@ -106,7 +106,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
               }
             />
           ) : (
-            <MapIcons.FcDownload
+            <FaIcons.FaCamera
               className={`${styles.mapIcon} ${styles.downloadIcon}`}
             />
           )}

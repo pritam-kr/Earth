@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import * as IoIcons from "react-icons/io";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useOutSideClick } from "../../../customHookes";
 
 export const SelectNav = ({
   value,
@@ -10,9 +11,9 @@ export const SelectNav = ({
   styles,
   dropdown,
   showDropdown,
-  navLinksRef,
 }) => {
   const location = useLocation();
+  const navLinksRef = useRef(null);
 
   const navLinks = (pathname) => {
     if (pathname === "/") {
@@ -21,6 +22,8 @@ export const SelectNav = ({
       return "Weather info";
     }
   };
+
+  useOutSideClick(navLinksRef, () => showDropdown(false));
 
   return (
     <div
