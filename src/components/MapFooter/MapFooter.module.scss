@@ -5,9 +5,8 @@
   z-index: 99999;
   bottom: 25px;
   // left: 10px;
-   padding-left: 20px;
+  padding-left: 20px;
   // padding-right: 20px;
- 
 
   @include display-flex;
   justify-content: space-between;
@@ -65,6 +64,32 @@
     flex: 0.05;
     position: relative;
 
+    .pieChartGraphWrapper {
+      display: flex !important;
+      position: relative;
+      width: fit-content;
+
+      .pieChartCircleWrapper {
+        position: absolute;
+        width: 300px;
+        background-color: $white;
+        z-index: 999999;
+        right: 50px;
+
+        bottom: 50px;
+        padding: 10px;
+        height: 300px;
+
+        border-radius: 10px;
+        border: 1px solid $border-color;
+      }
+
+      .graphWrapper {
+        width: 400px;
+        bottom: 50px;
+      }
+    }
+
     .visulaizeWrapper {
       width: 50px;
       height: 50px;
@@ -86,26 +111,6 @@
       .downloadIcon {
         font-size: 25px;
         color: $primary-color;
-      }
-
-      .pieChartCircleWrapper {
-        position: absolute;
-        width: 300px;
-        background-color: $white;
-        z-index: 999999;
-        right: 50px;
-
-        bottom: 50px;
-        padding: 10px;
-        height: 300px;
-
-        border-radius: 10px;
-        border: 1px solid $border-color;
-      }
-
-      .graphWrapper {
-        width: 400px;
-        bottom: 50px;
       }
     }
   }

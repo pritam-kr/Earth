@@ -22,7 +22,7 @@ const Nav = () => {
   } = useServices();
 
   // Refs
- 
+
   const inputRef = useRef(null);
   const suggestionRef = useRef(null);
 

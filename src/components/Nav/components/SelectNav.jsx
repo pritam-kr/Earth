@@ -23,13 +23,12 @@ export const SelectNav = ({
     }
   };
 
-  useOutSideClick(navLinksRef, () => showDropdown(false));
+  // useOutSideClick(navLinksRef, () => showDropdown(false));
 
   return (
     <div
       className={styles.optionWrapper}
       onClick={() => showDropdown((prev) => !prev)}
-      ref={navLinksRef}
     >
       <div className={styles.selectedValue}>
         {
