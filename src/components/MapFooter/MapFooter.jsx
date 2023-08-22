@@ -49,52 +49,56 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
       </div>
 
       <div className={styles.right}>
+        {(isVisual.pieChart || isVisual.graph) && (
+          <div className={styles.pieChartGraphWrapper}>
+            {isVisual.pieChart && (
+              <div className={styles.pieChartCircleWrapper}>
+                <PieChartCircle colors={COLORS} />
+              </div>
+            )}
+            {isVisual.graph && (
+              <div
+                className={`${styles.pieChartCircleWrapper}  ${styles.graphWrapper}`}
+              >
+                <Graph />
+              </div>
+            )}
+          </div>
+        )}
 
-        <div className={styles.pieChartGraphWrapper}>
-          {PIECHART_AVAILABLE.includes(pathname) && (
-            <div
-              className={`${styles.visulaizeWrapper} ${styles.pieChartWrapper}`}
-              onClick={() => {
-                setIsVisual((prev) => ({
-                  ...prev,
-                  pieChart: true,
-                  graph: true,
-                }));
-              }}
-            >
-              <MapIcons.FcPieChart className={styles.mapIcon} />
+        {PIECHART_AVAILABLE.includes(pathname) && (
+          <div
+            className={`${styles.visulaizeWrapper} ${
+              isVisual.pieChart ? styles.active : ""
+            }`}
+            onClick={() => {
+              setIsVisual((prev) => ({
+                ...prev,
+                pieChart: !prev.pieChart,
+                // graph: false,
+              }));
+            }}
+          >
+            <MapIcons.FcPieChart className={styles.mapIcon} />
+          </div>
+        )}
 
-              {isVisual.pieChart && (
-                <div className={styles.pieChartCircleWrapper}>
-                  <PieChartCircle colors={COLORS} />
-                </div>
-              )}
-            </div>
-          )}
-
-          {GRAPH_AVAILABLE.includes(pathname) && (
-            <div
-              className={`${styles.visulaizeWrapper} ${styles.graph}`}
-              // onClick={() => {
-              //   setIsVisual((prev) => ({
-              //     ...prev,
-              //     // pieChart: false,
-              //     graph: !prev.graph,
-              //   }));
-              // }}
-            >
-              <MapIcons.FcLineChart className={styles.mapIcon} />
-
-              {isVisual.graph && (
-                <div
-                  className={`${styles.pieChartCircleWrapper} ${styles.graphWrapper}`}
-                >
-                  <Graph />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        {GRAPH_AVAILABLE.includes(pathname) && (
+          <div
+            className={`${styles.visulaizeWrapper}  ${
+              isVisual.graph ? styles.active : ""
+            }`}
+            onClick={() => {
+              setIsVisual((prev) => ({
+                ...prev,
+                // pieChart: false,
+                graph: !prev.graph,
+              }));
+            }}
+          >
+            <MapIcons.FcLineChart className={styles.mapIcon} />
+          </div>
+        )}
 
         <div
           className={styles.visulaizeWrapper}
@@ -114,7 +118,6 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
             />
           )}
         </div>
-
       </div>
     </div>
   );
