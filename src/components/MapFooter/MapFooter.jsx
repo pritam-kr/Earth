@@ -49,47 +49,54 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
       </div>
 
       <div className={styles.right}>
-        {PIECHART_AVAILABLE.includes(pathname) && (
-          <div
-            className={`${styles.visulaizeWrapper} ${styles.pieChartWrapper}`}
-            onClick={() => {
-              setIsVisual((prev) => ({
-                ...prev,
-                pieChart: true,
-                graph: false,
-              }));
-            }}
-          >
-            <MapIcons.FcPieChart className={styles.mapIcon} />
-
+        {(isVisual.pieChart || isVisual.graph) && (
+          <div className={styles.pieChartGraphWrapper}>
             {isVisual.pieChart && (
               <div className={styles.pieChartCircleWrapper}>
                 <PieChartCircle colors={COLORS} />
               </div>
             )}
+            {isVisual.graph && (
+              <div
+                className={`${styles.pieChartCircleWrapper}  ${styles.graphWrapper}`}
+              >
+                <Graph />
+              </div>
+            )}
+          </div>
+        )}
+
+        {PIECHART_AVAILABLE.includes(pathname) && (
+          <div
+            className={`${styles.visulaizeWrapper} ${
+              isVisual.pieChart ? styles.active : ""
+            }`}
+            onClick={() => {
+              setIsVisual((prev) => ({
+                ...prev,
+                pieChart: !prev.pieChart,
+                // graph: false,
+              }));
+            }}
+          >
+            <MapIcons.FcPieChart className={styles.mapIcon} />
           </div>
         )}
 
         {GRAPH_AVAILABLE.includes(pathname) && (
           <div
-            className={`${styles.visulaizeWrapper} ${styles.graph}`}
+            className={`${styles.visulaizeWrapper}  ${
+              isVisual.graph ? styles.active : ""
+            }`}
             onClick={() => {
               setIsVisual((prev) => ({
                 ...prev,
-                pieChart: false,
-                graph: true,
+                // pieChart: false,
+                graph: !prev.graph,
               }));
             }}
           >
             <MapIcons.FcLineChart className={styles.mapIcon} />
-
-            {isVisual.graph && (
-              <div
-                className={`${styles.pieChartCircleWrapper} ${styles.graphWrapper}`}
-              >
-                <Graph />
-              </div>
-            )}
           </div>
         )}
 
@@ -106,7 +113,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
               }
             />
           ) : (
-            <MapIcons.FcDownload
+            <FaIcons.FaCamera
               className={`${styles.mapIcon} ${styles.downloadIcon}`}
             />
           )}

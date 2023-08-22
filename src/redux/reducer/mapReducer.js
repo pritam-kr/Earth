@@ -5,17 +5,14 @@ const initialState = {
   countryCode: "",
   stateName: "",
   coordinates: { lon: null, lat: null, isLoading: false, error: "" },
-  locationsList: { data: [], isLoading: true, error: "" },
+  locationsList: { data: [], isLoading: false, error: "" },
   mapLoading: false,
-  countries: { data: [], isLoading: true, error: "" },
+  countries: { data: [], isLoading: false, error: "" },
   states: { data: [], isLoading: false, error: "" },
-  cities: { data: [], isLoading: true, error: "" },
+  cities: { data: [], isLoading: false, error: "" },
   countryCoordinate: { lat: null, lng: null },
   citiesCoordinates: { data: [], isLoading: false, error: "" },
-
-  mapProperties: {},
   airPollutionInfo: null,
-  currentUserLocationInfo: null,
 };
 
 const mapReducer = (state = initialState, action) => {
@@ -52,16 +49,7 @@ const mapReducer = (state = initialState, action) => {
     case MAP_ACTIONS.GET_LOCATION_LIST:
       return { ...state, locationsList: action.payload };
 
-    case MAP_ACTIONS.GET_USER_CURRENT_LOCATION_IFNO:
-      const { data: userInfoData, isLoading: userInfoDataLoading } =
-        action.payload;
-
-      return {
-        ...state,
-
-        currentUserLocationInfo: { userInfoData, userInfoDataLoading },
-      };
-
+    
     default:
       return state;
   }
