@@ -73,7 +73,6 @@ export default PieChartCircle;
 const Colors = ({ item, index, colors, styles }) => {
   const [amt, setAmt] = useState(false);
 
-  console.log(amt, "amt");
   return (
     <div>
       <p
@@ -85,7 +84,7 @@ const Colors = ({ item, index, colors, styles }) => {
         {item.name.toUpperCase()} - {`${item.value} μg/m3`}
       </p>
 
-      {amt && <p className={styles.info}>{AIR_COMPONENTS[item.name]}</p>}
+      {amt && <p className={styles.info} style={{ backgroundColor: colors[index], opacity: .95, color: "#fff" }}>{AIR_COMPONENTS[item.name]}</p>}
     </div>
   );
 };
