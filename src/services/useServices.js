@@ -126,6 +126,15 @@ export const useServices = () => {
     }
   };
 
+  // 7. Weather forcast API
+  const getWeatherForcast = ({ lon, lat }) => {
+
+    //https://api.open-meteo.com/v1/forecast?latitude=23.8534&longitude=85.2165&hourly=temperature_2m
+    return axios.get(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m`
+    );
+  };
+
   return {
     findAirPollutionForLocation,
     getLocations,
@@ -135,5 +144,6 @@ export const useServices = () => {
     getAllCities,
     findCoordinates,
     getWeatherInfo,
+    getWeatherForcast,
   };
 };
