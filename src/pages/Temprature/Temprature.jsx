@@ -8,9 +8,10 @@ import { MAP_ACTIONS } from "../../redux/actions/actions";
 import MapFooter from "../../components/MapFooter/MapFooter";
 import { useServices } from "../../services/useServices";
 import { firstLetterUppercase } from "../../utils/firstLetterUppercase";
+import { toast } from "react-hot-toast";
 
 const Temprature = () => {
-  const { getWeatherInfo } = useServices();
+  const { getWeatherInfo, getWeatherForcast } = useServices();
 
   const mapContainer = useRef(null);
   const { getLonLatCoordinates } = useCurrentLanLat();
@@ -18,11 +19,43 @@ const Temprature = () => {
     "https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z"
   );
 
+  // States
+  const [forcastData, setForcastData] = useState({
+    data: null,
+    loading: false,
+    error: "",
+  });
+
   // Redux States
   const { countryCoordinate, mapLoading, citiesCoordinates } = useSelector(
     (state) => state.mapReducer
   );
   const dispatch = useDispatch();
+
+  const weatherForcast = async ({ lon, lat }) => {
+    try {
+      setForcastData((prev) => ({ ...prev, loading: true }));
+      if (lon && lat) {
+        const { data, status } = await getWeatherForcast({ lon, lat });
+        if (status === 200)
+          setForcastData((prev) => ({
+            ...prev,
+            loading: false,
+            error: "",
+            data: data,
+          }));
+      }
+    } catch (error) {
+      setForcastData((prev) => ({
+        ...prev,
+        loading: false,
+        error: error.message,
+      }));
+      toast.error(error.message);
+    }
+  };
+
+  console.log(forcastData, "forcastData")
 
   useEffect(() => {
     const getCoodinates = async () => {
@@ -58,7 +91,6 @@ const Temprature = () => {
         getWeatherInfo({ lat: item.lat, lon: item.lon })
       );
       const data = await Promise.allSettled(response);
-      console.log(data, "data");
 
       data
         ?.filter(
@@ -74,6 +106,18 @@ const Temprature = () => {
           temp.className = "temp";
           temp.textContent = `${celcius}°C`;
           customMark.appendChild(temp);
+
+          customMark.addEventListener("click", (e) => {
+            const {
+              value: {
+                data: {
+                  coord: { lon, lat },
+                },
+              },
+            } = item;
+
+            weatherForcast({ lon, lat });
+          });
 
           // create the popup
           const popup = new maplibregl.Popup({ offset: 25 }).setHTML(` <div>
