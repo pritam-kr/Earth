@@ -17,14 +17,14 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
   const { pathname } = useLocation();
 
   const COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28",
-    "#FF8042",
-    "#skyblue",
-    "red",
-    "pink",
-    "grey",
+    "#279EFF",
+    "#7091F5",
+    "#FF6969",
+    "#9EB384",
+    "#765827",
+    "#FEBBCC",
+    "#F11A7B",
+    "#B70404"
   ];
 
   return (

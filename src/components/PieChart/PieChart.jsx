@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./PieChart.module.scss";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { useSelector } from "react-redux";
+import { AIR_COMPONENTS } from "./constants";
 
 const PieChartCircle = ({ isPieChart, colors }) => {
   const { airPollutionInfo } = useSelector((state) => state.mapReducer);
+
   const data = airPollutionInfo?.list
     ?.map((item) =>
       Object.keys(item.components)?.map((item2) => ({
@@ -15,6 +17,8 @@ const PieChartCircle = ({ isPieChart, colors }) => {
     .flat();
 
   const RADIAN = Math.PI / 180;
+
+  console.log(data, colors);
 
   return (
     <>
@@ -48,17 +52,40 @@ const PieChartCircle = ({ isPieChart, colors }) => {
       </ResponsiveContainer>
 
       <div className={styles.colorWrapper}>
-        {data?.map((item, index) => (
-          <p className={styles.color}>
-            <span
-              style={{ backgroundColor: colors[index % colors.length] }}
-            ></span>
-            {item.name}
-          </p>
-        ))}
+        {data?.length > 0 &&
+          [...data]
+            .sort((a, b) => b.value - a.value)
+            ?.map((item, index) => (
+              <Colors
+                item={item}
+                index={index}
+                colors={colors}
+                styles={styles}
+              />
+            ))}
       </div>
     </>
   );
 };
 
 export default PieChartCircle;
+
+const Colors = ({ item, index, colors, styles }) => {
+  const [amt, setAmt] = useState(false);
+
+  console.log(amt, "amt");
+  return (
+    <div>
+      <p
+        className={styles.color}
+        onMouseEnter={() => setAmt(true)}
+        onMouseLeave={() => setAmt(false)}
+      >
+        <span style={{ backgroundColor: colors[index] }}></span>
+        {item.name.toUpperCase()} - {`${item.value} μg/m3`}
+      </p>
+
+      {amt && <p className={styles.info}>{AIR_COMPONENTS[item.name]}</p>}
+    </div>
+  );
+};

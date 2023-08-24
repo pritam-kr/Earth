@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   const [settingModal, setSettingModal] = useState(false);
-
+//1.15.2 - Maplibrejs
   return (
     <>
       <Nav />
