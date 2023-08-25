@@ -2,24 +2,28 @@ import { Route, Routes } from "react-router-dom";
 import { Home, Temprature } from "./pages";
 import { Footer, MainContainer, Nav } from "./components";
 import SettingModal from "./modals/settingModal/SettingModal";
-import { useState } from "react";
 import { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 function App() {
-  const [settingModal, setSettingModal] = useState(false);
-//1.15.2 - Maplibrejs
+ 
+  const ReducerStates = useSelector((state) => state.mapReducer);
+  const error =
+    ReducerStates.locationsList?.error || ReducerStates.airPollutionInfo?.error;
+
+  //1.15.2 - Maplibrejs
   return (
     <>
       <Nav />
       <MainContainer>
         <Routes>
-          <Route path="/" element={<Home setModal={setSettingModal} />} />
+          <Route path="/" element={<Home  />} />
           <Route path="/temprature" element={<Temprature />} />
         </Routes>
       </MainContainer>
 
       <Footer children={"Made with ReactJs"} />
-      {settingModal && <SettingModal setModal={setSettingModal} />}
+      {error && <SettingModal  />}
       <Toaster
         position="top-center"
         reverseOrder={false}

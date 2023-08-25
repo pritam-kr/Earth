@@ -13,7 +13,6 @@ export const SelectNav = ({
   showDropdown,
 }) => {
   const location = useLocation();
-  const navLinksRef = useRef(null);
 
   const navLinks = (pathname) => {
     if (pathname === "/") {
@@ -22,8 +21,6 @@ export const SelectNav = ({
       return "Weather info";
     }
   };
-
-  // useOutSideClick(navLinksRef, () => showDropdown(false));
 
   return (
     <div

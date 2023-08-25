@@ -78,8 +78,9 @@ input {
 }
 .maplibregl-popup-content,
 .recharts-default-tooltip {
-  border-radius: 10px !important;
+  border-radius: 10px ;
   border: 1px solid #0000001f;
+  text-transform: capitalize;
 }
 
 .maplibregl-popup-close-button {

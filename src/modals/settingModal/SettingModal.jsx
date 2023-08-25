@@ -1,86 +1,83 @@
 import React, { useState } from "react";
 import styles from "./SettingModal.module.scss";
-import Toggle from "react-toggle";
+import { useDispatch } from "react-redux";
+import { MAP_ACTIONS } from "../../redux/actions/actions";
+import { useServices } from "../../services/useServices";
 
-const SettingModal = ({ setModal }) => {
-  const [toggleData, setToggleData] = useState(
-    !JSON.parse(localStorage.getItem("features"))
-      ? {
-          air_pollution: true,
-          map_with_stats: false,
-          co2_emission: false,
-          water_pollution: false,
-          heat_wave: false,
-        }
-      : JSON.parse(localStorage.getItem("features"))
-  );
+const SettingModal = () => {
+  const dispatch = useDispatch();
+  const [apiKey, setApiKey] = useState("f4a78f3a238bb1393d8e39a33b9a4361");
+  const {setOpenWeatherApiKey} = useServices()
 
-  const showStatsHandler = (name, e) => {
-    setToggleData((prev) => ({ ...prev, [name]: e.target.checked }));
+  const onClose = () => {
+    dispatch({
+      type: MAP_ACTIONS.GET_AIR_POLLUTION || MAP_ACTIONS.GET_LOCATION_LIST,
+      payload: { error: false },
+    });
+
+    dispatch({
+      type: MAP_ACTIONS.GET_LOCATION_LIST,
+      payload: { error: false },
+    });
   };
 
-  const localStorageHandler = () => {
-    setModal(false);
-    localStorage.setItem("features", JSON.stringify(toggleData));
+  const onSave = () => {
+    onClose();
+    setOpenWeatherApiKey(apiKey)
+    localStorage.setItem("openWeatherAPIkey", apiKey);
   };
-
-  const FEATURES_LIST = [
-    { id: 1, label: "Air pollution", name: "air_pollution" },
-    { id: 2, label: "Map with statistics", name: "map_with_stats" },
-    { id: 3, label: "Co2 Emission", name: "co2_emission" },
-    { id: 4, label: "Water pollution", name: "water_pollution" },
-    { id: 5, label: "Heat wave", name: "heat_wave" },
-  ];
-
-  const DEFAULT_FEATURES = [
-    "air_pollution",
-    "co2_emission",
-    "water_pollution",
-    "heat_wave",
-  ];
 
   return (
     <div className={styles.settingModalWrapper}>
       <div className={styles.modal}>
         <div className={styles.header}>
           <div className={styles.title}>
-            <h3>Settings</h3>
+            <h3>Error: Expired or Invalid API Key</h3>
           </div>
-          <div className={styles.close} onClick={() => localStorageHandler()}>
+          <div className={styles.close} onClick={onClose}>
             <h3>X</h3>
           </div>
         </div>
         <div className={styles.subContents}>
           <p>
-            To optimize performance and minimize unnecessary API calls, This
-            feature will allow users to selectively access and utilize specific
-            functionalities, listed below.
+            We've noticed that the API key you've been using to access our
+            services has encountered an issue. This could be due to the key
+            having expired or becoming invalid. Please follow the steps below to
+            generate a new API key.
           </p>
-          {/* <p>
-            Basically, users will have the option to choose which features they
-            want to interact with, enabling them to focus only on the
-            functionalities they need, such as viewing particular content or
-            performing specific actions.
-          </p> */}
         </div>
 
-        <div className={styles.featuresWrapper}>
-          {FEATURES_LIST.map((item) => {
-            return (
-              <div className={styles.feature} key={item?.id}>
-                <p className={styles.featureTitle}>{item?.label}</p>
-                <div className={styles.toggleWrapper}>
-                  <Toggle
-                    disabled={DEFAULT_FEATURES.includes(item?.name)}
-                    defaultChecked={item?.name && toggleData[item?.name]}
-                    icons={false}
-                    onChange={(e) => showStatsHandler(item?.name, e)}
-                    className={"statsToggle"}
-                  />
-                </div>
-              </div>
-            );
-          })}
+        <div className={styles.steps}>
+          <li>
+            To begin, open your preferred web browser and navigate to the
+            OpenWeather website at{" "}
+            <a
+              href="https://openweathermap.org/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              www.openweathermap.org
+            </a>
+            .
+          </li>
+          <li>Log In to Your Account</li>
+          <li>Navigate to API Key Settings</li>
+          <li> Manage Your API Keys</li>
+          <li>Generate a New API Key, and Copy Your New API Key</li>
+          <li>Paste the New API Key, below in input field</li>
+          <li>Verify and Save</li>
+        </div>
+
+        <div className={styles.footer}>
+          <input
+            placeholder="API key"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            className={styles.input}
+          />{" "}
+          <button onClick={onSave} disabled={!apiKey}>
+            Save
+          </button>
         </div>
       </div>
     </div>

@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import styles from "./Home.module.scss";
 import { Loader, Map } from "../../components";
 import { useSelector } from "react-redux";
- 
-const Home = ({ setModal }) => {
+
+const Home = () => {
   const suggestionRef = useRef(null);
   const inputRef = useRef(null);
   const { mapLoading } = useSelector((state) => state.mapReducer);

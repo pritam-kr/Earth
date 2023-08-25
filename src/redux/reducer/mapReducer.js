@@ -13,6 +13,7 @@ const initialState = {
   countryCoordinate: { lat: null, lng: null },
   citiesCoordinates: { data: [], isLoading: false, error: "" },
   airPollutionInfo: null,
+
 };
 
 const mapReducer = (state = initialState, action) => {
@@ -27,7 +28,6 @@ const mapReducer = (state = initialState, action) => {
       return {
         ...state,
         states: action.payload,
-     
       };
 
     case MAP_ACTIONS.GET_COUNTRY_COORDINATS:
@@ -40,16 +40,19 @@ const mapReducer = (state = initialState, action) => {
       return { ...state, coordinates: action.payload };
 
     case MAP_ACTIONS.GET_AIR_POLLUTION:
-      const { data, isLoading } = action.payload;
+      const { data, isLoading, error } = action.payload;
       return {
         ...state,
-        airPollutionInfo: { ...data, airPoluttionLoading: isLoading },
+        airPollutionInfo: {
+          ...data,
+          airPoluttionLoading: isLoading,
+          error: error,
+        },
       };
 
     case MAP_ACTIONS.GET_LOCATION_LIST:
-      return { ...state, locationsList: action.payload };
+      return { ...state, locationsList: action.payload, };
 
-    
     default:
       return state;
   }

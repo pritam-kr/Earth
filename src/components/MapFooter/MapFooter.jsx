@@ -75,7 +75,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
               setIsVisual((prev) => ({
                 ...prev,
                 pieChart: !prev.pieChart,
-                // graph: false,
+                 graph: false,
               }));
             }}
           >
@@ -91,7 +91,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
             onClick={() => {
               setIsVisual((prev) => ({
                 ...prev,
-                // pieChart: false,
+                 pieChart: false,
                 graph: !prev.graph,
               }));
             }}
