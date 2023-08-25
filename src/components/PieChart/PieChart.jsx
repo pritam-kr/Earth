@@ -18,8 +18,6 @@ const PieChartCircle = ({ isPieChart, colors }) => {
 
   const RADIAN = Math.PI / 180;
 
-  console.log(data, colors);
-
   return (
     <>
       <ResponsiveContainer
