@@ -8,7 +8,7 @@ export const useServices = () => {
   const dispatch = useDispatch();
   const [OPEN_WEATHER_API_KEY, setOpenWeatherApiKey] = useState(
     !localStorage.getItem("openWeatherAPIkey")
-      ? "f4a78f3a238bb1393d8e39a33b9a4362"
+      ? "f4a78f3a238bb1393d8e39a33b9a4361"
       : localStorage.getItem("openWeatherAPIkey")
   );
   const STATE_CITY_API_KEY = process.env.REACT_APP_STATE_CITY_KEY;
