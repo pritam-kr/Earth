@@ -27,9 +27,8 @@ const Map = () => {
       dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
       const { longitude, latitude } = await getLonLatCoordinates();
 
-      if (longitude && latitude) {
+      if (longitude && latitude)
         dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
-      }
 
       if (!coordinates.lon && !coordinates.lat)
         findAirPollutionForLocation(longitude, latitude);

@@ -6,7 +6,11 @@ import { useState } from "react";
 
 export const useServices = () => {
   const dispatch = useDispatch();
-  const OPEN_WEATHER_API_KEY = process.env.REACT_APP_OPENWEATHERKEY;
+  const [OPEN_WEATHER_API_KEY, setOpenWeatherApiKey] = useState(
+    !localStorage.getItem("openWeatherAPIkey")
+      ? "f4a78f3a238bb1393d8e39a33b9a4361"
+      : localStorage.getItem("openWeatherAPIkey")
+  );
   const STATE_CITY_API_KEY = process.env.REACT_APP_STATE_CITY_KEY;
   const [searchValue, setSearchValue] = useState("");
 
@@ -34,10 +38,16 @@ export const useServices = () => {
     } catch (error) {
       dispatch({
         type: MAP_ACTIONS.GET_AIR_POLLUTION,
-        payload: { isLoading: false, data: null },
+        payload: {
+          isLoading: false,
+          data: null,
+          error:
+            error?.response?.data?.message ??
+            "Something went wrong, Please change your API key.",
+        },
       });
 
-      toast.error(`${error.message}`);
+      // toast.error(`${error.message}`);
     }
   };
 
@@ -65,10 +75,19 @@ export const useServices = () => {
     } catch (error) {
       dispatch({
         type: MAP_ACTIONS.GET_LOCATION_LIST,
-        payload: { data: null, isLoading: false, error: "" },
+        payload: {
+          data: null,
+          isLoading: false,
+          error:
+            error?.response?.data?.message ??
+            "Something went wrong, Please change your API key.",
+        },
       });
 
-      toast.error(`${error.message}`);
+      toast.error(
+        error.response.data.message ??
+          "Something went wrong, Please change your API key."
+      );
     }
   };
 
@@ -128,8 +147,6 @@ export const useServices = () => {
 
   // 7. Weather forcast API
   const getWeatherForcast = ({ lon, lat }) => {
-
-    //https://api.open-meteo.com/v1/forecast?latitude=23.8534&longitude=85.2165&hourly=temperature_2m
     return axios.get(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m`
     );
@@ -145,5 +162,6 @@ export const useServices = () => {
     findCoordinates,
     getWeatherInfo,
     getWeatherForcast,
+    setOpenWeatherApiKey,
   };
 };
