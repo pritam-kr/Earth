@@ -10,7 +10,7 @@ import { useServices } from "../../services/useServices";
 import { firstLetterUppercase } from "../../utils/firstLetterUppercase";
 import { toast } from "react-hot-toast";
 
-const Temprature = () => {
+const Temprature = ({ setApikeyModal }) => {
   const { getWeatherInfo, getWeatherForcast } = useServices();
 
   const mapContainer = useRef(null);
@@ -55,7 +55,7 @@ const Temprature = () => {
     }
   };
 
-  console.log(forcastData, "forcastData")
+  console.log(forcastData, "forcastData");
 
   useEffect(() => {
     const getCoodinates = async () => {
@@ -91,6 +91,13 @@ const Temprature = () => {
         getWeatherInfo({ lat: item.lat, lon: item.lon })
       );
       const data = await Promise.allSettled(response);
+
+      if (
+        data.some(
+          (item) => item.value.status !== 200 || item?.status === "rejected"
+        )
+      )
+        setApikeyModal(true);
 
       data
         ?.filter(

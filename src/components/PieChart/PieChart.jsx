@@ -84,7 +84,18 @@ const Colors = ({ item, index, colors, styles }) => {
         {item.name.toUpperCase()} - {`${item.value} μg/m3`}
       </p>
 
-      {amt && <p className={styles.info} style={{ backgroundColor: colors[index], opacity: .95, color: "#fff" }}>{AIR_COMPONENTS[item.name]}</p>}
+      {amt && (
+        <p
+          className={styles.info}
+          style={{
+            backgroundColor: colors[index],
+            opacity: 0.95,
+            color: "#fff",
+          }}
+        >
+          {AIR_COMPONENTS[item.name]}
+        </p>
+      )}
     </div>
   );
 };

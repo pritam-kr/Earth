@@ -4,12 +4,14 @@ import { Footer, MainContainer, Nav } from "./components";
 import SettingModal from "./modals/settingModal/SettingModal";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 function App() {
- 
   const ReducerStates = useSelector((state) => state.mapReducer);
   const error =
     ReducerStates.locationsList?.error || ReducerStates.airPollutionInfo?.error;
+
+  const [apiKeyModal, setApikeyModal] = useState(false);
 
   //1.15.2 - Maplibrejs
   return (
@@ -17,13 +19,16 @@ function App() {
       <Nav />
       <MainContainer>
         <Routes>
-          <Route path="/" element={<Home  />} />
-          <Route path="/temprature" element={<Temprature />} />
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/temprature"
+            element={<Temprature setApikeyModal={setApikeyModal} />}
+          />
         </Routes>
       </MainContainer>
 
       <Footer children={"Made with ReactJs"} />
-      {error && <SettingModal  />}
+      {(error || apiKeyModal) && <SettingModal />}
       <Toaster
         position="top-center"
         reverseOrder={false}
