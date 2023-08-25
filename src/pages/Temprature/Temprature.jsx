@@ -11,7 +11,7 @@ import { firstLetterUppercase } from "../../utils/firstLetterUppercase";
 import { toast } from "react-hot-toast";
 
 const Temprature = ({ setApikeyModal }) => {
-  const { getWeatherInfo, getWeatherForcast } = useServices({setApikeyModal});
+  const { getWeatherInfo, getWeatherForcast } = useServices({ setApikeyModal });
 
   const mapContainer = useRef(null);
   const { getLonLatCoordinates } = useCurrentLanLat();

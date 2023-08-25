@@ -5,7 +5,7 @@ import { SelectNav } from "./components/SelectNav";
 import { debaunceFunction } from "../../utils/debaunceFunction";
 import * as BiIcons from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { useFetchApi, useOutSideClick } from "../../customHookes";
+import { useFetchApi } from "../../customHookes";
 import { useLocation } from "react-router-dom";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import Select from "../Select/Select";
@@ -215,48 +215,50 @@ const Nav = () => {
 
       default:
         return (
-          <div className={styles.searchBar}>
-            {" "}
-            <input
-              type="text"
-              placeholder="Search location name"
-              className={styles.input}
-              onChange={debaunceSearchHandler}
-              onFocus={() => setSuggestionBox(true)}
-              ref={inputRef}
-            />
-            {inputRef?.current?.value && (
-              <BiIcons.BiXCircle
-                className={styles.btnXCircle}
-                onClick={() => (inputRef.current.value = "")}
+          pathname === "/" && (
+            <div className={styles.searchBar}>
+              {" "}
+              <input
+                type="text"
+                placeholder="Search location name"
+                className={styles.input}
+                onChange={debaunceSearchHandler}
+                onFocus={() => setSuggestionBox(true)}
+                ref={inputRef}
               />
-            )}
-            {suggestionBox && (
-              <div
-                className={styles.searchSuggestion}
-                onClick={(e) =>
-                  airPollutionHandler(
-                    e,
-                    dispatch,
-                    findAirPollutionForLocation,
-                    inputRef
-                  )
-                }
-                ref={suggestionRef}
-              >
-                {locationLists?.length ? (
-                  locationLists?.map((item, i) => (
-                    <LocationName location={item} key={i} />
-                  ))
-                ) : (
-                  <div className={styles.noLocation}>
-                    <BiIcons.BiLocationPlus className={styles.locationIcon} />
-                    <h4>No location found</h4>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+              {inputRef?.current?.value && (
+                <BiIcons.BiXCircle
+                  className={styles.btnXCircle}
+                  onClick={() => (inputRef.current.value = "")}
+                />
+              )}
+              {suggestionBox && (
+                <div
+                  className={styles.searchSuggestion}
+                  onClick={(e) =>
+                    airPollutionHandler(
+                      e,
+                      dispatch,
+                      findAirPollutionForLocation,
+                      inputRef
+                    )
+                  }
+                  ref={suggestionRef}
+                >
+                  {locationLists?.length ? (
+                    locationLists?.map((item, i) => (
+                      <LocationName location={item} key={i} />
+                    ))
+                  ) : (
+                    <div className={styles.noLocation}>
+                      <BiIcons.BiLocationPlus className={styles.locationIcon} />
+                      <h4>No location found</h4>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )
         );
     }
   };

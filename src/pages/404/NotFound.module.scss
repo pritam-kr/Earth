@@ -1,0 +1,14 @@
+.pageContainer {
+  padding: 0px 0 0px 0;
+  padding: 10px;
+  position: relative;
+  height: calc(100vh -  135px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    font-size: 2rem;
+text-align: center;
+  }
+}

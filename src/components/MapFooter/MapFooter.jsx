@@ -6,32 +6,18 @@ import { BASEMAP } from "../Map/constants";
 import { useScreenShot } from "../../customHookes/useScreenShot";
 import Loader from "../Loader/Loader";
 import { useLocation } from "react-router-dom";
-import { GRAPH_AVAILABLE, PIECHART_AVAILABLE } from "./constants";
+import { COLORS, GRAPH_AVAILABLE, PIECHART_AVAILABLE } from "./constants";
 import PieChartCircle from "../PieChart/PieChart";
 import Graph from "../Graph/Graph";
 import { useSelector } from "react-redux";
-
+ 
 const MapFooter = ({ setMapStyle, mapContainerRef }) => {
   const [basemap, setBaseMap] = useState(false);
   const { loading, takeScreenShot } = useScreenShot();
   const [isVisual, setIsVisual] = useState({ pieChart: false, graph: false });
   const { pathname } = useLocation();
-
   const { airPollutionInfo } = useSelector((state) => state.mapReducer);
-
-  const COLORS = [
-    "#279EFF",
-    "#7091F5",
-    "#FF6969",
-    "#9EB384",
-    "#765827",
-    "#FEBBCC",
-    "#F11A7B",
-    "#B70404",
-  ];
-
-  console.log(airPollutionInfo?.list, "airPollutionInfo?.list?.length")
-
+ 
   return (
     <div className={styles.mapFooter}>
       <div className={styles.left}>
@@ -73,7 +59,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
 
         {PIECHART_AVAILABLE.includes(pathname) && (
           <button
-            disabled={airPollutionInfo?.list?.length}
+            disabled={!airPollutionInfo?.list?.length}
             className={`${styles.visulaizeWrapper} ${
               isVisual.pieChart ? styles.active : ""
             }`}
@@ -91,7 +77,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
 
         {GRAPH_AVAILABLE.includes(pathname) && (
           <button
-           disabled={airPollutionInfo?.list?.length}
+           disabled={!airPollutionInfo?.list?.length}
             className={`${styles.visulaizeWrapper}  ${
               isVisual.graph ? styles.active : ""
             }`}

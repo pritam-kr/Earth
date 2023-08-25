@@ -5,6 +5,7 @@ import SettingModal from "./modals/settingModal/SettingModal";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import NotFound from "./pages/404/NotFound";
 
 function App() {
   const ReducerStates = useSelector((state) => state.mapReducer);
@@ -26,6 +27,7 @@ function App() {
             path="/temprature"
             element={<Temprature setApikeyModal={setApikeyModal} />}
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </MainContainer>
 
