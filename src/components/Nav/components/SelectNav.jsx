@@ -1,7 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import * as IoIcons from "react-icons/io";
-import { useEffect, useRef } from "react";
-import { useOutSideClick } from "../../../customHookes";
+import { navLinks } from "../constants";
 
 export const SelectNav = ({
   value,
@@ -13,14 +12,6 @@ export const SelectNav = ({
   showDropdown,
 }) => {
   const location = useLocation();
-
-  const navLinks = (pathname) => {
-    if (pathname === "/") {
-      return "Air Quality";
-    } else if (pathname === "/temprature") {
-      return "Weather info";
-    }
-  };
 
   return (
     <div
