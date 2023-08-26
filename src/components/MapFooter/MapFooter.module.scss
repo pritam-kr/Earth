@@ -78,6 +78,13 @@
       right: 154px;
       height: 310px;
       padding: 10px;
+      min-width: 412px;
+
+      .loaderWrapper{
+        width: 100%;
+        height: 100%;
+        @include display-center;
+      }
 
       .pieChartCircleWrapper {
         width: 390px;

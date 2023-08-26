@@ -17,7 +17,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
   const [isVisual, setIsVisual] = useState({ pieChart: false, graph: false });
   const { pathname } = useLocation();
   const { airPollutionInfo } = useSelector((state) => state.mapReducer);
-   
+
   return (
     <div className={styles.mapFooter}>
       <div className={styles.left}>
@@ -42,17 +42,32 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
       <div className={styles.right}>
         {(isVisual.pieChart || isVisual.graph) && (
           <div className={styles.pieChartGraphWrapper}>
-            {isVisual.pieChart && (
-              <div className={styles.pieChartCircleWrapper}>
-                <PieChartCircle colors={COLORS} />
+            {airPollutionInfo?.loading ? (
+              <div className={styles.loaderWrapper}>
+                <Loader
+                  width={40}
+                  height={40}
+                  src={
+                    "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
+                  }
+                />
               </div>
-            )}
-            {isVisual.graph && (
-              <div
-                className={`${styles.pieChartCircleWrapper}  ${styles.graphWrapper}`}
-              >
-                <Graph />
-              </div>
+            ) : (
+              <>
+                {" "}
+                {isVisual.pieChart && (
+                  <div className={styles.pieChartCircleWrapper}>
+                    <PieChartCircle colors={COLORS} />
+                  </div>
+                )}
+                {isVisual.graph && (
+                  <div
+                    className={`${styles.pieChartCircleWrapper}  ${styles.graphWrapper}`}
+                  >
+                    <Graph />
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
