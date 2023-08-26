@@ -45,7 +45,7 @@ const mapReducer = (state = initialState, action) => {
         ...state,
         airPollutionInfo: {
           ...data,
-          airPoluttionLoading: isLoading,
+          loading: isLoading,
           error: error,
         },
       };

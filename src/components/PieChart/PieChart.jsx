@@ -14,7 +14,8 @@ const PieChartCircle = ({ isPieChart, colors }) => {
         value: item.components[item2],
       }))
     )
-    .flat();
+    .flat()
+    ?.sort((a, b) => b.value - a.value);
 
   const RADIAN = Math.PI / 180;
 
@@ -40,10 +41,7 @@ const PieChartCircle = ({ isPieChart, colors }) => {
             // label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
           >
             {data?.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={colors[index % colors.length]}
-              />
+              <Cell key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
         </PieChart>
@@ -51,16 +49,9 @@ const PieChartCircle = ({ isPieChart, colors }) => {
 
       <div className={styles.colorWrapper}>
         {data?.length > 0 &&
-          [...data]
-            .sort((a, b) => b.value - a.value)
-            ?.map((item, index) => (
-              <Colors
-                item={item}
-                index={index}
-                colors={colors}
-                styles={styles}
-              />
-            ))}
+          data?.map((item, index) => (
+            <Colors item={item} index={index} colors={colors} styles={styles} />
+          ))}
       </div>
     </>
   );

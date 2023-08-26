@@ -3,7 +3,7 @@
 /*--For Headings--*/
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans:wght@100;200;300;400;500;600;700;800&display=swap");
 
-/* @import "maplibre-gl/dist/maplibre-gl.css"; */
+ @import "maplibre-gl/dist/maplibre-gl.css"; 
 @import "react-toggle/style.css";
 
 :root {

@@ -48,11 +48,15 @@ const Map = () => {
         boxZoom: true,
       });
 
-      map.addControl(new maplibregl.NavigationControl(), "top-right");
       let marker = new maplibregl.Marker({ color: "#FF0000" })
         .setLngLat([coordinates.lon ?? longitude, coordinates.lat ?? latitude])
         .addTo(map);
-      // marker.addClassName("location-marker");
+
+      map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+      map.on("click", (e) => {
+        findAirPollutionForLocation(e.lngLat.lng, e.lngLat.lat);
+      });
     };
 
     getCoodinates();

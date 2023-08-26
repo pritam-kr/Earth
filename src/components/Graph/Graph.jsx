@@ -23,10 +23,12 @@ const Graph = () => {
     )
     .flat();
 
-  const dataGraph = data2?.map((item) => ({
-    name: item.name,
-    amt: item.value,
-  }));
+  const dataGraph = data2
+    ?.map((item) => ({
+      name: item.name,
+      amt: item.value,
+    }))
+    ?.sort((a, b) => b.amt - a.amt);
 
   return (
     <>

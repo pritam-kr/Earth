@@ -10,14 +10,14 @@ import { COLORS, GRAPH_AVAILABLE, PIECHART_AVAILABLE } from "./constants";
 import PieChartCircle from "../PieChart/PieChart";
 import Graph from "../Graph/Graph";
 import { useSelector } from "react-redux";
- 
+
 const MapFooter = ({ setMapStyle, mapContainerRef }) => {
   const [basemap, setBaseMap] = useState(false);
   const { loading, takeScreenShot } = useScreenShot();
   const [isVisual, setIsVisual] = useState({ pieChart: false, graph: false });
   const { pathname } = useLocation();
   const { airPollutionInfo } = useSelector((state) => state.mapReducer);
- 
+   
   return (
     <div className={styles.mapFooter}>
       <div className={styles.left}>
@@ -64,32 +64,54 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
               isVisual.pieChart ? styles.active : ""
             }`}
             onClick={() => {
-              setIsVisual((prev) => ({
-                ...prev,
-                pieChart: !prev.pieChart,
-                graph: false,
-              }));
+              !airPollutionInfo?.loading &&
+                setIsVisual((prev) => ({
+                  ...prev,
+                  pieChart: !prev.pieChart,
+                  graph: false,
+                }));
             }}
           >
-            <MapIcons.FcPieChart className={styles.mapIcon} />
+            {airPollutionInfo?.loading ? (
+              <Loader
+                width={20}
+                height={20}
+                src={
+                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
+                }
+              />
+            ) : (
+              <MapIcons.FcPieChart className={styles.mapIcon} />
+            )}
           </button>
         )}
 
         {GRAPH_AVAILABLE.includes(pathname) && (
           <button
-           disabled={!airPollutionInfo?.list?.length}
+            disabled={!airPollutionInfo?.list?.length}
             className={`${styles.visulaizeWrapper}  ${
               isVisual.graph ? styles.active : ""
             }`}
             onClick={() => {
-              setIsVisual((prev) => ({
-                ...prev,
-                pieChart: false,
-                graph: !prev.graph,
-              }));
+              !airPollutionInfo?.loading &&
+                setIsVisual((prev) => ({
+                  ...prev,
+                  pieChart: false,
+                  graph: !prev.graph,
+                }));
             }}
           >
-            <MapIcons.FcLineChart className={styles.mapIcon} />
+            {airPollutionInfo?.loading ? (
+              <Loader
+                width={20}
+                height={20}
+                src={
+                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
+                }
+              />
+            ) : (
+              <MapIcons.FcLineChart className={styles.mapIcon} />
+            )}
           </button>
         )}
 
