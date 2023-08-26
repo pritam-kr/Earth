@@ -18,8 +18,8 @@ export const airPollutionHandler = (
     findAirPollutionForLocation(locationInfo.lon, locationInfo.lat);
     // Locate on map firstly
     inputRef.current.value = `${locationInfo?.name}${
-      locationInfo?.state !== undefined && ", "
-    }${locationInfo?.state ?? ""}`;
+      typeof locationInfo?.state === "string" ? ", " + locationInfo?.state : ""
+    } `;
 
     dispatch({
       type: MAP_ACTIONS.GET_INITIAL_LON_LAT,

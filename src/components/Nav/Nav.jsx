@@ -293,8 +293,7 @@ export default Nav;
 const LocationName = ({ location }) => {
   return (
     <p className={styles.locationOption} data={JSON.stringify(location)}>
-      {location.name}
-      {location.state && `, ${location.state}`}
+      {location.name}{location.state && `, ${location.state }`}
     </p>
   );
 };
