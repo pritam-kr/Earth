@@ -14,6 +14,8 @@ const initialState = {
   citiesCoordinates: { data: [], isLoading: false, error: "" },
   airPollutionInfo: null,
 
+  // error for only open weather API
+  openweatherError: "",
 };
 
 const mapReducer = (state = initialState, action) => {
@@ -51,7 +53,10 @@ const mapReducer = (state = initialState, action) => {
       };
 
     case MAP_ACTIONS.GET_LOCATION_LIST:
-      return { ...state, locationsList: action.payload, };
+      return { ...state, locationsList: action.payload };
+
+    case MAP_ACTIONS.GET_ERROR_OPENWEATHERAPI:
+      return { ...state, openweatherError: action.payload };
 
     default:
       return state;
