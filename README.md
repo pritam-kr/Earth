@@ -4,3 +4,4 @@
 
  ## Key features
   - AQI Visualization using Graph, and Piechart. 
+  - Real time weather info of all cities in a state`
