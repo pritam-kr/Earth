@@ -16,25 +16,27 @@ function App() {
       ReducerStates.airPollutionInfo?.error?.includes("Invalid API key."));
   const [apiKeyModal, setApikeyModal] = useState(false);
 
+  console.log(apiKeyModal, )
+
   //1.15.2 - Maplibrejs
   return (
     <>
-      <Nav />
+      <Nav setApikeyModal={setApikeyModal}/>
       <MainContainer>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
             path="/temprature"
-            element={<Temprature setApikeyModal={setApikeyModal} />}
+            element={<Temprature  />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </MainContainer>
 
       <Footer children={"Made with ReactJs"} />
-      {(error || apiKeyModal) && <SettingModal />}
+      {(error || apiKeyModal) && <SettingModal setApikeyModal={setApikeyModal} />}
       <Toaster
-        position="top-left"
+        position="top-center"
         reverseOrder={false}
         gutter={8}
         containerClassName=""

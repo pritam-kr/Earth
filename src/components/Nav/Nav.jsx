@@ -12,7 +12,7 @@ import Select from "../Select/Select";
 import { getUniqueListBy } from "../../utils/getUniqueArray";
 import { useServices } from "../../services/useServices";
 
-const Nav = () => {
+const Nav = ({ setApikeyModal }) => {
   const {
     findAirPollutionForLocation,
     getLocations,
@@ -131,25 +131,34 @@ const Nav = () => {
               findCoordinates(item.name.toLowerCase().trim())
             );
 
-            const response = await Promise.all(responses);
+            const response = await Promise.allSettled(responses);
+            console.log(response)
 
-            const citiesCoordinates = getUniqueListBy(
-              response
-                .filter((item) => item.data.length && item.status === 200)
-                .map((item) => item.data)
-                .flat()
-                .filter(
-                  (item) =>
-                    item.country === country.cca2 &&
-                    item.state.toLowerCase() === state.name.toLowerCase()
-                ),
-              "name"
-            );
+            if (response.some((item) => item.status === "rejected")) {
+              setApikeyModal(true);
+            } else {
+              const citiesCoordinates = getUniqueListBy(
+                response
+                  .filter((item) => item.data.length && item.status === 200)
+                  .map((item) => item.data)
+                  .flat()
+                  .filter(
+                    (item) =>
+                      item.country === country.cca2 &&
+                      item.state.toLowerCase() === state.name.toLowerCase()
+                  ),
+                "name"
+              );
 
-            dispatch({
-              type: MAP_ACTIONS.GET_CITIES_COORDINATS,
-              payload: { data: citiesCoordinates, isLoading: false, error: "" },
-            });
+              dispatch({
+                type: MAP_ACTIONS.GET_CITIES_COORDINATS,
+                payload: {
+                  data: citiesCoordinates,
+                  isLoading: false,
+                  error: "",
+                },
+              });
+            }
           }
         } catch (error) {
           dispatch({
@@ -293,7 +302,8 @@ export default Nav;
 const LocationName = ({ location }) => {
   return (
     <p className={styles.locationOption} data={JSON.stringify(location)}>
-      {location.name}{location.state && `, ${location.state }`}
+      {location.name}
+      {location.state && `, ${location.state}`}
     </p>
   );
 };

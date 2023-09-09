@@ -4,10 +4,10 @@ import { useDispatch } from "react-redux";
 import { MAP_ACTIONS } from "../../redux/actions/actions";
 import { useServices } from "../../services/useServices";
 
-const SettingModal = () => {
+const SettingModal = ({ setApikeyModal }) => {
   const dispatch = useDispatch();
   const [apiKey, setApiKey] = useState("f4a78f3a238bb1393d8e39a33b9a4361");
-  const {setOpenWeatherApiKey} = useServices()
+  const { setOpenWeatherApiKey } = useServices();
 
   const onClose = () => {
     dispatch({
@@ -19,11 +19,13 @@ const SettingModal = () => {
       type: MAP_ACTIONS.GET_LOCATION_LIST,
       payload: { error: false },
     });
+
+    setApikeyModal(false);
   };
 
   const onSave = () => {
     onClose();
-    setOpenWeatherApiKey(apiKey)
+    setOpenWeatherApiKey(apiKey);
     localStorage.setItem("openWeatherAPIkey", apiKey);
   };
 

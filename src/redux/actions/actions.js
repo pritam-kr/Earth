@@ -11,4 +11,5 @@ export const MAP_ACTIONS = {
   GET_STATES: "get_states",
   GET_COUNTRY_COORDINATS: "get_country_coordinate",
   GET_CITIES_COORDINATS: "get_cities_coordinate",
+  GET_ERROR_OPENWEATHERAPI: "get_error_openweather",
 };
