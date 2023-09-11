@@ -18,7 +18,6 @@
   - [Countrystatecity.in](https://countrystatecity.in/)
 
   ## Getting Started
-
  Follow these steps to run Earth on your machine:
 
 - Clone the repository: git clone https://github.com/pritam-kr/Earth
