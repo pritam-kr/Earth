@@ -12,6 +12,11 @@
   - Redux
   - MaplibreJs
 
+  ## API's
+  I used several APIs to develop this application.
+  - [Openweather.org](https://openweathermap.org/)
+  - [Countrystatecity.in](https://countrystatecity.in/)
+
   ## Getting Started
 
  Follow these steps to run Earth on your machine:
