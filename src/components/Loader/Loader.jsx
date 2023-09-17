@@ -1,7 +1,8 @@
 import React from "react";
+import { LOADER_GIF } from "./constant";
 
 const Loader = ({
-  src,
+  src = LOADER_GIF,
   alt = "loader",
   width = 10,
   height = 10,

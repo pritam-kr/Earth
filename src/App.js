@@ -9,32 +9,30 @@ import NotFound from "./pages/404/NotFound";
 
 function App() {
   const ReducerStates = useSelector((state) => state.mapReducer);
-  const error =
-    (ReducerStates.locationsList?.error &&
-      ReducerStates.locationsList?.error?.includes("Invalid API key.")) ||
-    (ReducerStates.airPollutionInfo?.error &&
-      ReducerStates.airPollutionInfo?.error?.includes("Invalid API key."));
+  const isError =
+    (ReducerStates.locationsList?.isError &&
+      ReducerStates.locationsList?.isError?.includes("Invalid API key.")) ||
+    (ReducerStates.airPollutionInfo?.isError &&
+      ReducerStates.airPollutionInfo?.isError?.includes("Invalid API key."));
   const [apiKeyModal, setApikeyModal] = useState(false);
-
-  console.log(apiKeyModal, )
 
   //1.15.2 - Maplibrejs
   return (
     <>
-      <Nav setApikeyModal={setApikeyModal}/>
+      <Nav setApikeyModal={setApikeyModal} />
       <MainContainer>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/temprature"
-            element={<Temprature  />}
-          />
+          <Route path="/temprature" element={<Temprature />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </MainContainer>
 
       <Footer children={"Made with ReactJs"} />
-      {(error || apiKeyModal) && <SettingModal setApikeyModal={setApikeyModal} />}
+
+      {(isError || apiKeyModal) && (
+        <SettingModal setApikeyModal={setApikeyModal} />
+      )}
       <Toaster
         position="top-center"
         reverseOrder={false}

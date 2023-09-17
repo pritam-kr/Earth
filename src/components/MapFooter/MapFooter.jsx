@@ -12,11 +12,16 @@ import Graph from "../Graph/Graph";
 import { useSelector } from "react-redux";
 
 const MapFooter = ({ setMapStyle, mapContainerRef }) => {
-  const [basemap, setBaseMap] = useState(false);
+  // Hooks
   const { loading, takeScreenShot } = useScreenShot();
-  const [isVisual, setIsVisual] = useState({ pieChart: false, graph: false });
   const { pathname } = useLocation();
+
+  // Redux States
   const { airPollutionInfo } = useSelector((state) => state.mapReducer);
+
+  // States
+  const [basemap, setBaseMap] = useState(false);
+  const [isVisual, setIsVisual] = useState({ pieChart: false, graph: false });
 
   return (
     <div className={styles.mapFooter}>
@@ -44,13 +49,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
           <div className={styles.pieChartGraphWrapper}>
             {airPollutionInfo?.loading ? (
               <div className={styles.loaderWrapper}>
-                <Loader
-                  width={40}
-                  height={40}
-                  src={
-                    "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-                  }
-                />
+                <Loader width={40} height={40} />
               </div>
             ) : (
               <>
@@ -88,13 +87,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
             }}
           >
             {airPollutionInfo?.loading ? (
-              <Loader
-                width={20}
-                height={20}
-                src={
-                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-                }
-              />
+              <Loader width={20} height={20} />
             ) : (
               <MapIcons.FcPieChart className={styles.mapIcon} />
             )}
@@ -117,13 +110,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
             }}
           >
             {airPollutionInfo?.loading ? (
-              <Loader
-                width={20}
-                height={20}
-                src={
-                  "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-                }
-              />
+              <Loader width={20} height={20} />
             ) : (
               <MapIcons.FcLineChart className={styles.mapIcon} />
             )}
@@ -135,13 +122,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
           onClick={() => takeScreenShot(mapContainerRef.current)}
         >
           {loading ? (
-            <Loader
-              width={20}
-              height={20}
-              src={
-                "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-              }
-            />
+            <Loader width={20} height={20} />
           ) : (
             <FaIcons.FaCamera
               className={`${styles.mapIcon} ${styles.downloadIcon}`}
