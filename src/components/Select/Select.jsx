@@ -65,13 +65,7 @@ const Select = ({
           ) : (
             <div className={styles.noLocation}>
               {loading ? (
-                <Loader
-                  src={
-                    "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-                  }
-                  width={loaderW}
-                  height={loaderH}
-                />
+                <Loader width={loaderW} height={loaderH} />
               ) : (
                 <>
                   <BiIcons.BiLocationPlus className={styles.locationIcon} />
@@ -84,14 +78,7 @@ const Select = ({
       )}
 
       {loading && (
-        <Loader
-          width={20}
-          height={20}
-          src={
-            "https://res.cloudinary.com/dhqxln7zi/image/upload/v1679836774/FormalBewitchedIsabellinewheatear-max-1mb.gif"
-          }
-          className={styles.smallLoader}
-        />
+        <Loader width={20} height={20} className={styles.smallLoader} />
       )}
     </div>
   );

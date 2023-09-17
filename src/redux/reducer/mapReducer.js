@@ -1,17 +1,12 @@
 import { MAP_ACTIONS } from "../actions/actions";
 
 const initialState = {
-  //Oninitial render
-  countryCode: "",
-  stateName: "",
-  coordinates: { lon: null, lat: null, isLoading: false, error: "" },
-  locationsList: { data: [], isLoading: false, error: "" },
+  // Map loading
   mapLoading: false,
-  countries: { data: [], isLoading: false, error: "" },
-  states: { data: [], isLoading: false, error: "" },
-  cities: { data: [], isLoading: false, error: "" },
-  countryCoordinate: { lat: null, lng: null },
-  citiesCoordinates: { data: [], isLoading: false, error: "" },
+
+  //Oninitial render
+  coordinates: { lon: null, lat: null, isLoading: false, isError: "" },
+  locationsList: { data: [], isLoading: false, isError: "" },
   airPollutionInfo: null,
 
   // error for only open weather API
@@ -20,21 +15,6 @@ const initialState = {
 
 const mapReducer = (state = initialState, action) => {
   switch (action.type) {
-    case MAP_ACTIONS.GET_CITIES_COORDINATS:
-      return { ...state, citiesCoordinates: action.payload };
-
-    case MAP_ACTIONS.GET_CITIES:
-      return { ...state, cities: action.payload };
-
-    case MAP_ACTIONS.GET_STATES:
-      return {
-        ...state,
-        states: action.payload,
-      };
-
-    case MAP_ACTIONS.GET_COUNTRY_COORDINATS:
-      return { ...state, countryCoordinate: action.payload };
-
     case MAP_ACTIONS.RANDOM_LOADING:
       return { ...state, mapLoading: action.payload };
 
@@ -42,13 +22,13 @@ const mapReducer = (state = initialState, action) => {
       return { ...state, coordinates: action.payload };
 
     case MAP_ACTIONS.GET_AIR_POLLUTION:
-      const { data, isLoading, error } = action.payload;
+      const { data, isLoading, isError } = action.payload;
       return {
         ...state,
         airPollutionInfo: {
           ...data,
           loading: isLoading,
-          error: error,
+          isError: isError,
         },
       };
 

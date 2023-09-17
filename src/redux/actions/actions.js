@@ -13,3 +13,10 @@ export const MAP_ACTIONS = {
   GET_CITIES_COORDINATS: "get_cities_coordinate",
   GET_ERROR_OPENWEATHERAPI: "get_error_openweather",
 };
+
+export const PAYLOAD_LOADING_TRUE = { data: [], isLoading: true, isError: "" };
+export const PAYLOAD_LOADING_FALSE = {
+  data: [],
+  isLoading: false,
+  isError: "",
+};
