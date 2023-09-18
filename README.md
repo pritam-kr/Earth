@@ -24,6 +24,15 @@
 - Install dependencies: npm install
 - Start the development server: npm start
 - Open your web browser and go to http://localhost:3000 to access the website.
+
+## Versions
+- version 0.1 
+    - Two major feature
+        - AQI
+        - Weather info
+    - Bugs to manger states using Redux
+- version 0.2 
+    - Switching to ReactQuery
  
 # Contact
 If you have any questions or suggestions, please feel free to reach out to me at pritamvr9@gmail.com
