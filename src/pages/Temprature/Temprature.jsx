@@ -26,6 +26,8 @@ const Temprature = () => {
     loading: false,
     error: "",
   });
+
+
   const mapContainer = useRef(null);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ const Temprature = () => {
       if (longitude && latitude) {
         dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
       }
+
       dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
 
       const map = new maplibregl.Map({
@@ -49,7 +52,7 @@ const Temprature = () => {
           countryCoordinate.lng ?? longitude,
           countryCoordinate.lat ?? latitude,
         ], // starting position [lng, lat]
-        zoom: 5, // starting zoom
+        zoom: 4, // starting zoom
         maxZoom: 24,
         preserveDrawingBuffer: true,
         attributionControl: true,

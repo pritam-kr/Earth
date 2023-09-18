@@ -126,7 +126,6 @@ export const getCitiesOfStates = async ({
       });
 
       const { data, status } = await getAllCities(country?.cca2, state.iso2);
-      console.log(data, "data")
 
       if (status === 200) {
         if (!data?.length) {
@@ -215,6 +214,7 @@ export const renderSelectComponents = ({
   stateList,
   LocationName,
   debaunceSearchHandler,
+  citiesLoading
 }) => {
   switch (pathname) {
     case "/temprature":
@@ -258,7 +258,7 @@ export const renderSelectComponents = ({
               .map((item) => ({ ...item, label: item.name }))}
             value={state}
             setValue={setState}
-            loading={stateListLoading}
+            loading={stateListLoading || citiesLoading}
           />
         </div>
       );

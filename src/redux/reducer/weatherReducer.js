@@ -6,10 +6,16 @@ const initialState = {
 
   countryCoordinate: { lat: null, lng: null },
   citiesCoordinates: { data: [], isLoading: false, error: "" },
+
+  // States for Loader
+  mapLoading: false,
 };
 
 const weatherReducer = (state = initialState, action) => {
   switch (action.type) {
+    case MAP_ACTIONS.RANDOM_LOADING:
+      return { ...state, mapLoading: action.payload };
+
     case MAP_ACTIONS.GET_STATES:
       return {
         ...state,

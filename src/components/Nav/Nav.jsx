@@ -36,6 +36,7 @@ const Nav = ({ setApikeyModal }) => {
   const locationLists = mapReducer.locationsList.data;
   const { data: stateList, isLoading: stateListLoading } =
     weatherReducer.states;
+  const { isLoading: citiesLoading } = weatherReducer.cities;
 
   //Refs
   const inputRef = useRef(null);
@@ -121,6 +122,7 @@ const Nav = ({ setApikeyModal }) => {
           stateList,
           LocationName,
           debaunceSearchHandler,
+          citiesLoading,
         })}
       </div>
     </nav>

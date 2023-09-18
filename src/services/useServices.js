@@ -6,9 +6,9 @@ import { useState } from "react";
 
 export const useServices = () => {
   const dispatch = useDispatch();
-  const [OPEN_WEATHER_API_KEY, setOpenWeatherApiKey] = useState(
+  const [openWeatherAPIkey, setOpenWeatherApiKey] = useState(
     !localStorage.getItem("openWeatherAPIkey")
-      ? "f4a78f3a238bb1393d8e39a33b9a4362"
+      ? "f4a78f3a238bb1393d8e39a33b9a4361"
       : localStorage.getItem("openWeatherAPIkey")
   );
   const STATE_CITY_API_KEY = process.env.REACT_APP_STATE_CITY_KEY;
@@ -22,7 +22,7 @@ export const useServices = () => {
         payload: { isLoading: true, data: null },
       });
       const { data, status } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_API_KEY}`
+        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${openWeatherAPIkey}`
       );
 
       if (status === 200)
@@ -63,7 +63,7 @@ export const useServices = () => {
       });
 
       const { data, status } = await axios.get(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${OPEN_WEATHER_API_KEY}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${openWeatherAPIkey}`
       );
 
       if (status === 200) {
@@ -127,7 +127,7 @@ export const useServices = () => {
   const findCoordinates = (city) => {
     try {
       return axios.get(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${OPEN_WEATHER_API_KEY}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${openWeatherAPIkey}`
       );
     } catch (error) {
       dispatch({
@@ -143,7 +143,7 @@ export const useServices = () => {
   const getWeatherInfo = ({ lat, lon }) => {
     try {
       return axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${openWeatherAPIkey}&units=metric`
       );
     } catch (error) {
       toast.error(
