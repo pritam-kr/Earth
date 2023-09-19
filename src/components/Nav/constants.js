@@ -7,52 +7,34 @@ import {
 import { getUniqueListBy } from "../../utils/getUniqueArray";
 import Select from "../Select/Select";
 import * as BiIcons from "react-icons/bi";
+import Loader from "../Loader/Loader";
+import { CONTEXT_ACTIONS } from "../../context/contextActions";
 
-export const MENUS = [
-  { label: "Air Quality", value: "air pollution", path: "/" },
-  { label: "Weather info", value: "temprature", path: "/temprature" },
-  // { label: "Water Pollution", value: "water pollution", path: "/2" },
-  // { label: "Heat Wave", value: "head wave", path: "/3" },
-];
-
-export const LOGO =
-  "https://i.pinimg.com/originals/f3/7e/bb/f37ebbea1f4318dec775a4d705bd7cca.gif";
-
-export const COUNTRY_API = "https://restcountries.com/v3.1/all";
-
+ 
 export const airPollutionHandler = (
   e,
   dispatch,
-  findAirPollutionForLocation,
+  getAirPollution,
+  airPollutionLoading,
   inputRef
 ) => {
   const locationInfo = JSON.parse(e.target.getAttribute("data"));
   if (locationInfo) {
-    findAirPollutionForLocation(locationInfo.lon, locationInfo.lat);
+    getAirPollution(
+      { lon: locationInfo.lon, lat: locationInfo.lat },
+      {
+        onSuccess: (data) => {
+          dispatch({
+            type: CONTEXT_ACTIONS.GET_AIRPOLLUTION,
+            payload: { ...data, isLoading: airPollutionLoading },
+          });
+        },
+      }
+    );
 
     inputRef.current.value = `${locationInfo?.name}${
       typeof locationInfo?.state === "string" ? ", " + locationInfo?.state : ""
     } `;
-
-    dispatch({
-      type: MAP_ACTIONS.GET_INITIAL_LON_LAT,
-      payload: {
-        lon: locationInfo.lon,
-        lat: locationInfo.lat,
-        isLoading: false,
-        error: "",
-      },
-    });
-  }
-};
-
-export const navLinks = (pathname) => {
-  if (pathname === "/") {
-    return "Air Quality";
-  } else if (pathname === "/temprature") {
-    return "Weather info";
-  } else {
-    return "Not found";
   }
 };
 
@@ -197,7 +179,9 @@ export const getCitiesOfStates = async ({
 export const renderSelectComponents = ({
   suggestionRef,
   locationLists,
-  findAirPollutionForLocation,
+  getLocationNamesLoading,
+  getAirPollution,
+  airPollutionLoading,
   setSuggestionBox,
   inputRef,
   dispatch,
@@ -214,7 +198,7 @@ export const renderSelectComponents = ({
   stateList,
   LocationName,
   debaunceSearchHandler,
-  citiesLoading
+  citiesLoading,
 }) => {
   switch (pathname) {
     case "/temprature":
@@ -276,11 +260,15 @@ export const renderSelectComponents = ({
               onFocus={() => setSuggestionBox(true)}
               ref={inputRef}
             />
-            {inputRef?.current?.value && (
-              <BiIcons.BiXCircle
-                className={styles.btnXCircle}
-                onClick={() => (inputRef.current.value = "")}
-              />
+            {getLocationNamesLoading || airPollutionLoading ? (
+              <Loader width={20} height={20} />
+            ) : (
+              inputRef?.current?.value && (
+                <BiIcons.BiXCircle
+                  className={styles.btnXCircle}
+                  onClick={() => (inputRef.current.value = "")}
+                />
+              )
             )}
             {suggestionBox && (
               <div
@@ -289,7 +277,8 @@ export const renderSelectComponents = ({
                   airPollutionHandler(
                     e,
                     dispatch,
-                    findAirPollutionForLocation,
+                    getAirPollution,
+                    airPollutionLoading,
                     inputRef
                   )
                 }

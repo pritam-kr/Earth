@@ -1,8 +1,6 @@
 import { MAP_ACTIONS } from "../actions/actions";
 
 const initialState = {
-  // Map loading
-  mapLoading: false,
 
   //Oninitial render
   coordinates: { lon: null, lat: null, isLoading: false, isError: "" },
@@ -15,8 +13,7 @@ const initialState = {
 
 const mapReducer = (state = initialState, action) => {
   switch (action.type) {
-    case MAP_ACTIONS.RANDOM_LOADING:
-      return { ...state, mapLoading: action.payload };
+ 
 
     case MAP_ACTIONS.GET_INITIAL_LON_LAT:
       return { ...state, coordinates: action.payload };

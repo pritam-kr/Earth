@@ -2,39 +2,56 @@ import React, { useEffect, useRef } from "react";
 import styles from "./Map.module.scss";
 import maplibregl from "maplibre-gl";
 import { useCurrentLanLat, useMapStyle } from "../../customHookes";
-import { useSelector, useDispatch } from "react-redux";
-import { MAP_ACTIONS } from "../../redux/actions/actions";
 import MapFooter from "../MapFooter/MapFooter";
-import { useServices } from "../../services/useServices";
+import { useMapContext } from "../../context/mapContext";
+import { useAirPollution } from "../../services/useAirPollution";
+import { CONTEXT_ACTIONS } from "../../context/contextActions";
 
-const Map = () => {
+const Map = ({ setMapLoading }) => {
+
   // Hooks
-  const { findAirPollutionForLocation } = useServices();
   const { getLonLatCoordinates } = useCurrentLanLat();
   const { mapStyle, setMapStyle } = useMapStyle();
 
-  // Redux states
-  const { coordinates } = useSelector((state) => state.mapReducer);
-  const dispatch = useDispatch();
+  // New
+  const { getAirPollution, airPollutionLoading } = useAirPollution();
 
   //States
   const mapContainer = useRef(null);
 
+  // Context State
+  const {
+    dispatch,
+    state: { currentLocationCoordinate, locationCoordinate },
+  } = useMapContext();
+
   const getCoodinates = async () => {
-    // On the in
-    dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
+    // On the intial rendring
+    setMapLoading(true);
     // Getting user current Location's coordinates
     const { longitude, latitude } = await getLonLatCoordinates();
-    if (longitude && latitude)
-      dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
+    if (longitude && latitude) setMapLoading(false);
 
-    if (!coordinates.lon && !coordinates.lat)
-      findAirPollutionForLocation(longitude, latitude);
+    if (!locationCoordinate.lon && !locationCoordinate.lat)
+      getAirPollution(
+        { lon: longitude, lat: latitude },
+        {
+          onSuccess: (data) => {
+            dispatch({
+              type: CONTEXT_ACTIONS.GET_AIRPOLLUTION,
+              payload: { ...data, isLoading: airPollutionLoading },
+            });
+          },
+        }
+      );
 
     const map = new maplibregl.Map({
       container: mapContainer.current,
       style: mapStyle,
-      center: [coordinates.lon ?? longitude, coordinates.lat ?? latitude], // starting position [lng, lat]
+      center: [
+        locationCoordinate.lon ?? longitude,
+        locationCoordinate.lat ?? latitude,
+      ], // starting position [lng, lat]
       zoom: 3, // starting zoom
       maxZoom: 24,
       preserveDrawingBuffer: true,
@@ -43,23 +60,40 @@ const Map = () => {
     });
 
     new maplibregl.Marker({ color: "#FF0000" })
-      .setLngLat([coordinates.lon ?? longitude, coordinates.lat ?? latitude])
+      .setLngLat([
+        locationCoordinate.lon ?? longitude,
+        locationCoordinate.lat ?? latitude,
+      ])
       .addTo(map);
 
     map.addControl(new maplibregl.NavigationControl(), "top-right");
 
     map.on("click", (e) => {
-      findAirPollutionForLocation(e.lngLat.lng, e.lngLat.lat);
+      getAirPollution(
+        { lon: e.lngLat.lng, lat: e.lngLat.lat },
+        {
+          onSuccess: (data) => {
+            dispatch({
+              type: CONTEXT_ACTIONS.GET_AIRPOLLUTION,
+              payload: { ...data, isLoading: airPollutionLoading },
+            });
+          },
+        }
+      );
     });
   };
 
   useEffect(() => {
     getCoodinates();
-  }, [coordinates, mapStyle]);
+  }, [locationCoordinate, mapStyle]);
 
   return (
     <div className={styles.mapContainer} ref={mapContainer}>
-      <MapFooter setMapStyle={setMapStyle} mapContainerRef={mapContainer} />
+      <MapFooter
+        loadingProp={airPollutionLoading}
+        setMapStyle={setMapStyle}
+        mapContainerRef={mapContainer}
+      />
     </div>
   );
 };

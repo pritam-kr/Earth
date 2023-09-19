@@ -27,7 +27,6 @@ const Temprature = () => {
     error: "",
   });
 
-
   const mapContainer = useRef(null);
 
   useEffect(() => {
@@ -110,7 +109,7 @@ const Temprature = () => {
     <div className={styles.pageContainer}>
       <div className={styles.mapContainer} ref={mapContainer}></div>
 
-      {(mapLoading || citiesCoordinates.isLoading) && (
+      {mapLoading && (
         <div className={styles.mapLoader}>
           <Loader width={50} height={50} />
         </div>

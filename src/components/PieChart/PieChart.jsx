@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styles from "./PieChart.module.scss";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { useSelector } from "react-redux";
 import { AIR_COMPONENTS } from "./constants";
+import { useMapContext } from "../../context/mapContext";
 
 const PieChartCircle = ({ isPieChart, colors }) => {
-  const { airPollutionInfo } = useSelector((state) => state.mapReducer);
+  const {
+    state: { airPollutionInfo },
+  } = useMapContext();
 
   const data = airPollutionInfo?.list
     ?.map((item) =>
@@ -16,8 +18,6 @@ const PieChartCircle = ({ isPieChart, colors }) => {
     )
     .flat()
     ?.sort((a, b) => b.value - a.value);
-
-  const RADIAN = Math.PI / 180;
 
   return (
     <>

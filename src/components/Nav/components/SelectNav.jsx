@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import * as IoIcons from "react-icons/io";
-import { navLinks } from "../constants";
+import { navLinks } from "../../../globalConstant/constants";
 
 export const SelectNav = ({
   value,

@@ -16,14 +16,31 @@ function App() {
       ReducerStates.airPollutionInfo?.isError?.includes("Invalid API key."));
   const [apiKeyModal, setApikeyModal] = useState(false);
 
+  // Current country co-ordinates
+  const [countryCoordinate, setCountryCoordinate] = useState("");
+
+  // Maploading
+  const [mapLoading, setMapLoading] = useState(false);
+
   //1.15.2 - Maplibrejs
   return (
     <>
-      <Nav setApikeyModal={setApikeyModal} />
+      <Nav
+        setApikeyModal={setApikeyModal}
+        setCountryCoordinate={setCountryCoordinate}
+      />
       <MainContainer>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/temprature" element={<Temprature />} />
+          <Route
+            path="/"
+            element={
+              <Home mapLoading={mapLoading} setMapLoading={setMapLoading} />
+            }
+          />
+          <Route
+            path="/temprature"
+            element={<Temprature countryCoordinate={countryCoordinate} />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </MainContainer>
