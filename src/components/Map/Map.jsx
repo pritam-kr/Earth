@@ -8,7 +8,6 @@ import { useAirPollution } from "../../services/useAirPollution";
 import { CONTEXT_ACTIONS } from "../../context/contextActions";
 
 const Map = ({ setMapLoading }) => {
-
   // Hooks
   const { getLonLatCoordinates } = useCurrentLanLat();
   const { mapStyle, setMapStyle } = useMapStyle();
@@ -30,7 +29,13 @@ const Map = ({ setMapLoading }) => {
     setMapLoading(true);
     // Getting user current Location's coordinates
     const { longitude, latitude } = await getLonLatCoordinates();
-    if (longitude && latitude) setMapLoading(false);
+    if (longitude && latitude) {
+      dispatch({
+        type: CONTEXT_ACTIONS.GET_CURRENT_LOCATION_COORDINATE,
+        payload: { lon: longitude, lat: latitude },
+      });
+      setMapLoading(false);
+    }
 
     if (!locationCoordinate.lon && !locationCoordinate.lat)
       getAirPollution(

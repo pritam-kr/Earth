@@ -8,6 +8,7 @@ import { MAP_ACTIONS } from "../../redux/actions/actions";
 import MapFooter from "../../components/MapFooter/MapFooter";
 import { useServices } from "../../services/useServices";
 import { getPopup, weatherForcast } from "./constant";
+import { useWeatherContext } from "../../context/weatherContext";
 
 const Temprature = () => {
   // Hooks
@@ -17,8 +18,15 @@ const Temprature = () => {
 
   // Redux States
   const { weatherReducer } = useSelector((state) => state);
-  const { countryCoordinate, mapLoading, citiesCoordinates } = weatherReducer;
+  const { countryCoordinate, mapLoading } = weatherReducer;
   const dispatch = useDispatch();
+
+  // New
+
+  const { state: weatherContextState, dispatch: weatherContextDispath } =
+    useWeatherContext();
+
+  console.log(weatherContextState);
 
   // States
   const [forcastData, setForcastData] = useState({
@@ -60,50 +68,57 @@ const Temprature = () => {
 
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-      const response = citiesCoordinates.data?.map((item) =>
-        getWeatherInfo({ lat: item.lat, lon: item.lon })
-      );
+      const response =
+        weatherContextState?.citiesCoordinates?.citiesCoordinatesList?.map(
+          (item) => getWeatherInfo({ lat: item.lat, lon: item.lon })
+        );
 
-      const data = await Promise.allSettled(response);
+      const data = response && (await Promise.allSettled(response));
 
-      data
-        ?.filter(
-          (item) => item?.value?.status === 200 || item?.status === "fulfilled"
-        )
-        .forEach((item) => {
-          const weatherInfo = item?.value?.data;
-          const customMark = document.createElement("div");
-          customMark.className = "customMarker";
-          const celcius = Math.trunc(weatherInfo.main.temp);
-          const temp = document.createElement("p");
-          temp.className = "temp";
-          temp.textContent = `${celcius}°C`;
-          customMark.appendChild(temp);
+      data &&
+        data
+          ?.filter(
+            (item) =>
+              item?.value?.status === 200 || item?.status === "fulfilled"
+          )
+          .forEach((item) => {
+            const weatherInfo = item?.value?.data;
+            const customMark = document.createElement("div");
+            customMark.className = "customMarker";
+            const celcius = Math.trunc(weatherInfo.main.temp);
+            const temp = document.createElement("p");
+            temp.className = "temp";
+            temp.textContent = `${celcius}°C`;
+            customMark.appendChild(temp);
 
-          customMark.addEventListener("click", (e) => {
-            const {
-              value: {
-                data: {
-                  coord: { lon, lat },
+            customMark.addEventListener("click", (e) => {
+              const {
+                value: {
+                  data: {
+                    coord: { lon, lat },
+                  },
                 },
-              },
-            } = item;
+              } = item;
 
-            weatherForcast({ lon, lat, setForcastData, getWeatherForcast });
+              weatherForcast({ lon, lat, setForcastData, getWeatherForcast });
+            });
+
+            new maplibregl.Marker({
+              color: "#FF0000",
+              element: customMark,
+            })
+              .setLngLat([weatherInfo.coord.lon, weatherInfo.coord.lat])
+              .setPopup(getPopup({ weatherInfo }))
+              .addTo(map);
           });
-
-          new maplibregl.Marker({
-            color: "#FF0000",
-            element: customMark,
-          })
-            .setLngLat([weatherInfo.coord.lon, weatherInfo.coord.lat])
-            .setPopup(getPopup({ weatherInfo }))
-            .addTo(map);
-        });
     };
 
     getCoodinates();
-  }, [countryCoordinate, citiesCoordinates.data, mapStyle]);
+  }, [
+    countryCoordinate,
+    weatherContextState?.citiesCoordinates?.citiesCoordinatesList,
+    mapStyle,
+  ]);
 
   return (
     <div className={styles.pageContainer}>

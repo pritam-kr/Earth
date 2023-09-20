@@ -5,11 +5,15 @@ const WeatherContext = createContext(null);
 
 const initialState = {
   citiesList: [],
-  citiesCoordinates: [],
+  citiesCoordinates: null,
 };
 
 const weatherReducer = (state, action) => {
   switch (action.type) {
+    case CONTEXT_ACTIONS.GET_CITY_COORDINATES:
+      console.log(action)
+      return { ...state, citiesCoordinates: action.payload };
+
     default:
       return { ...state };
   }

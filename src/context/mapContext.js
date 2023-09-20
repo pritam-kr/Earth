@@ -14,6 +14,12 @@ const mapReducer = (state, action) => {
     case CONTEXT_ACTIONS.GET_AIRPOLLUTION:
       return { ...state, airPollutionInfo: action.payload };
 
+    case CONTEXT_ACTIONS.GET_CURRENT_LOCATION_COORDINATE:
+      return { ...state, currentLocationCoordinate: action.payload };
+
+    case CONTEXT_ACTIONS.GET_LOCATION_COORDINATE:
+      return { ...state, locationCoordinate: action.payload };
+
     default:
       return { ...state };
   }

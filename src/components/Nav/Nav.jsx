@@ -13,13 +13,20 @@ import { useCityList } from "../../services/useCityList";
 import { useAirPollution } from "../../services/useAirPollution";
 import { useMapContext } from "../../context/mapContext";
 import { LOGO, MENUS } from "../../globalConstant/constants";
+import { getUniqueListBy } from "../../utils/getUniqueArray";
+import { CONTEXT_ACTIONS } from "../../context/contextActions";
+import { useWeatherContext } from "../../context/weatherContext";
 
-const Nav = ({ setApikeyModal }) => {
+const Nav = () => {
   const { pathname } = useLocation();
 
   // New
-  const { getLocationNames, locationLists, getLocationNamesLoading } =
-    useLocationSearch();
+  const {
+    getLocationNames,
+    locationLists,
+    getLocationNamesLoading,
+    findCoordinates,
+  } = useLocationSearch();
   const { getStateList, getStateListLoading } = useStateList();
   const {
     getCountry,
@@ -32,10 +39,13 @@ const Nav = ({ setApikeyModal }) => {
 
   // Context State
   const { dispatch } = useMapContext();
+  const { state: weatherContextState, dispatch: weatherContextDispath } =
+    useWeatherContext();
+
+ 
 
   // Redux States
   const { weatherReducer } = useSelector((state) => state);
-
   const { isLoading: citiesLoading } = weatherReducer.cities;
 
   //Refs
@@ -46,14 +56,14 @@ const Nav = ({ setApikeyModal }) => {
   const [navLinks, setNavLinks] = useState("");
   const [dropdown, showDropdown] = useState(false);
   const [suggestionBox, setSuggestionBox] = useState(false);
+  const [countryList, setCountryList] = useState([]);
 
-  const [countries, setCountries] = useState([]);
+  // Currest State, Current Country -- States
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
+  // Currest State, Current Country -- States
 
   const [stateList, setStateList] = useState([]);
-  const [cityList, setCityList] = useState([]);
-  const [coordinatesList, setCoordinates] = useState([])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debaunceSearchHandler = useCallback(
@@ -64,7 +74,7 @@ const Nav = ({ setApikeyModal }) => {
   useEffect(() => {
     getCountry(null, {
       onSuccess: (data) => {
-        setCountries(data);
+        setCountryList(data);
       },
 
       onError: (error) => {
@@ -91,6 +101,45 @@ const Nav = ({ setApikeyModal }) => {
     }
   }, [country]);
 
+  const findCoordinatesHandler = async (data) => {
+    weatherContextDispath({
+      type: CONTEXT_ACTIONS.GET_CITY_COORDINATES,
+      payload: { isLoading: true },
+    });
+
+    const responses = data.map((item) =>
+      findCoordinates(item.name.toLowerCase().trim())
+    );
+
+    const response = await Promise.allSettled(responses);
+
+    weatherContextDispath({
+      type: CONTEXT_ACTIONS.GET_CITY_COORDINATES,
+      payload: { isLoading: false },
+    });
+
+    const citiesCoordinates = getUniqueListBy(
+      response
+        .filter(
+          (item) => item?.value?.data?.length > 0 && item.status === "fulfilled"
+        )
+        .map((item) => item.value.data)
+        .flat()
+        .filter(
+          (item) =>
+            item.country === country.cca2 &&
+            item.state.toLowerCase() === state.name.toLowerCase()
+        ),
+      "name"
+    );
+
+    if (citiesCoordinates.length > 0)
+      weatherContextDispath({
+        type: CONTEXT_ACTIONS.GET_CITY_COORDINATES,
+        payload: { isLoading: false, citiesCoordinatesList: citiesCoordinates },
+      });
+  };
+
   useEffect(() => {
     if (state && country) {
       getCity(
@@ -100,7 +149,7 @@ const Nav = ({ setApikeyModal }) => {
             if (!data?.length) {
               toast.error("No city found");
             } else {
-              setCityList(data);
+              findCoordinatesHandler(data);
             }
           },
           onError: (error) => {
@@ -150,7 +199,7 @@ const Nav = ({ setApikeyModal }) => {
           suggestionBox,
           pathname,
           styles,
-          countries,
+          countries: countryList,
           country,
           setCountry,
           state,
@@ -159,7 +208,7 @@ const Nav = ({ setApikeyModal }) => {
           stateList,
           LocationName,
           debaunceSearchHandler,
-          citiesLoading,
+          citiesLoading: weatherContextState.citiesCoordinates.isLoading,
         })}
       </div>
     </nav>

@@ -10,7 +10,6 @@ import * as BiIcons from "react-icons/bi";
 import Loader from "../Loader/Loader";
 import { CONTEXT_ACTIONS } from "../../context/contextActions";
 
- 
 export const airPollutionHandler = (
   e,
   dispatch,
@@ -20,6 +19,10 @@ export const airPollutionHandler = (
 ) => {
   const locationInfo = JSON.parse(e.target.getAttribute("data"));
   if (locationInfo) {
+    inputRef.current.value = `${locationInfo?.name}${
+      typeof locationInfo?.state === "string" ? ", " + locationInfo?.state : ""
+    } `;
+
     getAirPollution(
       { lon: locationInfo.lon, lat: locationInfo.lat },
       {
@@ -32,9 +35,11 @@ export const airPollutionHandler = (
       }
     );
 
-    inputRef.current.value = `${locationInfo?.name}${
-      typeof locationInfo?.state === "string" ? ", " + locationInfo?.state : ""
-    } `;
+    // Storing searched location coordinate
+    dispatch({
+      type: CONTEXT_ACTIONS.GET_LOCATION_COORDINATE,
+      payload: { lon: locationInfo.lon, lat: locationInfo.lat },
+    });
   }
 };
 
