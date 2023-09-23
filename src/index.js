@@ -4,8 +4,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "./redux/store";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MapContextProvider } from "./context/mapContext";
 import { WeatherContextProvider } from "./context/weatherContext";
@@ -23,9 +21,7 @@ root.render(
         <MapContextProvider>
           <WeatherContextProvider>
             <QueryClientProvider client={queryClient}>
-              <Provider store={store} r>
-                <App />
-              </Provider>
+              <App />
             </QueryClientProvider>
           </WeatherContextProvider>
         </MapContextProvider>

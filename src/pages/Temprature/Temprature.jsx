@@ -7,12 +7,14 @@ import MapFooter from "../../components/MapFooter/MapFooter";
 import { useServices } from "../../services/useServices";
 import { getPopup, weatherForcast } from "./constant";
 import { useWeatherContext } from "../../context/weatherContext";
+import { useErrorContext } from "../../context/errorContext";
 
 const Temprature = () => {
   // Custom hooks
   const { mapStyle, setMapStyle } = useMapStyle();
   const { getWeatherInfo, getWeatherForcast } = useServices();
   const { getLonLatCoordinates } = useCurrentLanLat();
+  const { setIsError } = useErrorContext();
 
   // States
   const [mapLoading, setMapLoading] = useState(false);
@@ -74,41 +76,46 @@ const Temprature = () => {
 
     const data = response && (await Promise.allSettled(response));
 
-    data &&
-      data
-        ?.filter(
-          (item) => item?.value?.status === 200 || item?.status === "fulfilled"
-        )
-        .forEach((item) => {
-          const weatherInfo = item?.value?.data;
-          const customMark = document.createElement("div");
-          customMark.className = "customMarker";
-          const celcius = Math.trunc(weatherInfo.main.temp);
-          const temp = document.createElement("p");
-          temp.className = "temp";
-          temp.textContent = `${celcius}°C`;
-          customMark.appendChild(temp);
+    if (data?.some((item) => item.status === "rejected")) {
+      setIsError((prev) => ({ ...prev, openWeatherApi: true }));
+    } else {
+      data &&
+        data
+          ?.filter(
+            (item) =>
+              item?.value?.status === 200 || item?.status === "fulfilled"
+          )
+          .forEach((item) => {
+            const weatherInfo = item?.value?.data;
+            const customMark = document.createElement("div");
+            customMark.className = "customMarker";
+            const celcius = Math.trunc(weatherInfo.main.temp);
+            const temp = document.createElement("p");
+            temp.className = "temp";
+            temp.textContent = `${celcius}°C`;
+            customMark.appendChild(temp);
 
-          customMark.addEventListener("click", (e) => {
-            const {
-              value: {
-                data: {
-                  coord: { lon, lat },
+            customMark.addEventListener("click", (e) => {
+              const {
+                value: {
+                  data: {
+                    coord: { lon, lat },
+                  },
                 },
-              },
-            } = item;
+              } = item;
 
-            weatherForcast({ lon, lat, setForcastData, getWeatherForcast });
+              weatherForcast({ lon, lat, setForcastData, getWeatherForcast });
+            });
+
+            new maplibregl.Marker({
+              color: "#FF0000",
+              element: customMark,
+            })
+              .setLngLat([weatherInfo.coord.lon, weatherInfo.coord.lat])
+              .setPopup(getPopup({ weatherInfo }))
+              .addTo(map);
           });
-
-          new maplibregl.Marker({
-            color: "#FF0000",
-            element: customMark,
-          })
-            .setLngLat([weatherInfo.coord.lon, weatherInfo.coord.lat])
-            .setPopup(getPopup({ weatherInfo }))
-            .addTo(map);
-        });
+    }
   };
 
   useEffect(() => {

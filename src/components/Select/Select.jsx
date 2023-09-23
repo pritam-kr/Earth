@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Select.module.scss";
 import * as BiIcons from "react-icons/bi";
 import Loader from "../Loader/Loader";
@@ -8,15 +8,18 @@ const Select = ({
   setValue,
   placeholder = "Select",
   options = [],
-  ref,
   className,
   disabled = false,
   loading = false,
   loaderW = 30,
   loaderH = 30,
 }) => {
+  //States
   const [suggestionBos, setSuggestionBox] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+
+  //refs
+  const inputRef = useRef(null);
 
   const optionHandler = (e) => {
     const optionInfo = JSON.parse(e.target.getAttribute("data"));
@@ -32,11 +35,26 @@ const Select = ({
     }
   };
 
+  useEffect(() => {
+    if (disabled) {
+      setSearchValue("");
+    }
+  }, [disabled]);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      if (e.target !== inputRef.current) {
+        setSuggestionBox(false);
+      }
+    });
+
+    return () => {
+      window.removeEventListener("click", () => {});
+    };
+  });
+
   return (
-    <div
-      className={`${styles.selectWrapper} ${className ? className : ""}`}
-      ref={ref}
-    >
+    <div className={`${styles.selectWrapper} ${className ? className : ""}`}>
       <input
         type="text"
         value={searchValue}
@@ -48,6 +66,7 @@ const Select = ({
           setSearchValue("");
         }}
         disabled={disabled}
+        ref={inputRef}
       />
 
       {suggestionBos && (
@@ -77,8 +96,18 @@ const Select = ({
         </div>
       )}
 
-      {loading && (
+      {loading ? (
         <Loader width={20} height={20} className={styles.smallLoader} />
+      ) : (
+        searchValue && (
+          <BiIcons.BiXCircle
+            className={styles.btnClose}
+            onClick={() => {
+              setSuggestionBox(false);
+              setSearchValue("");
+            }}
+          />
+        )
       )}
     </div>
   );
