@@ -82,7 +82,7 @@ const CountryStateSearchbar = ({ styles }) => {
     );
 
     const response = await Promise.allSettled(responses);
-    if (response.some((item) => item.status === "rejected")) {
+    if (response?.some((item) => item.status === "rejected")) {
       setIsError((prev) => ({ ...prev, openWeatherApi: true }));
       dispatch({
         type: CONTEXT_ACTIONS.GET_CITY_COORDINATES,
@@ -148,7 +148,7 @@ const CountryStateSearchbar = ({ styles }) => {
       <Select
         placeholder={"Select country name"}
         className={styles.selectCountryState}
-        options={sortingAtoB(countryList).map((item) => ({
+        options={sortingAtoB(countryList, "country").map((item) => ({
           ...item,
           label: `${item.name.common} ${item.flag}`,
         }))}
@@ -160,7 +160,7 @@ const CountryStateSearchbar = ({ styles }) => {
         placeholder={"Select state name"}
         className={styles.selectCountryState}
         disabled={!stateList?.length}
-        options={sortingAtoB(stateList).map((item) => ({
+        options={sortingAtoB(stateList, "state").map((item) => ({
           ...item,
           label: item.name,
         }))}
