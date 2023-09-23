@@ -6,8 +6,7 @@ import {
 } from "../../redux/actions/actions";
 import { getUniqueListBy } from "../../utils/getUniqueArray";
 import Select from "../Select/Select";
-import * as BiIcons from "react-icons/bi";
-import Loader from "../Loader/Loader";
+
 import { CONTEXT_ACTIONS } from "../../context/contextActions";
 
 export const airPollutionHandler = (
@@ -182,15 +181,6 @@ export const getCitiesOfStates = async ({
 };
 
 export const renderSelectComponents = ({
-  suggestionRef,
-  locationLists,
-  getLocationNamesLoading,
-  getAirPollution,
-  airPollutionLoading,
-  setSuggestionBox,
-  inputRef,
-  dispatch,
-  suggestionBox,
   pathname,
   styles,
   countries,
@@ -201,8 +191,6 @@ export const renderSelectComponents = ({
   setState,
   stateListLoading,
   stateList,
-  LocationName,
-  debaunceSearchHandler,
   citiesLoading,
 }) => {
   switch (pathname) {
@@ -253,56 +241,6 @@ export const renderSelectComponents = ({
       );
 
     default:
-      return (
-        pathname === "/" && (
-          <div className={styles.searchBar}>
-            {" "}
-            <input
-              type="text"
-              placeholder="Search location name"
-              className={styles.input}
-              onChange={debaunceSearchHandler}
-              onFocus={() => setSuggestionBox(true)}
-              ref={inputRef}
-            />
-            {getLocationNamesLoading || airPollutionLoading ? (
-              <Loader width={20} height={20} />
-            ) : (
-              inputRef?.current?.value && (
-                <BiIcons.BiXCircle
-                  className={styles.btnXCircle}
-                  onClick={() => (inputRef.current.value = "")}
-                />
-              )
-            )}
-            {suggestionBox && (
-              <div
-                className={styles.searchSuggestion}
-                onClick={(e) =>
-                  airPollutionHandler(
-                    e,
-                    dispatch,
-                    getAirPollution,
-                    airPollutionLoading,
-                    inputRef
-                  )
-                }
-                ref={suggestionRef}
-              >
-                {locationLists?.length ? (
-                  locationLists?.map((item, i) => (
-                    <LocationName location={item} key={i} />
-                  ))
-                ) : (
-                  <div className={styles.noLocation}>
-                    <BiIcons.BiLocationPlus className={styles.locationIcon} />
-                    <h4>No location found</h4>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )
-      );
+      return "";
   }
 };

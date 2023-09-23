@@ -49,25 +49,10 @@ export const useLocationSearch = () => {
     },
   });
 
-  // 5. Find Co-ordinates by city name
-  const findCoordinates = (
-    city,
-    openWeatherAPIkey = "f4a78f3a238bb1393d8e39a33b9a4361"
-  ) => {
-    try {
-      return axios.get(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${openWeatherAPIkey}`
-      );
-    } catch (error) {}
-  };
-
   return {
     getLocationNames,
     getLocationNamesLoading,
     getLocationNamesError,
     locationLists: data,
-
-    //findCoordinates
-    findCoordinates,
   };
 };

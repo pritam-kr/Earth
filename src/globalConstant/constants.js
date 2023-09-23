@@ -1,6 +1,6 @@
 export const MENUS = [
   { label: "Air Quality", value: "air pollution", path: "/" },
-  { label: "Weather info", value: "temprature", path: "/temprature" },
+  { label: "Weather info", value: "temprature", path: "/weather" },
   // { label: "Water Pollution", value: "water pollution", path: "/2" },
   // { label: "Heat Wave", value: "head wave", path: "/3" },
 ];
@@ -11,7 +11,7 @@ export const LOGO =
 export const navLinks = (pathname) => {
   if (pathname === "/") {
     return "Air Quality";
-  } else if (pathname === "/temprature") {
+  } else if (pathname === "/weather") {
     return "Weather info";
   } else {
     return "Not found";
@@ -58,6 +58,7 @@ export const BASEMAP = [
 
 export const PIECHART_AVAILABLE = ["/"];
 export const GRAPH_AVAILABLE = ["/"];
+export const CITY_LIST_AVAILABLE = ["/weather"]
 export const COLORS = [
   "#279EFF",
   "#7091F5",

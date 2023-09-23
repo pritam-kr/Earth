@@ -2,29 +2,32 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Temprature.module.scss";
 import { useCurrentLanLat, useMapStyle } from "../../customHookes";
 import maplibregl from "maplibre-gl";
-import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../components";
-import { MAP_ACTIONS } from "../../redux/actions/actions";
 import MapFooter from "../../components/MapFooter/MapFooter";
 import { useServices } from "../../services/useServices";
 import { getPopup, weatherForcast } from "./constant";
 import { useWeatherContext } from "../../context/weatherContext";
 
 const Temprature = () => {
-  // Hooks
+  // Custom hooks
   const { mapStyle, setMapStyle } = useMapStyle();
   const { getWeatherInfo, getWeatherForcast } = useServices();
   const { getLonLatCoordinates } = useCurrentLanLat();
 
-  // Redux States
-  const { weatherReducer } = useSelector((state) => state);
-  const { countryCoordinate, mapLoading } = weatherReducer;
-  const dispatch = useDispatch();
+  // States
+  const [mapLoading, setMapLoading] = useState(false);
 
-  // New
-
-  const { state: weatherContextState, dispatch: weatherContextDispath } =
-    useWeatherContext();
+  // Context states
+  const {
+    state: {
+      currentCountryCoordinate,
+      citiesCoordinates: {
+        citiesCoordinatesList,
+        isLoading: citiesCoordinatesListLoading,
+      },
+    },
+    dispatch,
+  } = useWeatherContext();
 
   // States
   const [forcastData, setForcastData] = useState({
@@ -36,25 +39,25 @@ const Temprature = () => {
   const mapContainer = useRef(null);
 
   const getCoodinates = async () => {
-    dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
+    setMapLoading(true);
 
     const { longitude, latitude } =
-      !countryCoordinate.lng &&
-      !countryCoordinate.lat &&
+      !currentCountryCoordinate?.lon &&
+      !currentCountryCoordinate?.lat &&
       (await getLonLatCoordinates());
 
     if (longitude && latitude) {
-      dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
+      setMapLoading(false);
     }
 
-    dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
+    setMapLoading(false);
 
     const map = new maplibregl.Map({
       container: mapContainer.current,
       style: mapStyle,
       center: [
-        countryCoordinate.lng ?? longitude,
-        countryCoordinate.lat ?? latitude,
+        currentCountryCoordinate?.lon ?? longitude,
+        currentCountryCoordinate?.lat ?? latitude,
       ], // starting position [lng, lat]
       zoom: 4, // starting zoom
       maxZoom: 24,
@@ -65,10 +68,9 @@ const Temprature = () => {
 
     map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-    const response =
-      weatherContextState?.citiesCoordinates?.citiesCoordinatesList?.map(
-        (item) => getWeatherInfo({ lat: item.lat, lon: item.lon })
-      );
+    const response = citiesCoordinatesList?.map((item) =>
+      getWeatherInfo({ lat: item.lat, lon: item.lon })
+    );
 
     const data = response && (await Promise.allSettled(response));
 
@@ -111,17 +113,13 @@ const Temprature = () => {
 
   useEffect(() => {
     getCoodinates();
-  }, [
-    countryCoordinate,
-    weatherContextState?.citiesCoordinates?.citiesCoordinatesList,
-    mapStyle,
-  ]);
+  }, [citiesCoordinatesList, mapStyle, currentCountryCoordinate]);
 
   return (
     <div className={styles.pageContainer}>
       <div className={styles.mapContainer} ref={mapContainer}></div>
 
-      {mapLoading && (
+      {(mapLoading || citiesCoordinatesListLoading) && (
         <div className={styles.mapLoader}>
           <Loader width={50} height={50} />
         </div>

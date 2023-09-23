@@ -17,6 +17,7 @@ const SettingModal = () => {
     onClose();
     setOpenWeatherApiKey(apiKey);
     localStorage.setItem("openWeatherAPIkey", apiKey);
+    window.location.reload()
   };
 
   return (

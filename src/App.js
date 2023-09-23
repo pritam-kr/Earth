@@ -26,7 +26,7 @@ function App() {
               <Home mapLoading={mapLoading} setMapLoading={setMapLoading} />
             }
           />
-          <Route path="/temprature" element={<Temprature />} />
+          <Route path="/weather" element={<Temprature />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </MainContainer>
