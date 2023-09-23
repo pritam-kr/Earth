@@ -9,7 +9,7 @@
   ## Tech Stack
   - JavaScript
   - ReactJS, 
-  - Redux
+  - React Query
   - MaplibreJs
 
   ## API's
