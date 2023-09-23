@@ -1,10 +1,10 @@
  # Earth - Air Quality and Weather Visualization Web App
 
- Earth is a dynamic web application that empowers users to access real-time Air Quality Index (AQI) and weather information for any location around the world. With an intuitive map-based interface, users can effortlessly explore AQI levels and current weather conditions.
+ Earth is a dynamic web application that empowers users to access real-time Air Quality Index (AQI) and weather information for any location worldwide. Users can effortlessly explore AQI levels and current weather conditions with an intuitive map-based interface.
 
  ## Key features
   - AQI Visualization using Graph, and Piechart. 
-  - Real time weather info of all cities of a states on map it self.
+  - Real-time weather info of all cities of states on the map itself.
 
   ## Tech Stack
   - JavaScript
@@ -30,9 +30,11 @@
     - Two major feature
         - AQI
         - Weather info
-    - Bugs to manger states using Redux
+      
 - version 0.2 
     - Switching to ReactQuery
+    - Error handling
+    - State management using useContext
  
 # Contact
 If you have any questions or suggestions, please feel free to reach out to me at pritamvr9@gmail.com
