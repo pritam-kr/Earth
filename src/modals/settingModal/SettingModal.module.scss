@@ -10,10 +10,10 @@
   bottom: 0;
   @include display-center;
   /* From https://css.glass */
-  background: rgba(237, 234, 234, 0.055);
+  background: rgba(237, 234, 234, 0.127);
 
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(0.8px);
+  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(0.8px);
   z-index: 99999999;
 

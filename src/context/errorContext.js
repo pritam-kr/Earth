@@ -5,6 +5,7 @@ const ErrorContext = createContext(null);
 const ErrorContextProvider = ({ children }) => {
   const [isError, setIsError] = useState({
     openWeatherApi: false,
+    stateCityApi: false,
   });
 
   return (

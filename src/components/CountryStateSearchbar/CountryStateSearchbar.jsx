@@ -65,7 +65,19 @@ const CountryStateSearchbar = ({ styles }) => {
           },
 
           onError: (error) => {
-            toast.error("Something went wrong, No state found");
+            if (
+              error?.response?.data?.error
+                .toLowerCase()
+                .includes("Unauthorized".toLowerCase())
+            ) {
+              setIsError((prev) => ({
+                ...prev,
+                openWeatherApi: false,
+                stateCityApi: true,
+              }));
+            } else {
+              toast.error("Something went wrong, No state found");
+            }
           },
         }
       );
@@ -83,7 +95,11 @@ const CountryStateSearchbar = ({ styles }) => {
 
     const response = await Promise.allSettled(responses);
     if (response?.some((item) => item.status === "rejected")) {
-      setIsError((prev) => ({ ...prev, openWeatherApi: true }));
+      setIsError((prev) => ({
+        ...prev,
+        openWeatherApi: true,
+        stateCityApi: false,
+      }));
       dispatch({
         type: CONTEXT_ACTIONS.GET_CITY_COORDINATES,
         payload: { isLoading: false },
@@ -136,7 +152,19 @@ const CountryStateSearchbar = ({ styles }) => {
             }
           },
           onError: (error) => {
-            toast.error("Something went wrong, No city found");
+            if (
+              error?.response?.data?.error
+                .toLowerCase()
+                .includes("Unauthorized".toLowerCase())
+            ) {
+              setIsError((prev) => ({
+                ...prev,
+                openWeatherApi: false,
+                stateCityApi: true,
+              }));
+            } else {
+              toast.error("Something went wrong, No city found");
+            }
           },
         }
       );

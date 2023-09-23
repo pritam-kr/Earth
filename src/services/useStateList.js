@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useMutation } from "react-query";
+import { useApiKey } from "../customHookes/useApiKey";
 
 export const useStateList = () => {
-  const STATE_CITY_API_KEY = process.env.REACT_APP_STATE_CITY_KEY;
+  const { stateCityApikey } = useApiKey();
 
   const stateListApi = ({ currentCountry }) => {
     const countryCode = currentCountry?.cca2;
@@ -13,7 +14,7 @@ export const useStateList = () => {
           `https://api.countrystatecity.in/v1/countries/${countryCode}/states`,
           {
             headers: {
-              "X-CSCAPI-KEY": `${STATE_CITY_API_KEY}`,
+              "X-CSCAPI-KEY": `${stateCityApikey}`,
             },
           }
         )

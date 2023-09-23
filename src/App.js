@@ -33,7 +33,7 @@ function App() {
 
       <Footer children={"Made with ReactJs"} />
 
-      {isError.openWeatherApi && <SettingModal />}
+      {(isError.openWeatherApi || isError.stateCityApi) && <SettingModal />}
       <Toaster
         position="top-center"
         reverseOrder={false}

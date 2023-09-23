@@ -3,12 +3,22 @@ import { useState } from "react";
 const useApiKey = () => {
   const [openWeatherApiKey, setOpenWeatherApiKey] = useState(
     !localStorage.getItem("openWeatherAPIkey")
-      ? "f4a78f3a238bb1393d8e39a33b9a4361"
+      ? process.env.REACT_APP_OPENWEATHERKEY
       : localStorage.getItem("openWeatherAPIkey")
   );
 
+  const [stateCityApikey, setStateCityApikey] = useState(
+    !localStorage.getItem("stateCityAPIKey")
+      ? process.env.REACT_APP_STATE_CITY_KEY
+      : localStorage.getItem("stateCityAPIKey")
+  );
 
-  return { openWeatherApiKey, setOpenWeatherApiKey };
+  return {
+    openWeatherApiKey,
+    setOpenWeatherApiKey,
+    stateCityApikey,
+    setStateCityApikey,
+  };
 };
 
 export { useApiKey };

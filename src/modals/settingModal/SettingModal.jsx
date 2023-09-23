@@ -4,20 +4,34 @@ import { useApiKey } from "../../customHookes/useApiKey";
 import { useErrorContext } from "../../context/errorContext";
 
 const SettingModal = () => {
+  
   // Custom hooks
-  const { setOpenWeatherApiKey } = useApiKey();
-  const { setIsError } = useErrorContext();
-  const [apiKey, setApiKey] = useState("f4a78f3a238bb1393d8e39a33b9a4361");
+  const { setOpenWeatherApiKey, setStateCityApikey } = useApiKey();
+  const { isError, setIsError } = useErrorContext();
+  const [apiKey, setApiKey] = useState(
+    isError?.openWeatherApi
+      ? process.env.REACT_APP_OPENWEATHERKEY
+      : process.env.REACT_APP_STATE_CITY_KEY
+  );
 
   const onClose = () => {
-    setIsError((prev) => ({ ...prev, openWeatherApi: false }));
+    setIsError((prev) => ({
+      ...prev,
+      openWeatherApi: false,
+      stateCityApi: false,
+    }));
   };
 
   const onSave = () => {
+    if (isError?.openWeatherApi) {
+      setOpenWeatherApiKey(apiKey.trim());
+      localStorage.setItem("openWeatherAPIkey", apiKey.trim());
+    } else {
+      setStateCityApikey(apiKey.trim());
+      localStorage.setItem("stateCityAPIKey", apiKey.trim());
+    }
     onClose();
-    setOpenWeatherApiKey(apiKey);
-    localStorage.setItem("openWeatherAPIkey", apiKey);
-    window.location.reload()
+    window.location.reload();
   };
 
   return (
@@ -43,22 +57,45 @@ const SettingModal = () => {
         <div className={styles.steps}>
           <li>
             To begin, open your preferred web browser and navigate to the
-            OpenWeather website at{" "}
-            <a
-              href="https://openweathermap.org/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              www.openweathermap.org
-            </a>
+            {isError?.openWeatherApi
+              ? "Open Weather"
+              : "Country State City API"}{" "}
+            website at{" "}
+            {isError?.openWeatherApi ? (
+              <a
+                href="https://openweathermap.org/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                www.openweathermap.org
+              </a>
+            ) : (
+              <a
+                href="https://countrystatecity.in/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                www.countrystatecity.in
+              </a>
+            )}
             .
           </li>
-          <li>Log In to Your Account</li>
-          <li>Navigate to API Key Settings</li>
-          <li> Manage Your API Keys</li>
-          <li>Generate a New API Key, and Copy Your New API Key</li>
-          <li>Paste the New API Key, below in input field</li>
-          <li>Verify and Save</li>
+          {isError?.openWeatherApi ? (
+            <>
+              {" "}
+              <li>Log In to Your Account</li>
+              <li>Navigate to API Key Settings</li>
+              <li> Manage Your API Keys</li>
+              <li>Generate a New API Key, and Copy Your New API Key</li>
+              <li>Paste the New API Key, below in input field</li>
+              <li>Verify and Save</li>
+            </>
+          ) : (
+            <>
+              {" "}
+              <li>And, Request for an api key</li>
+            </>
+          )}
         </div>
 
         <div className={styles.footer}>
@@ -68,7 +105,7 @@ const SettingModal = () => {
             onChange={(e) => setApiKey(e.target.value)}
             className={styles.input}
           />{" "}
-          <button onClick={onSave} disabled={!apiKey}>
+          <button onClick={onSave} disabled={!apiKey.trim()}>
             Save
           </button>
         </div>

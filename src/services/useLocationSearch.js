@@ -39,7 +39,7 @@ export const useLocationSearch = () => {
           .toLowerCase()
           .includes("Invalid API key".toLowerCase())
       ) {
-        setIsError((prev) => ({ ...prev, openWeatherApi: true }));
+        setIsError((prev) => ({ ...prev, openWeatherApi: true,  stateCityApi: false, }));
       } else {
         toast.error(
           error?.response?.data?.message ??

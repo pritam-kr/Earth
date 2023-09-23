@@ -29,7 +29,11 @@ export const useAirPollution = () => {
           .toLowerCase()
           .includes("Invalid API key".toLowerCase())
       ) {
-        setIsError((prev) => ({ ...prev, openWeatherApi: true }));
+        setIsError((prev) => ({
+          ...prev,
+          openWeatherApi: true,
+          stateCityApi: false,
+        }));
       }
     },
   });

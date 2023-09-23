@@ -77,7 +77,11 @@ const Temprature = () => {
     const data = response && (await Promise.allSettled(response));
 
     if (data?.some((item) => item.status === "rejected")) {
-      setIsError((prev) => ({ ...prev, openWeatherApi: true }));
+      setIsError((prev) => ({
+        ...prev,
+        openWeatherApi: true,
+        stateCityApi: false,
+      }));
     } else {
       data &&
         data

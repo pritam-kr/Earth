@@ -1,19 +1,22 @@
 import axios from "axios";
 import { useMutation } from "react-query";
+import { useApiKey } from "../customHookes/useApiKey";
 
 export const useCityList = () => {
-  const STATE_CITY_API_KEY = process.env.REACT_APP_STATE_CITY_KEY;
+  const { stateCityApikey } = useApiKey();
 
   const getCityApi = ({ countryCode = "IN", stateCode = "JH" }) => {
     if (countryCode && stateCode)
-      return axios.get(
-        `https://api.countrystatecity.in/v1/countries/${countryCode}/states/${stateCode}/cities`,
-        {
-          headers: {
-            "X-CSCAPI-KEY": `${STATE_CITY_API_KEY}`,
-          },
-        }
-      ).then(res => res.data);
+      return axios
+        .get(
+          `https://api.countrystatecity.in/v1/countries/${countryCode}/states/${stateCode}/cities`,
+          {
+            headers: {
+              "X-CSCAPI-KEY": `${stateCityApikey}`,
+            },
+          }
+        )
+        .then((res) => res.data);
   };
 
   const {
