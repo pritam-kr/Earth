@@ -4,8 +4,8 @@ import { useMutation } from "react-query";
 export const useStateList = () => {
   const STATE_CITY_API_KEY = process.env.REACT_APP_STATE_CITY_KEY;
 
-  const stateListApi = ({ country }) => {
-    const countryCode = country?.cca2;
+  const stateListApi = ({ currentCountry }) => {
+    const countryCode = currentCountry?.cca2;
 
     if (countryCode)
       return axios
