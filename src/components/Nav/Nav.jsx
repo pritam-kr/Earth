@@ -3,7 +3,6 @@ import styles from "./Nav.module.scss";
 import { renderSelectComponents } from "./constants";
 import { SelectNav } from "./components/SelectNav";
 import { debaunceFunction } from "../../utils/debaunceFunction";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useLocationSearch } from "../../services/useLocationSearch";
 import { useCountryList } from "../../services/useCountryList";
@@ -18,9 +17,8 @@ import { CONTEXT_ACTIONS } from "../../context/contextActions";
 import { useWeatherContext } from "../../context/weatherContext";
 
 const Nav = () => {
+  // Custom hooks
   const { pathname } = useLocation();
-
-  // New
   const {
     getLocationNames,
     locationLists,
@@ -33,7 +31,6 @@ const Nav = () => {
     isLoading: countryDataLoading,
     error: countryDataError,
   } = useCountryList();
-
   const { getCity, getCityError, getCityLoading } = useCityList();
   const { getAirPollution, airPollutionLoading } = useAirPollution();
 
@@ -41,12 +38,6 @@ const Nav = () => {
   const { dispatch } = useMapContext();
   const { state: weatherContextState, dispatch: weatherContextDispath } =
     useWeatherContext();
-
- 
-
-  // Redux States
-  const { weatherReducer } = useSelector((state) => state);
-  const { isLoading: citiesLoading } = weatherReducer.cities;
 
   //Refs
   const inputRef = useRef(null);
@@ -57,12 +48,9 @@ const Nav = () => {
   const [dropdown, showDropdown] = useState(false);
   const [suggestionBox, setSuggestionBox] = useState(false);
   const [countryList, setCountryList] = useState([]);
-
   // Currest State, Current Country -- States
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
-  // Currest State, Current Country -- States
-
   const [stateList, setStateList] = useState([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,16 +116,17 @@ const Nav = () => {
         .filter(
           (item) =>
             item.country === country.cca2 &&
-            item.state.toLowerCase() === state.name.toLowerCase()
+            item.state.toLowerCase().includes(state.name.toLowerCase())
         ),
       "name"
     );
 
-    if (citiesCoordinates.length > 0)
+    if (citiesCoordinates.length > 0) {
       weatherContextDispath({
         type: CONTEXT_ACTIONS.GET_CITY_COORDINATES,
         payload: { isLoading: false, citiesCoordinatesList: citiesCoordinates },
       });
+    }
   };
 
   useEffect(() => {
@@ -146,6 +135,7 @@ const Nav = () => {
         { countryCode: country?.cca2, stateCode: state.iso2 },
         {
           onSuccess: (data) => {
+            console.log(data, "data");
             if (!data?.length) {
               toast.error("No city found");
             } else {
@@ -186,6 +176,7 @@ const Nav = () => {
           showDropdown={showDropdown}
         />
       </div>
+
       <div className={styles.right}>
         {renderSelectComponents({
           suggestionRef,
@@ -208,7 +199,7 @@ const Nav = () => {
           stateList,
           LocationName,
           debaunceSearchHandler,
-          citiesLoading: weatherContextState.citiesCoordinates.isLoading,
+          citiesLoading: weatherContextState?.citiesCoordinates?.isLoading,
         })}
       </div>
     </nav>

@@ -3,32 +3,21 @@ import { Home, Temprature } from "./pages";
 import { Footer, MainContainer, Nav } from "./components";
 import SettingModal from "./modals/settingModal/SettingModal";
 import { Toaster } from "react-hot-toast";
-import { useSelector } from "react-redux";
 import { useState } from "react";
 import NotFound from "./pages/404/NotFound";
+import { useErrorContext } from "./context/errorContext";
 
 function App() {
-  const ReducerStates = useSelector((state) => state.mapReducer);
-  const isError =
-    (ReducerStates.locationsList?.isError &&
-      ReducerStates.locationsList?.isError?.includes("Invalid API key.")) ||
-    (ReducerStates.airPollutionInfo?.isError &&
-      ReducerStates.airPollutionInfo?.isError?.includes("Invalid API key."));
-  const [apiKeyModal, setApikeyModal] = useState(false);
-
-  // Current country co-ordinates
-  const [countryCoordinate, setCountryCoordinate] = useState("");
-
   // Maploading
   const [mapLoading, setMapLoading] = useState(false);
+
+  // Context state
+  const { isError } = useErrorContext();
 
   //1.15.2 - Maplibrejs
   return (
     <>
-      <Nav
-        setApikeyModal={setApikeyModal}
-        setCountryCoordinate={setCountryCoordinate}
-      />
+      <Nav />
       <MainContainer>
         <Routes>
           <Route
@@ -37,19 +26,14 @@ function App() {
               <Home mapLoading={mapLoading} setMapLoading={setMapLoading} />
             }
           />
-          <Route
-            path="/temprature"
-            element={<Temprature countryCoordinate={countryCoordinate} />}
-          />
+          <Route path="/temprature" element={<Temprature />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </MainContainer>
 
       <Footer children={"Made with ReactJs"} />
 
-      {(isError || apiKeyModal) && (
-        <SettingModal setApikeyModal={setApikeyModal} />
-      )}
+      {isError.openWeatherApi && <SettingModal />}
       <Toaster
         position="top-center"
         reverseOrder={false}

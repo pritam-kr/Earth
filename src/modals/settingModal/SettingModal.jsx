@@ -1,26 +1,16 @@
 import React, { useState } from "react";
 import styles from "./SettingModal.module.scss";
-import { useDispatch } from "react-redux";
-import { MAP_ACTIONS } from "../../redux/actions/actions";
-import { useServices } from "../../services/useServices";
+import { useApiKey } from "../../customHookes/useApiKey";
+import { useErrorContext } from "../../context/errorContext";
 
-const SettingModal = ({ setApikeyModal }) => {
-  const dispatch = useDispatch();
+const SettingModal = () => {
+  // Custom hooks
+  const { setOpenWeatherApiKey } = useApiKey();
+  const { setIsError } = useErrorContext();
   const [apiKey, setApiKey] = useState("f4a78f3a238bb1393d8e39a33b9a4361");
-  const { setOpenWeatherApiKey } = useServices();
 
   const onClose = () => {
-    dispatch({
-      type: MAP_ACTIONS.GET_AIR_POLLUTION || MAP_ACTIONS.GET_LOCATION_LIST,
-      payload: { error: false },
-    });
-
-    dispatch({
-      type: MAP_ACTIONS.GET_LOCATION_LIST,
-      payload: { error: false },
-    });
-
-    setApikeyModal(false);
+    setIsError((prev) => ({ ...prev, openWeatherApi: false }));
   };
 
   const onSave = () => {

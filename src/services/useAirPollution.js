@@ -1,16 +1,18 @@
 import axios from "axios";
 import { useMutation } from "react-query";
+import { useErrorContext } from "../context/errorContext";
+import { useApiKey } from "../customHookes/useApiKey";
 
 export const useAirPollution = () => {
-  const airPollutionApi = ({
-    openWeatherAPIkey = "f4a78f3a238bb1393d8e39a33b9a4361",
-    lon,
-    lat,
-  }) => {
+  // Custom hooks
+  const { openWeatherApiKey } = useApiKey();
+  const { setIsError } = useErrorContext();
+
+  const airPollutionApi = ({ lon, lat }) => {
     if (lon && lat)
       return axios
         .get(
-          `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${openWeatherAPIkey}`
+          `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${openWeatherApiKey}`
         )
         .then((res) => res.data);
   };
@@ -20,7 +22,17 @@ export const useAirPollution = () => {
     isLoading: airPollutionLoading,
     isError,
     error: airPollutionError,
-  } = useMutation(airPollutionApi);
+  } = useMutation(airPollutionApi, {
+    onError: (error) => {
+      if (
+        error?.response?.data?.message
+          .toLowerCase()
+          .includes("Invalid API key".toLowerCase())
+      ) {
+        setIsError((prev) => ({ ...prev, openWeatherApi: true }));
+      }
+    },
+  });
 
   return { getAirPollution, airPollutionLoading, airPollutionError };
 };

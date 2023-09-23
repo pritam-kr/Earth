@@ -26,8 +26,6 @@ const Temprature = () => {
   const { state: weatherContextState, dispatch: weatherContextDispath } =
     useWeatherContext();
 
-  console.log(weatherContextState);
-
   // States
   const [forcastData, setForcastData] = useState({
     data: null,
@@ -37,82 +35,81 @@ const Temprature = () => {
 
   const mapContainer = useRef(null);
 
-  useEffect(() => {
-    const getCoodinates = async () => {
-      dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
+  const getCoodinates = async () => {
+    dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
 
-      const { longitude, latitude } =
-        !countryCoordinate.lng &&
-        !countryCoordinate.lat &&
-        (await getLonLatCoordinates());
+    const { longitude, latitude } =
+      !countryCoordinate.lng &&
+      !countryCoordinate.lat &&
+      (await getLonLatCoordinates());
 
-      if (longitude && latitude) {
-        dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
-      }
-
+    if (longitude && latitude) {
       dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
+    }
 
-      const map = new maplibregl.Map({
-        container: mapContainer.current,
-        style: mapStyle,
-        center: [
-          countryCoordinate.lng ?? longitude,
-          countryCoordinate.lat ?? latitude,
-        ], // starting position [lng, lat]
-        zoom: 4, // starting zoom
-        maxZoom: 24,
-        preserveDrawingBuffer: true,
-        attributionControl: true,
-        boxZoom: true,
-      });
+    dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
 
-      map.addControl(new maplibregl.NavigationControl(), "top-right");
+    const map = new maplibregl.Map({
+      container: mapContainer.current,
+      style: mapStyle,
+      center: [
+        countryCoordinate.lng ?? longitude,
+        countryCoordinate.lat ?? latitude,
+      ], // starting position [lng, lat]
+      zoom: 4, // starting zoom
+      maxZoom: 24,
+      preserveDrawingBuffer: true,
+      attributionControl: true,
+      boxZoom: true,
+    });
 
-      const response =
-        weatherContextState?.citiesCoordinates?.citiesCoordinatesList?.map(
-          (item) => getWeatherInfo({ lat: item.lat, lon: item.lon })
-        );
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-      const data = response && (await Promise.allSettled(response));
+    const response =
+      weatherContextState?.citiesCoordinates?.citiesCoordinatesList?.map(
+        (item) => getWeatherInfo({ lat: item.lat, lon: item.lon })
+      );
 
-      data &&
-        data
-          ?.filter(
-            (item) =>
-              item?.value?.status === 200 || item?.status === "fulfilled"
-          )
-          .forEach((item) => {
-            const weatherInfo = item?.value?.data;
-            const customMark = document.createElement("div");
-            customMark.className = "customMarker";
-            const celcius = Math.trunc(weatherInfo.main.temp);
-            const temp = document.createElement("p");
-            temp.className = "temp";
-            temp.textContent = `${celcius}°C`;
-            customMark.appendChild(temp);
+    const data = response && (await Promise.allSettled(response));
 
-            customMark.addEventListener("click", (e) => {
-              const {
-                value: {
-                  data: {
-                    coord: { lon, lat },
-                  },
+    data &&
+      data
+        ?.filter(
+          (item) => item?.value?.status === 200 || item?.status === "fulfilled"
+        )
+        .forEach((item) => {
+          const weatherInfo = item?.value?.data;
+          const customMark = document.createElement("div");
+          customMark.className = "customMarker";
+          const celcius = Math.trunc(weatherInfo.main.temp);
+          const temp = document.createElement("p");
+          temp.className = "temp";
+          temp.textContent = `${celcius}°C`;
+          customMark.appendChild(temp);
+
+          customMark.addEventListener("click", (e) => {
+            const {
+              value: {
+                data: {
+                  coord: { lon, lat },
                 },
-              } = item;
+              },
+            } = item;
 
-              weatherForcast({ lon, lat, setForcastData, getWeatherForcast });
-            });
-
-            new maplibregl.Marker({
-              color: "#FF0000",
-              element: customMark,
-            })
-              .setLngLat([weatherInfo.coord.lon, weatherInfo.coord.lat])
-              .setPopup(getPopup({ weatherInfo }))
-              .addTo(map);
+            weatherForcast({ lon, lat, setForcastData, getWeatherForcast });
           });
-    };
 
+          new maplibregl.Marker({
+            color: "#FF0000",
+            element: customMark,
+          })
+            .setLngLat([weatherInfo.coord.lon, weatherInfo.coord.lat])
+            .setPopup(getPopup({ weatherInfo }))
+            .addTo(map);
+        });
+  };
+
+  useEffect(() => {
     getCoodinates();
   }, [
     countryCoordinate,

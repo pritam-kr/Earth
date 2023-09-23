@@ -2,20 +2,25 @@ import React, { useState } from "react";
 import styles from "./MapFooter.module.scss";
 import * as MapIcons from "react-icons/fc";
 import * as FaIcons from "react-icons/fa";
-import { BASEMAP } from "../Map/constants";
 import { useScreenShot } from "../../customHookes/useScreenShot";
 import Loader from "../Loader/Loader";
 import { useLocation } from "react-router-dom";
-import { COLORS, GRAPH_AVAILABLE, PIECHART_AVAILABLE } from "./constants";
 import PieChartCircle from "../PieChart/PieChart";
 import Graph from "../Graph/Graph";
 import { useMapContext } from "../../context/mapContext";
+import {
+  BASEMAP,
+  COLORS,
+  GRAPH_AVAILABLE,
+  PIECHART_AVAILABLE,
+} from "../../globalConstant/constants";
 
 const MapFooter = ({ setMapStyle, mapContainerRef, loadingProp = false }) => {
-  // Hooks
+  // Custom hooks
   const { loading, takeScreenShot } = useScreenShot();
   const { pathname } = useLocation();
 
+  //Context state
   const {
     state: { airPollutionInfo },
   } = useMapContext();

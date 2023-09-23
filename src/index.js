@@ -9,6 +9,7 @@ import { store } from "./redux/store";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MapContextProvider } from "./context/mapContext";
 import { WeatherContextProvider } from "./context/weatherContext";
+import { ErrorContextProvider } from "./context/errorContext";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -18,15 +19,17 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <MapContextProvider>
-        <WeatherContextProvider>
-          <QueryClientProvider client={queryClient}>
-            <Provider store={store} r>
-              <App />
-            </Provider>
-          </QueryClientProvider>
-        </WeatherContextProvider>
-      </MapContextProvider>
+      <ErrorContextProvider>
+        <MapContextProvider>
+          <WeatherContextProvider>
+            <QueryClientProvider client={queryClient}>
+              <Provider store={store} r>
+                <App />
+              </Provider>
+            </QueryClientProvider>
+          </WeatherContextProvider>
+        </MapContextProvider>
+      </ErrorContextProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

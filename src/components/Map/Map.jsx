@@ -8,14 +8,12 @@ import { useAirPollution } from "../../services/useAirPollution";
 import { CONTEXT_ACTIONS } from "../../context/contextActions";
 
 const Map = ({ setMapLoading }) => {
-  // Hooks
+  // Custom hooks
   const { getLonLatCoordinates } = useCurrentLanLat();
   const { mapStyle, setMapStyle } = useMapStyle();
-
-  // New
   const { getAirPollution, airPollutionLoading } = useAirPollution();
 
-  //States
+  // Refs
   const mapContainer = useRef(null);
 
   // Context State

@@ -11,7 +11,6 @@ const initialState = {
 const weatherReducer = (state, action) => {
   switch (action.type) {
     case CONTEXT_ACTIONS.GET_CITY_COORDINATES:
-      console.log(action)
       return { ...state, citiesCoordinates: action.payload };
 
     default:

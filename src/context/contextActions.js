@@ -5,3 +5,7 @@ export const CONTEXT_ACTIONS = {
   GET_CITIES: "get_cities",
   GET_CITY_COORDINATES: "get_city_coordinates",
 };
+
+export const ERROR_ACTIONS = {
+  INVALID_OPENWEATHER_KEY: "invalid_openweather_key",
+};
