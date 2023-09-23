@@ -2,22 +2,28 @@ import React, { useState } from "react";
 import styles from "./MapFooter.module.scss";
 import * as MapIcons from "react-icons/fc";
 import * as FaIcons from "react-icons/fa";
-import { BASEMAP } from "../Map/constants";
 import { useScreenShot } from "../../customHookes/useScreenShot";
 import Loader from "../Loader/Loader";
 import { useLocation } from "react-router-dom";
-import { COLORS, GRAPH_AVAILABLE, PIECHART_AVAILABLE } from "./constants";
 import PieChartCircle from "../PieChart/PieChart";
 import Graph from "../Graph/Graph";
-import { useSelector } from "react-redux";
+import { useMapContext } from "../../context/mapContext";
+import {
+  BASEMAP,
+  COLORS,
+  GRAPH_AVAILABLE,
+  PIECHART_AVAILABLE,
+} from "../../globalConstant/constants";
 
-const MapFooter = ({ setMapStyle, mapContainerRef }) => {
-  // Hooks
+const MapFooter = ({ setMapStyle, mapContainerRef, loadingProp = false }) => {
+  // Custom hooks
   const { loading, takeScreenShot } = useScreenShot();
   const { pathname } = useLocation();
 
-  // Redux States
-  const { airPollutionInfo } = useSelector((state) => state.mapReducer);
+  //Context state
+  const {
+    state: { airPollutionInfo },
+  } = useMapContext();
 
   // States
   const [basemap, setBaseMap] = useState(false);
@@ -47,7 +53,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
       <div className={styles.right}>
         {(isVisual.pieChart || isVisual.graph) && (
           <div className={styles.pieChartGraphWrapper}>
-            {airPollutionInfo?.loading ? (
+            {loadingProp ? (
               <div className={styles.loaderWrapper}>
                 <Loader width={40} height={40} />
               </div>
@@ -78,7 +84,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
               isVisual.pieChart ? styles.active : ""
             }`}
             onClick={() => {
-              !airPollutionInfo?.loading &&
+              !loadingProp &&
                 setIsVisual((prev) => ({
                   ...prev,
                   pieChart: !prev.pieChart,
@@ -86,7 +92,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
                 }));
             }}
           >
-            {airPollutionInfo?.loading ? (
+            {loadingProp ? (
               <Loader width={20} height={20} />
             ) : (
               <MapIcons.FcPieChart className={styles.mapIcon} />
@@ -101,7 +107,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
               isVisual.graph ? styles.active : ""
             }`}
             onClick={() => {
-              !airPollutionInfo?.loading &&
+              !loadingProp &&
                 setIsVisual((prev) => ({
                   ...prev,
                   pieChart: false,
@@ -109,7 +115,7 @@ const MapFooter = ({ setMapStyle, mapContainerRef }) => {
                 }));
             }}
           >
-            {airPollutionInfo?.loading ? (
+            {loadingProp ? (
               <Loader width={20} height={20} />
             ) : (
               <MapIcons.FcLineChart className={styles.mapIcon} />

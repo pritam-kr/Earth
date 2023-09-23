@@ -9,10 +9,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useSelector } from "react-redux";
+
+import { useMapContext } from "../../context/mapContext";
 
 const Graph = () => {
-  const { airPollutionInfo } = useSelector((state) => state.mapReducer);
+  const {
+    state: { airPollutionInfo },
+  } = useMapContext();
 
   const data2 = airPollutionInfo?.list
     ?.map((item) =>

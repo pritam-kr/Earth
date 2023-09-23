@@ -1,4 +1,76 @@
-const country_list = [
+export const MENUS = [
+  { label: "Air Quality", value: "air pollution", path: "/" },
+  { label: "Weather info", value: "temprature", path: "/temprature" },
+  // { label: "Water Pollution", value: "water pollution", path: "/2" },
+  // { label: "Heat Wave", value: "head wave", path: "/3" },
+];
+
+export const LOGO =
+  "https://i.pinimg.com/originals/f3/7e/bb/f37ebbea1f4318dec775a4d705bd7cca.gif";
+
+export const navLinks = (pathname) => {
+  if (pathname === "/") {
+    return "Air Quality";
+  } else if (pathname === "/temprature") {
+    return "Weather info";
+  } else {
+    return "Not found";
+  }
+};
+
+export const BASEMAP = [
+  {
+    name: "cadastre satellite",
+    mapLink:
+      "https://api.maptiler.com/maps/cadastre-satellite/style.json?key=yu7UtJN0eOg536ACtL8z",
+    IMGlink:
+      "https://res.cloudinary.com/dhqxln7zi/image/upload/v1690649710/Screenshot_2023-07-29_at_12.58.40_PM_ac5dpf.png",
+  },
+  {
+    name: "basic",
+    mapLink:
+      "https://api.maptiler.com/maps/basic-v2/style.json?key=yu7UtJN0eOg536ACtL8z",
+    IMGlink:
+      "https://res.cloudinary.com/dhqxln7zi/image/upload/v1690651342/Screenshot_2023-07-29_at_10.51.58_PM_udd93p.png",
+  },
+  {
+    name: "satellite",
+    mapLink:
+      "https://api.maptiler.com/maps/satellite/style.json?key=yu7UtJN0eOg536ACtL8z",
+    IMGlink:
+      "https://res.cloudinary.com/dhqxln7zi/image/upload/v1690649710/Screenshot_2023-07-29_at_12.57.46_PM_debsxd.png",
+  },
+  {
+    name: "topo",
+    mapLink:
+      "https://api.maptiler.com/maps/topo-v2/style.json?key=yu7UtJN0eOg536ACtL8z",
+    IMGlink:
+      "https://res.cloudinary.com/dhqxln7zi/image/upload/v1690651459/Screenshot_2023-07-29_at_10.54.06_PM_nt90mq.png",
+  },
+  {
+    name: "streets",
+    mapLink:
+      "https://api.maptiler.com/maps/streets-v2/style.json?key=yu7UtJN0eOg536ACtL8z",
+    IMGlink:
+      "https://res.cloudinary.com/dhqxln7zi/image/upload/v1690649709/Screenshot_2023-07-29_at_12.59.18_PM_y5iwqu.png",
+  },
+];
+
+export const PIECHART_AVAILABLE = ["/"];
+export const GRAPH_AVAILABLE = ["/"];
+export const COLORS = [
+  "#279EFF",
+  "#7091F5",
+  "#FF6969",
+  "#9EB384",
+  "#765827",
+  "#FEBBCC",
+  "#F11A7B",
+  "#B70404",
+];
+
+
+export const country_list = [
   "Afghanistan",
   "Albania",
   "Algeria",

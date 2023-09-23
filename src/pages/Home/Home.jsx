@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "./Home.module.scss";
 import { Loader, Map } from "../../components";
-import { useSelector } from "react-redux";
+ 
 
-const Home = () => {
+const Home = ({mapLoading, setMapLoading}) => {
   const suggestionRef = useRef(null);
   const inputRef = useRef(null);
-  const { mapLoading } = useSelector((state) => state.mapReducer);
+ 
   const [suggestionBox, setSuggestionBox] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const Home = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <Map />
+      <Map setMapLoading={setMapLoading} />
 
       {mapLoading && (
         <div className={styles.mapLoader}>

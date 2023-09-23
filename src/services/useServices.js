@@ -91,22 +91,6 @@ export const useServices = () => {
     }
   };
 
-  // 3. Get all states by country code
-  const getAllState = (countryCode) => {
-    try {
-      return axios.get(
-        `https://api.countrystatecity.in/v1/countries/${countryCode}/states`,
-        {
-          headers: {
-            "X-CSCAPI-KEY": `${STATE_CITY_API_KEY}`,
-          },
-        }
-      );
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
   // 4. Get All cities by country and state code
   const getAllCities = (countryCode = "IN", stateCode = "JH") => {
     try {
@@ -171,7 +155,7 @@ export const useServices = () => {
     getLocations,
     searchValue,
     setSearchValue,
-    getAllState,
+    // getAllState,
     getAllCities,
     findCoordinates,
     getWeatherInfo,

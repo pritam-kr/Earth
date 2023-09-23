@@ -8,6 +8,7 @@ import { MAP_ACTIONS } from "../../redux/actions/actions";
 import MapFooter from "../../components/MapFooter/MapFooter";
 import { useServices } from "../../services/useServices";
 import { getPopup, weatherForcast } from "./constant";
+import { useWeatherContext } from "../../context/weatherContext";
 
 const Temprature = () => {
   // Hooks
@@ -17,8 +18,13 @@ const Temprature = () => {
 
   // Redux States
   const { weatherReducer } = useSelector((state) => state);
-  const { countryCoordinate, mapLoading, citiesCoordinates } = weatherReducer;
+  const { countryCoordinate, mapLoading } = weatherReducer;
   const dispatch = useDispatch();
+
+  // New
+
+  const { state: weatherContextState, dispatch: weatherContextDispath } =
+    useWeatherContext();
 
   // States
   const [forcastData, setForcastData] = useState({
@@ -27,46 +33,46 @@ const Temprature = () => {
     error: "",
   });
 
-
   const mapContainer = useRef(null);
 
-  useEffect(() => {
-    const getCoodinates = async () => {
-      dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
+  const getCoodinates = async () => {
+    dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: true });
 
-      const { longitude, latitude } =
-        !countryCoordinate.lng &&
-        !countryCoordinate.lat &&
-        (await getLonLatCoordinates());
+    const { longitude, latitude } =
+      !countryCoordinate.lng &&
+      !countryCoordinate.lat &&
+      (await getLonLatCoordinates());
 
-      if (longitude && latitude) {
-        dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
-      }
-
+    if (longitude && latitude) {
       dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
+    }
 
-      const map = new maplibregl.Map({
-        container: mapContainer.current,
-        style: mapStyle,
-        center: [
-          countryCoordinate.lng ?? longitude,
-          countryCoordinate.lat ?? latitude,
-        ], // starting position [lng, lat]
-        zoom: 4, // starting zoom
-        maxZoom: 24,
-        preserveDrawingBuffer: true,
-        attributionControl: true,
-        boxZoom: true,
-      });
+    dispatch({ type: MAP_ACTIONS.RANDOM_LOADING, payload: false });
 
-      map.addControl(new maplibregl.NavigationControl(), "top-right");
+    const map = new maplibregl.Map({
+      container: mapContainer.current,
+      style: mapStyle,
+      center: [
+        countryCoordinate.lng ?? longitude,
+        countryCoordinate.lat ?? latitude,
+      ], // starting position [lng, lat]
+      zoom: 4, // starting zoom
+      maxZoom: 24,
+      preserveDrawingBuffer: true,
+      attributionControl: true,
+      boxZoom: true,
+    });
 
-      const response = citiesCoordinates.data?.map((item) =>
-        getWeatherInfo({ lat: item.lat, lon: item.lon })
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+    const response =
+      weatherContextState?.citiesCoordinates?.citiesCoordinatesList?.map(
+        (item) => getWeatherInfo({ lat: item.lat, lon: item.lon })
       );
 
-      const data = await Promise.allSettled(response);
+    const data = response && (await Promise.allSettled(response));
 
+    data &&
       data
         ?.filter(
           (item) => item?.value?.status === 200 || item?.status === "fulfilled"
@@ -101,16 +107,21 @@ const Temprature = () => {
             .setPopup(getPopup({ weatherInfo }))
             .addTo(map);
         });
-    };
+  };
 
+  useEffect(() => {
     getCoodinates();
-  }, [countryCoordinate, citiesCoordinates.data, mapStyle]);
+  }, [
+    countryCoordinate,
+    weatherContextState?.citiesCoordinates?.citiesCoordinatesList,
+    mapStyle,
+  ]);
 
   return (
     <div className={styles.pageContainer}>
       <div className={styles.mapContainer} ref={mapContainer}></div>
 
-      {(mapLoading || citiesCoordinates.isLoading) && (
+      {mapLoading && (
         <div className={styles.mapLoader}>
           <Loader width={50} height={50} />
         </div>
