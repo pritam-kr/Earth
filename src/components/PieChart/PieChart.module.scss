@@ -9,6 +9,31 @@
   text-align: left;
   width: fit-content;
   cursor: pointer;
+  z-index: 9999999;
+
+  .airType {
+    font-size: 0.8rem;
+    background: #dedede;
+    width: 80px;
+    top: 55px;
+    left: 60px;
+    position: absolute;
+    padding: 0 0.4rem;
+    border-radius: 3px;
+    
+  }
+  .aqi {
+    font-size: 0.8rem;
+    @include display-center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    position: relative;
+
+    .aqiInfo {
+      cursor: pointer;
+    }
+  }
 
   div {
     position: relative;
@@ -39,7 +64,7 @@
       width: 150px;
       left: -165px;
       background-color: #fff;
-      
+
       padding: 3px 10px;
       border-radius: 30px;
       z-index: 99999;

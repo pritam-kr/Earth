@@ -3,6 +3,7 @@ import styles from "./PieChart.module.scss";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { AIR_COMPONENTS } from "./constants";
 import { useMapContext } from "../../context/mapContext";
+import * as BiIcons from "react-icons/bi";
 
 const PieChartCircle = ({ isPieChart, colors }) => {
   const {
@@ -18,6 +19,28 @@ const PieChartCircle = ({ isPieChart, colors }) => {
     )
     .flat()
     ?.sort((a, b) => b.value - a.value);
+
+  const { aqi } = airPollutionInfo?.list[0].main || {};
+  const [info, setInfo] = useState(false);
+
+  const getAirInfo = (aqi) => {
+    if (!aqi) return "";
+
+    switch (aqi) {
+      case 5:
+        return "Very Poor";
+      case 4:
+        return "Poor";
+      case 3:
+        return "Moderate";
+      case 2:
+        return "Fair";
+      case 1:
+        return "Good";
+      default:
+        return "";
+    }
+  };
 
   return (
     <>
@@ -48,6 +71,18 @@ const PieChartCircle = ({ isPieChart, colors }) => {
       </ResponsiveContainer>
 
       <div className={styles.colorWrapper}>
+        {info && <p className={styles.airType}>{getAirInfo(aqi) + " air"}</p>}
+        {aqi && (
+          <p className={styles.aqi}>
+            AQI: {aqi}{" "}
+            <BiIcons.BiInfoCircle
+              style={{ color: "red" }}
+              className={styles.aqiInfo}
+              onMouseLeave={() => setInfo(false)}
+              onMouseEnter={() => setInfo(true)}
+            />{" "}
+          </p>
+        )}
         {data?.length > 0 &&
           data?.map((item, index) => (
             <Colors item={item} index={index} colors={colors} styles={styles} />
